@@ -4,9 +4,7 @@
 </script>
 
 <svg class="{klass} h-6 w-6" xmlns="http://www.w3.org/2000/svg" height="24" width="24">
-	<path
-		{d}
-	/>
+	<path {d} />
 </svg>
 
 <style lang="scss">

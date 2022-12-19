@@ -7,7 +7,7 @@ const config = {
 	// for more information about preprocessors
 	preprocess: vitePreprocess({
 		postcss: true,
-		sass: true,
+		sass: true
 	}),
 
 	kit: {
