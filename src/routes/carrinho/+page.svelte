@@ -2,24 +2,30 @@
 	import carrinho from '$lib/stores/carrinho.store';
 
 	function tirarDoCarrinho(nome: string, preco: string) {
-		for (let i = 0; i < $carrinho.length; i++) {
-			if ($carrinho[i].nome == nome) {
-				$carrinho.splice(i, 1);
+		carrinho.update((val) => {
+			for (let i = 0; i < val.length; i++) {
+				if (val[i].nome == nome) {
+					val.splice(i, 1);
+				}
 			}
-		}
+			return val;
+		});
 
 		return null;
 	}
 
-	const total =
-		$carrinho.length > 0 &&
-		//@ts-expect-error is not carrinho
-		$carrinho.reduce((a, b) => {
-			if (typeof a === 'number') {
-				return a + parseFloat(b.preco);
-			}
-			return parseFloat(a.preco) + parseFloat(b.preco);
-		});
+	$: total =
+		$carrinho.length > 1
+			? //@ts-ignore
+			  $carrinho.reduce((a, b) => {
+					if (typeof a === 'number') return a + parseFloat(b.preco);
+					return parseFloat(a.preco) + parseFloat(b.preco);
+			  })
+			: $carrinho.length === 1
+			? $carrinho[0].preco
+			: 0;
+
+	console.log(total);
 </script>
 
 <section class="flex flex-col gap-5">
@@ -37,7 +43,7 @@
 				<p>R${c.preco}</p>
 
 				<div class="card-actions">
-					<button on:click={tirarDoCarrinho(c.nome, c.preco)} class="btn btn-error">-</button>
+					<button on:click={tirarDoCarrinho(c.nome, c.preco)} class="btn btn-sm btn-error">-</button>
 				</div>
 			</div>
 		</div>
