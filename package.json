@@ -4,74 +4,14 @@
 	"private": true,
 	"scripts": {
 		"dev": "vite dev --host",
-		"build": "wireit",
-		"preview": "wireit",
-		"test": "wireit",
-		"check": "wireit",
+		"build": "vite build",
+		"preview": "vite preview --host",
+		"test": "playwright test",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test:unit": "vitest",
-		"lint": "wireit",
-		"format": "wireit"
-	},
-	"wireit": {
-		"build": {
-			"command": "vite build",
-			"dependencies": [
-				"lint"
-			],
-			"files": [
-				"src/**/*",
-				"tsconfig.json"
-			],
-			"output": [
-				".svelte-kit/**"
-			]
-		},
-		"preview": {
-			"command": "vite preview --host",
-			"dependencies": [
-				"build"
-			],
-			"service": true
-		},
-		"format": {
-			"command": "prettier --cache --plugin-search-dir . --check . --write .",
-			"files": [
-				"src/**/*",
-				"tsconfig.json"
-			]
-		},
-		"lint": {
-			"command": "eslint .",
-			"dependencies": [
-				"format"
-			],
-			"files": [
-				"src/**/*",
-				"tsconfig.json"
-			]
-		},
-		"test": {
-			"command": "playwright test",
-			"files": [
-				"./tests/**/*.ts"
-			]
-		},
-		"check": {
-			"command": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
-		},
-		"dev": {
-			"command": "vite dev --host",
-			"dependencies": [
-				"format"
-			],
-			"service": true,
-			"files": [
-				"./src/**/*",
-				"./.svelte-kit/tsconfig.json",
-				"./tsconfig.json"
-			]
-		}
+		"lint": "prettier --cache --plugin-search-dir . --check . --write . && eslint .",
+		"format": "prettier --cache --plugin-search-dir . --check . --write ."
 	},
 	"devDependencies": {
 		"@fontsource/roboto": "^4.5.3",
