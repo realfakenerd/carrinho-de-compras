@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { auth } from '$lib/firebase';
-	import { credential, user } from '$lib/stores/user.store';
+	import user, { credential } from '$lib/stores/user.store';
 	import type { FirebaseError } from 'firebase/app';
 	import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 	import { backOut } from 'svelte/easing';
@@ -23,18 +23,15 @@
 	}
 </script>
 
+<div class="hero">
+	<section class="hero-content flex-col lg:flex-row-reverse">
+		<h1 class="text-5xl font-bold">Faça o login aqui</h1>
+		<p class="py-6">
+			Hum... não fez o login ainda? Então não esta desfrutando de tudo o que o carrinho de compras
+			pode lhe oferecer. <br />
+			Faça agora, é rápido e simples. 😉
+		</p>
 
-
-<div class="hero min-h-screen">
-	<div class="hero-content flex-col lg:flex-row-reverse">
-		<div class="text-center lg:text-left">
-			<h1 class="text-5xl font-bold">Faça o login aqui</h1>
-			<p class="py-6">
-				Hum... não fez o login ainda? Então não esta desfrutando de tudo o que o carrinho de compras
-				pode lhe oferecer. <br />
-				Faça agora, é rápido e simples. 😉
-			</p>
-		</div>
 		<div class="card w-full max-w-sm flex-shrink-0 bg-base-300 shadow-2xl">
 			<section class="card-body">
 				<div class="card-title">
@@ -85,5 +82,5 @@
 				{/if}
 			</section>
 		</div>
-	</div>
+	</section>
 </div>

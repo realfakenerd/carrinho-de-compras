@@ -36,23 +36,17 @@
 </script>
 
 <header>
-	<nav class="custom-navbar">
-		{#each routes as route, index (index)}
-			<a href={route.href}>
-				<div class="{data.currentRoute === route.href ? 'bg-base-200' : ''} ">
-					<span>
-						<Icon d={data.currentRoute === route.href ? route.d.filled : route.d.outlined} />
-					</span>
-				</div>
-				<h3>{route.name}</h3>
-			</a>
-		{/each}
+	<nav class="navbar justify-center bg-base-100">
+		<ul class="space-x-5">
+			<a href="/" class="btn-ghost btn">home</a>
+			<a href="/carrinho" class="btn-ghost btn">carrinho</a>
+		</ul>
 	</nav>
 </header>
 
 {#key data.currentRoute}
 	<main
-		class="container mx-auto px-5 pt-10 pb-40"
+		class=" px-5 pt-10 pb-40"
 		in:fly={{ y: -5, duration: 500, delay: 200 }}
 		out:fly={{ y: 5, duration: 200 }}
 	>
@@ -60,14 +54,30 @@
 	</main>
 {/key}
 
+<footer>
+	<nav class="custom-navbar">
+		{#each routes as route, index (index)}
+			<a href={route.href}>
+				<div
+					style="background-color:{data.currentRoute === route.href ? 'hsl(220, 18%, 20%)' : ''} "
+				>
+					<span class="text-white">
+						<Icon d={data.currentRoute === route.href ? route.d.filled : route.d.outlined} />
+					</span>
+				</div>
+				<h3>{route.name}</h3>
+			</a>
+		{/each}
+	</nav>
+</footer>
+
 <style lang="scss">
-	header {
+	footer {
 		@apply fixed bottom-0 z-20 w-full;
 	}
 
 	.custom-navbar {
-		@apply bg-base-200 flex h-20 flex-none flex-grow-0 flex-row items-start gap-2 py-0 px-2;
-		
+		@apply flex h-20 flex-none flex-grow-0 flex-row items-start gap-2 bg-base-200 py-0 px-2;
 
 		a {
 			@apply order-[0] flex h-20 flex-none flex-grow flex-col items-center justify-center gap-1 px-0 pt-3 pb-4;

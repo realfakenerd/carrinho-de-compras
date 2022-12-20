@@ -1,5 +1,8 @@
 lockfileVersion: 5.4
 
+overrides:
+  rxfire>tslib: '2'
+
 specifiers:
   '@fontsource/metropolis': ^4.5.3
   '@playwright/test': ^1.29.0
@@ -20,9 +23,12 @@ specifiers:
   prettier: ^2.8.1
   prettier-plugin-svelte: ^2.9.0
   prettier-plugin-tailwindcss: ^0.2.1
+  rxfire: ^6.0.3
+  rxjs: ^7.8.0
   sass: ^1.57.0
   svelte: ^3.55.0
   svelte-check: ^2.10.2
+  svelte-local-storage-store: ^0.3.2
   svelte-preprocess: ^5.0.0
   tailwindcss: ^3.2.4
   tslib: ^2.4.1
@@ -54,9 +60,12 @@ devDependencies:
   prettier: 2.8.1
   prettier-plugin-svelte: 2.9.0_ajxj753sv7dbwexjherrch25ta
   prettier-plugin-tailwindcss: 0.2.1_prettier@2.8.1
+  rxfire: 6.0.3_firebase@9.15.0+rxjs@7.8.0
+  rxjs: 7.8.0
   sass: 1.57.0
   svelte: 3.55.0
   svelte-check: 2.10.2_okwkemuf52qf5ttfhweow3rruu
+  svelte-local-storage-store: 0.3.2_svelte@3.55.0
   svelte-preprocess: 5.0.0_vwqxrpdxnkbskqjperqhrbxsve
   tailwindcss: 3.2.4_postcss@8.4.20
   tslib: 2.4.1
@@ -3095,6 +3104,23 @@ packages:
       queue-microtask: 1.2.3
     dev: true
 
+  /rxfire/6.0.3_firebase@9.15.0+rxjs@7.8.0:
+    resolution: {integrity: sha512-77nkyffHh7jgfi1YA/N9RI+kWxYpgKk6GRML1lyersvaqbJt4hkvWwk1rWib9Rb5Lr5mT+Ha45lu7nM79sJCZA==}
+    peerDependencies:
+      firebase: ^9.0.0
+      rxjs: ^6.0.0 || ^7.0.0
+    dependencies:
+      firebase: 9.15.0
+      rxjs: 7.8.0
+      tslib: 2.4.1
+    dev: true
+
+  /rxjs/7.8.0:
+    resolution: {integrity: sha512-F2+gxDshqmIub1KdvZkaEfGDwLNpPvk9Fs6LD/MyQxNgMds/WH9OdDDXOmxUZpME+iSK3rQCctkL0DYyytUqMg==}
+    dependencies:
+      tslib: 2.4.1
+    dev: true
+
   /sade/1.8.1:
     resolution: {integrity: sha512-xal3CZX1Xlo/k4ApwCFrHVACi9fBqJ7V+mwhBsuf/1IOKbBy098Fex+Wa/5QMubw09pSZ/u8EY8PWgevJsXp1A==}
     engines: {node: '>=6'}
@@ -3294,6 +3320,15 @@ packages:
     engines: {node: ^12.20 || ^14.13.1 || >= 16}
     peerDependencies:
       svelte: '>=3.19.0'
+    dependencies:
+      svelte: 3.55.0
+    dev: true
+
+  /svelte-local-storage-store/0.3.2_svelte@3.55.0:
+    resolution: {integrity: sha512-wIjXgulHNYecHAWv68ZpQOaxjFJS/LaGAo8yKLal/mMrWTkbpGQMo2f2hF5X9WJGNqsOp5pJAjsmnuNoottctQ==}
+    engines: {node: '>=0.14'}
+    peerDependencies:
+      svelte: ^3.48.0
     dependencies:
       svelte: 3.55.0
     dev: true
