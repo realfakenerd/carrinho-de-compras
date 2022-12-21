@@ -19,13 +19,15 @@
 		if ($carrinho.length === 0) return 0;
 
 		const lista = $carrinho.map((val) => {
-			let sum = 0;
-			let i = 0;
-			for (i; i < val.quantidade; i++) {
-				sum += parseFloat(val.preco);
-			}
+			// let sum = 0;
+			// let i = 0;
+			// for (i; i < val.quantidade; i++) {
+			// 	sum += parseFloat(val.preco);
+			// }
 
-			return parseFloat(sum.toFixed(2));
+			// return parseFloat(sum.toFixed(2));
+
+			return parseFloat(val.preco) * val.quantidade;
 		});
 
 		if (lista.length === 1) return lista[0];
