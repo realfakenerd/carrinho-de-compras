@@ -1,12 +1,30 @@
-import {writable} from 'svelte-local-storage-store';
+import { writable } from 'svelte-local-storage-store';
 
-interface Carrinho {
-    nome: string;
-    preco: string;
+export interface Carrinho {
+	nome: string;
+	preco: string;
+	quantidade: number;
 }
 
 const carrinho = writable<Carrinho[]>('carrinho', [], {
-    storage: 'local'
-})
+	storage: 'local'
+});
+
+export function porNoCarrinho({ nome, preco, quantidade = 1 }: Carrinho) {
+	carrinho.update((val) => {
+		let i = 0;
+		for (i; i < val.length; i++) {
+			if (val[i].nome === nome) {
+				val[i].quantidade = quantidade;
+				return val;
+			}
+		}
+
+		val = [...val, { nome, preco, quantidade }];
+		return val;
+	});
+
+	return null;
+}
 
 export default carrinho;

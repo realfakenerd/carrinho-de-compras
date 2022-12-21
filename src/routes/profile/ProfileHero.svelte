@@ -6,7 +6,7 @@
 
 <div class="hero">
 	<div class="hero-content">
-		<div class="card bg-base-200 w-full">
+		<div class="card w-full bg-base-200">
 			<figure class="avatar pt-10">
 				<div class="w-24 rounded-full">
 					<img src={$user?.photoURL} alt="user profile" />
@@ -15,7 +15,6 @@
 			<div class="card-body ">
 				<h1 class="card-title">{$user?.displayName}</h1>
 				<p>{$user?.email}</p>
-				
 			</div>
 		</div>
 	</div>

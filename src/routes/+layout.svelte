@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from '$lib/components/Icon.svelte';
 	import { fly } from 'svelte/transition';
-
+	import "@fontsource/roboto"
 	import '../app.scss';
 	import type { LayoutData } from './$types';
 	export let data: LayoutData;
@@ -42,11 +42,9 @@
 	];
 </script>
 
-
-
 {#key data.currentRoute}
 	<main
-		class=" px-5 pt-10 pb-40"
+		class=" px-5 pt-10 pb-32"
 		in:fly={{ y: -5, duration: 500, delay: 200 }}
 		out:fly={{ y: 5, duration: 200 }}
 	>
@@ -61,7 +59,7 @@
 				<div
 					style="background-color:{data.currentRoute === route.href ? 'hsl(220, 18%, 20%)' : ''} "
 				>
-					<span class="text-white">
+					<span>
 						<Icon d={data.currentRoute === route.href ? route.d.filled : route.d.outlined} />
 					</span>
 				</div>

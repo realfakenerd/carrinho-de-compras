@@ -7,6 +7,9 @@ const config = {
 	define: {
 		'process.env': {}
 	},
+	ssr: {
+		external: ['rxfire/firestore', 'firebase']
+	},
 	build: {
 		reportCompressedSize: false,
 		target: 'esnext',
@@ -27,5 +30,3 @@ const config = {
 } satisfies UserConfig;
 
 export default config;
-
-
