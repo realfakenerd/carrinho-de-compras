@@ -1,16 +1,18 @@
 <script lang="ts">
 	import { mercadoRef } from '$lib/db';
-	import { porNoCarrinho } from '$lib/stores/carrinho.store';
-	import mercado from '$lib/stores/mercado.store';
 	import user from '$lib/stores/user.store';
 	import { addDoc } from 'firebase/firestore';
 	import { backOut } from 'svelte/easing';
 	import { fly } from 'svelte/transition';
+	import type { PageData } from './$types';
 	import ItemCard from './ItemCard.svelte';
 
 	let nome = '';
 	let preco = '';
 	let img = '';
+
+	export let data: PageData;
+	const { mercado } = data;
 
 	function addItem() {
 		addDoc(mercadoRef, {
@@ -56,7 +58,7 @@
 							<input
 								bind:value={preco}
 								id="preco"
-								type="text"
+								type="number"
 								pattern={String.raw`\d{1,7},\d{1,2}`}
 								class="input-bordered input-primary input w-full focus:valid:input-success focus:invalid:input-error"
 							/>
