@@ -15,7 +15,7 @@ export function porNoCarrinho({ nome, preco, quantidade = 1 }: Carrinho) {
 		let i = 0;
 		for (i; i < val.length; i++) {
 			if (val[i].nome === nome) {
-				val[i].quantidade = quantidade;
+				val[i].quantidade = quantidade === null ? 0 : quantidade;
 				return val;
 			}
 		}

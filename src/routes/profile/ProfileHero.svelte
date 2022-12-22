@@ -1,7 +1,11 @@
 <script lang="ts">
+	import { auth } from '$lib/firebase';
 	import user from '$lib/stores/user.store';
+	import { signOut } from 'firebase/auth';
 
-	console.log($user);
+	async function logout() {
+		await signOut(auth);
+	}
 </script>
 
 <div class="hero">
@@ -14,7 +18,14 @@
 			</figure>
 			<div class="card-body ">
 				<h1 class="card-title">{$user?.displayName}</h1>
-				<p>{$user?.email}</p>
+				<section>
+					<p>email: {$user?.email}</p>
+					<p>telefone: {$user?.phoneNumber ? $user.phoneNumber : ''}</p>
+				</section>
+
+				<div class="card-actions">
+					<button on:click={logout} class="btn-error btn-block btn"> logout </button>
+				</div>
 			</div>
 		</div>
 	</div>

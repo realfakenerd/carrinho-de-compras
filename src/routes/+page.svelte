@@ -26,12 +26,12 @@
 	}
 </script>
 
-<section class="flex flex-col items-center justify-center pb-10">
+<section class="grid grid-cols-1 place-items-center pb-5">
 	<h1 class="text-2xl">Carrinho da nuvem</h1>
 </section>
 
 <section class="py-5">
-	{#if $user}
+	{#if $user && $user.emailVerified}
 		<div class="card bg-base-300">
 			<div class="card-body">
 				<div class="card-title">Adicione um novo item</div>
@@ -76,7 +76,7 @@
 						</section>
 					</fieldset>
 					<div>
-						<button on:click={addItem} class="btn btn-primary btn-block">ADD</button>
+						<button on:click={addItem}  class="btn-primary btn-block btn">ADD</button>
 					</div>
 				</form>
 			</div>
@@ -84,7 +84,7 @@
 	{/if}
 </section>
 
-<section class="flex flex-col gap-5 ">
+<section class="grid grid-cols-1 gap-5 md:grid-cols-3">
 	{#each $mercado as item, i (i)}
 		<div in:fly={{ y: 50, delay: 200 * i, easing: backOut }}>
 			<ItemCard nome={item.nome} preco={item.preco} img={item.img} />

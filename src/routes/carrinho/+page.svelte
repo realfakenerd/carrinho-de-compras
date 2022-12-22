@@ -1,8 +1,8 @@
 <script lang="ts">
-	import carrinho, { type Carrinho } from '$lib/stores/carrinho.store';
-	import { onMount } from 'svelte';
+	import Icon from '$lib/components/Icon.svelte';
+	import carrinho from '$lib/stores/carrinho.store';
 
-	function tirarDoCarrinho(nome: string, preco: string) {
+	function tirarDoCarrinho(nome: string) {
 		carrinho.update((val) => {
 			for (let i = 0; i < val.length; i++) {
 				if (val[i].nome == nome) {
@@ -15,18 +15,19 @@
 		return null;
 	}
 
+	$: totalDeItens = (() => {
+		if($carrinho.length === 0) return 0;
+		if($carrinho.length === 1) return $carrinho[0].quantidade;
+		return $carrinho.reduce((a, b) => (a.quantidade + b.quantidade) as any);
+	})();
+
+	console.log(totalDeItens);
+	
+
 	$: total = (() => {
 		if ($carrinho.length === 0) return 0;
 
 		const lista = $carrinho.map((val) => {
-			// let sum = 0;
-			// let i = 0;
-			// for (i; i < val.quantidade; i++) {
-			// 	sum += parseFloat(val.preco);
-			// }
-
-			// return parseFloat(sum.toFixed(2));
-
 			return parseFloat(val.preco) * val.quantidade;
 		});
 
@@ -38,24 +39,24 @@
 <section class="flex flex-col gap-5">
 	<div class="card bg-base-200">
 		<div class="card-body">
-			<p>Itens no carrinho {$carrinho.length}</p>
+			<p>Itens no carrinho {totalDeItens}</p>
 			<p>Vai pagar quanto? R${total.toFixed(2)}</p>
 		</div>
 	</div>
 
 	{#each $carrinho as c}
-		<div class="card card-compact bg-base-200">
+		<div class="card-compact card bg-base-200">
 			<div class="card-body">
 				<h1 class="card-title items-baseline">
 					{c.nome}
-					<span class="badge badge-primary">{c.quantidade}</span>
+					<span class="badge-primary badge">{c.quantidade}</span>
 				</h1>
 				<p>R${c.preco}</p>
 
-
-				<div class="card-actions">
-					<button on:click={tirarDoCarrinho(c.nome, c.preco)} class="btn-error btn-sm btn">-</button
-					>
+				<div class="card-actions justify-end">
+					<button on:click={tirarDoCarrinho(c.nome)} class="btn-error btn-sm btn">
+						<Icon d="M19 13H5v-2h14v2z" />
+					</button>
 				</div>
 			</div>
 		</div>

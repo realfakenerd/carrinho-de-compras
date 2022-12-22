@@ -1,8 +1,12 @@
 import {
-    onSnapshot,
-    type DocumentData,
-    type DocumentSnapshot,
-    type Query
+	DocumentReference,
+	DocumentSnapshot,
+	onSnapshot,
+	QueryDocumentSnapshot,
+	QuerySnapshot,
+	type DocumentData,
+	type Query,
+	type SnapshotListenOptions
 } from 'firebase/firestore';
 
 import { Observable } from 'rxjs';
@@ -10,11 +14,8 @@ import { map } from 'rxjs/operators';
 
 function snapToData<T = DocumentData>(
 	snapshot: DocumentSnapshot<T>,
-	options: { idField?: string }
-): T | undefined {
-	if (options === void 0) {
-		options = {};
-	}
+	options: { idField?: string } = {}
+): T {
 	// TODO clean up the typings
 	const data = snapshot.data();
 	// match the behavior of the JS SDK when the snapshot doesn't exist
@@ -44,19 +45,19 @@ function snapToData<T = DocumentData>(
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const DEFAULT_OPTIONS = { includeMetadataChanges: false };
-function fromRef(ref, options) {
-	if (options === void 0) {
-		options = DEFAULT_OPTIONS;
-	}
+const DEFAULT_OPTIONS: SnapshotListenOptions = { includeMetadataChanges: false };
+function fromRef<T>(
+	ref: DocumentReference<T> | Query<T>,
+	options = DEFAULT_OPTIONS
+): Observable<DocumentSnapshot<T> | QuerySnapshot<T>> {
 	/* eslint-enable @typescript-eslint/no-explicit-any */
-	return new Observable(function (subscriber) {
+	return new Observable((subscriber) => {
 		const unsubscribe = onSnapshot(ref, options, {
 			next: subscriber.next.bind(subscriber),
 			error: subscriber.error.bind(subscriber),
 			complete: subscriber.complete.bind(subscriber)
 		});
-		return { unsubscribe: unsubscribe };
+		return { unsubscribe };
 	});
 }
 
@@ -64,10 +65,10 @@ function fromRef(ref, options) {
  * Return a stream of document snapshots on a query. These results are in sort order.
  * @param query
  */
-function collection(query) {
+function collection<T = DocumentData>(query: Query<T>): Observable<QueryDocumentSnapshot<T>[]> {
 	return fromRef(query, { includeMetadataChanges: true }).pipe(
-		map(function (changes) {
-			return changes.docs;
+		map((changes) => {
+			return (changes as QuerySnapshot<T>).docs;
 		})
 	);
 }
@@ -78,14 +79,11 @@ function collection(query) {
  */
 export function collectionData<T = DocumentData>(
 	query: Query<T>,
-	options?: { idField?: string }
+	options: { idField?: string } = {}
 ): Observable<T[]> {
-	if (options === void 0) {
-		options = {};
-	}
 	return collection(query).pipe(
-		map(function (arr) {
-			return arr.map(function (snap) {
+		map((arr) => {
+			return arr.map((snap) => {
 				return snapToData(snap, options);
 			});
 		})

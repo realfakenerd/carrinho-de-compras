@@ -1,0 +1,39 @@
+{
+	"$schema": "https://json.schemastore.org/web-manifest-combined.json",
+	"name": "Carrinho de Compras",
+	"short_name": "Carrinho de Compras",
+	"start_url": "/?source=pwa",
+    "display": "standalone",
+	"icons": [
+		{
+			"src": "icons/icon-512-512.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		},
+		{
+			"src": "icons/icon-192-192.png",
+			"type": "image/png",
+			"sizes": "192x192"
+		},
+		{
+			"src": "icons/icon-144-144.png",
+			"type": "image/png",
+			"sizes": "144x144"
+		},
+		{
+			"src": "icons/icon-96-96.png",
+			"type": "image/png",
+			"sizes": "96x96"
+		},
+		{
+			"src": "icons/icon-72-72.png",
+			"type": "image/png",
+			"sizes": "72x72"
+		},
+		{
+			"src": "icons/icon-48-48.png",
+			"type": "image/png",
+			"sizes": "48x48"
+		}
+	]
+}
