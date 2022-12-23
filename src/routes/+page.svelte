@@ -76,7 +76,7 @@
 						</section>
 					</fieldset>
 					<div>
-						<button on:click={addItem}  class="btn-primary btn-block btn">ADD</button>
+						<button on:click={addItem} class="btn-primary btn-block btn">ADD</button>
 					</div>
 				</form>
 			</div>
@@ -84,7 +84,7 @@
 	{/if}
 </section>
 
-<section class="grid grid-cols-1 gap-5 md:grid-cols-3">
+<section class="grid grid-cols-1 gap-3 md:grid-cols-3">
 	{#each $mercado as item, i (i)}
 		<div in:fly={{ y: 50, delay: 200 * i, easing: backOut }}>
 			<ItemCard nome={item.nome} preco={item.preco} img={item.img} />

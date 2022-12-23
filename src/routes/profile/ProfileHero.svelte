@@ -24,7 +24,7 @@
 				</section>
 
 				<div class="card-actions">
-					<button on:click={logout} class="btn-error btn-block btn"> logout </button>
+					<button on:click={logout} class="btn btn-error btn-block"> logout </button>
 				</div>
 			</div>
 		</div>

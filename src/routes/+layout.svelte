@@ -60,9 +60,7 @@
 					style="background-color:{data.currentRoute === route.href ? 'hsl(220, 18%, 20%)' : ''} "
 				>
 					<span class="fill-base-content">
-						<Icon
-							d={data.currentRoute === route.href ? route.d.filled : route.d.outlined}
-						/>
+						<Icon d={data.currentRoute === route.href ? route.d.filled : route.d.outlined} />
 					</span>
 				</div>
 				<h3>{route.name}</h3>

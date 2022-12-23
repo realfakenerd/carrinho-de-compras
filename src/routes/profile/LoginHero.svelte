@@ -30,7 +30,7 @@
 					<h1>Faça seu login com o google :)</h1>
 				</div>
 
-				<button on:click={login} class="btn-primary btn gap-x-3">
+				<button on:click={login} class="btn btn-primary gap-x-3">
 					<span>login</span>
 					<svg
 						class="rounded-full bg-white p-1"

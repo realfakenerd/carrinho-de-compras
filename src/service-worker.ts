@@ -8,7 +8,6 @@ setCacheNameDetails({
 	googleFontsCache: 'ga'
 });
 
-
 clientsClaim();
 
 pageCache({

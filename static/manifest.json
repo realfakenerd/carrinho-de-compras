@@ -3,7 +3,7 @@
 	"name": "Carrinho de Compras",
 	"short_name": "Carrinho de Compras",
 	"start_url": "/?source=pwa",
-    "display": "standalone",
+	"display": "standalone",
 	"icons": [
 		{
 			"src": "icons/icon-512-512.png",

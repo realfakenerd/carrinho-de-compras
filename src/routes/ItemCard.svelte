@@ -12,9 +12,9 @@
 	// card-side h-40 w-24 w-60
 </script>
 
-<section class="card-compact card bg-base-300 card-side">
+<section class="card card-side card-compact bg-base-300">
 	<figure class="w-32">
-		<img class="w-60 max-h-[13rem]" src={img} alt="produto" />
+		<img class="max-h-[13rem] w-60" src={img} alt="produto" />
 	</figure>
 	<div class="card-body">
 		<div class="card-title capitalize">{nome}</div>
@@ -28,7 +28,7 @@
 						preco: preco,
 						quantidade: 1
 					})}
-					class="btn-primary btn-sm btn fill-white"
+					class="btn btn-primary btn-sm fill-white"
 				>
 					<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
 				</button>
@@ -38,7 +38,7 @@
 						preco: preco,
 						quantidade: 5
 					})}
-					class="btn-secondary btn-sm btn fill-white"
+					class="btn btn-secondary btn-sm fill-white"
 				>
 					<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
 					5
@@ -49,7 +49,7 @@
 						preco: preco,
 						quantidade: 10
 					})}
-					class="btn-accent btn-sm btn fill-white"
+					class="btn btn-accent btn-sm fill-white"
 				>
 					<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
 					10
@@ -74,7 +74,7 @@
 							preco: preco,
 							quantidade: customQuantidade
 						})}
-						class="btn-square btn-sm btn fill-base-content"
+						class="btn btn-square btn-sm fill-base-content"
 					>
 						<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
 					</button>
