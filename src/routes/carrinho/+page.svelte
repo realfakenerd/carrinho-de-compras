@@ -11,18 +11,14 @@
 			}
 			return val;
 		});
-
 		return null;
 	}
 
 	$: totalDeItens = (() => {
-		if($carrinho.length === 0) return 0;
-		if($carrinho.length === 1) return $carrinho[0].quantidade;
-		return $carrinho.reduce((a, b) => (a.quantidade + b.quantidade) as any);
+		if ($carrinho.length === 0) return 0;
+		if ($carrinho.length === 1) return $carrinho[0].quantidade;
+		return $carrinho.reduce((a, b) => (a.quantidade + b.quantidade) as any) as unknown as number;
 	})();
-
-	console.log(totalDeItens);
-	
 
 	$: total = (() => {
 		if ($carrinho.length === 0) return 0;
@@ -45,7 +41,7 @@
 	</div>
 
 	{#each $carrinho as c}
-		<div class="card-compact card bg-base-200">
+		<div class="card card-compact bg-base-200">
 			<div class="card-body">
 				<h1 class="card-title items-baseline">
 					{c.nome}
