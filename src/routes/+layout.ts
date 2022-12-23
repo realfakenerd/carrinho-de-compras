@@ -1,8 +1,6 @@
-import type { LayoutLoad } from './$types';
-import { mercadoRef } from '$lib/db';
 import type { DocumentData } from 'firebase/firestore';
-import { collectionData } from '$lib/fixedRXFire';
-import { startWith } from 'rxjs';
+import type { LayoutLoad } from './$types';
+import mercado from '$lib/stores/mercado.store'
 interface Mercado extends DocumentData {
 	id: string;
 	criado_em: string;
@@ -11,7 +9,6 @@ interface Mercado extends DocumentData {
 }
 
 export const load = (async ({ url }) => {
-	const mercado = collectionData(mercadoRef).pipe(startWith([]));
 	return {
 		currentRoute: url.pathname,
 		mercado
