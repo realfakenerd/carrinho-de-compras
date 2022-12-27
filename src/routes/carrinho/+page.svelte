@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from '$lib/components/Icon.svelte';
 	import carrinho from '$lib/stores/carrinho.store';
-
+	import { Badge, Button, Card, Heading, Listgroup, ListgroupItem, P } from 'flowbite-svelte';
 	function tirarDoCarrinho(nome: string) {
 		carrinho.update((val) => {
 			for (let i = 0; i < val.length; i++) {
@@ -33,35 +33,35 @@
 </script>
 
 <section class="flex flex-col gap-5">
-	<div class="card bg-base-200">
-		<div class="card-body">
-			<p>Itens no carrinho {totalDeItens}</p>
-			<p>Vai pagar quanto? R${total.toFixed(2)}</p>
-		</div>
-	</div>
+	<Card class="w-full">
+		<P>Itens no carrinho {totalDeItens}</P>
+		<P>vai pagar quanto? R${total.toFixed(2)}</P>
+	</Card>
 
-	{#each $carrinho as c}
-		<div class="card card-compact bg-base-200">
-			<div class="card-body">
-				<h1 class="card-title items-baseline">
+	<Listgroup>
+		{#each $carrinho as c}
+			<ListgroupItem>
+				<Heading
+					tag="h1"
+					class="flex flex-row items-center gap-x-5 font-semibold capitalize"
+					customSize="text-lg"
+				>
 					{c.nome}
-					<span class="badge-primary badge">{c.quantidade}</span>
-				</h1>
-				<p>R${c.preco}</p>
+					<Badge>
+						{c.quantidade}
+					</Badge>
+				</Heading>
+				<P>R${c.preco}</P>
 
-				<div class="card-actions justify-end">
-					<button on:click={tirarDoCarrinho(c.nome)} class="btn-error btn-sm btn">
-						<Icon d="M19 13H5v-2h14v2z" />
-					</button>
-				</div>
-			</div>
-		</div>
-	{:else}
-		<div class="card bg-base-200">
-			<div class="card-body">
-				<h1 class="card-title">Oops!</h1>
-				<p>não há items dentro do carrinho</p>
-			</div>
-		</div>
-	{/each}
+				<Button color="red" size="xs" on:click={tirarDoCarrinho(c.nome)}>
+					<Icon d="M19 13H5v-2h14v2z" />
+				</Button>
+			</ListgroupItem>
+		{:else}
+			<ListgroupItem>
+				<Heading tag="h1" class="font-semibold" customSize="text-lg">Oops!</Heading>
+				<P>não há items dentro do carrinho</P>
+			</ListgroupItem>
+		{/each}
+	</Listgroup>
 </section>

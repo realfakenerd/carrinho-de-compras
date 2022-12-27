@@ -1,14 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/shopcart_icon.png" />
-		<meta name="viewport" content="width=device-width,viewport-fit=cover" />
-		<link rel="manifest" href="%sveltekit.assets%/manifest.json" />
-		<title>Carrinho de Compras</title>
-		%sveltekit.head%
-	</head>
-	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
-	</body>
+
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" href="%sveltekit.assets%/shopcart_icon.png" />
+	<meta name="viewport" content="width=device-width,viewport-fit=cover" />
+	<link rel="manifest" href="%sveltekit.assets%/manifest.json" />
+	<title>Carrinho de Compras</title>
+	%sveltekit.head%
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-S8X0QZYVM9"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'G-S8X0QZYVM9');
+	</script>
+</head>
+
+<body data-sveltekit-preload-data="hover" class="bg-gray-50 dark:bg-gray-800 transition-colors duration-500 ease-in-out">
+	<div style="display: contents">%sveltekit.body%</div>
+</body>
+
 </html>

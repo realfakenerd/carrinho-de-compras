@@ -2,8 +2,16 @@
 	import { mercadoRef } from '$lib/db';
 	import user from '$lib/stores/user.store';
 	import { addDoc } from 'firebase/firestore';
+	import {
+		Button,
+		Heading,
+		Input,
+		Label,
+		Listgroup, ListPlaceholder,
+		Modal
+	} from 'flowbite-svelte';
 	import { backOut } from 'svelte/easing';
-	import { fly } from 'svelte/transition';
+	import { slide } from 'svelte/transition';
 	import type { PageData } from './$types';
 	import ItemCard from './ItemCard.svelte';
 
@@ -24,76 +32,44 @@
 
 		img = nome = preco = '';
 	}
+
+	let formModal = false;
 </script>
 
-<section class="grid grid-cols-1 place-items-center pb-5">
-	<h1 class="text-2xl">Carrinho da nuvem</h1>
+<section class="flex flex-row items-center justify-between pb-5">
+	<Heading tag="h1" customSize="text-2xl">Carrinho da nuvem</Heading>
 </section>
 
 <section class="py-5">
 	{#if $user && $user.emailVerified}
-		<div class="card bg-base-300">
-			<div class="card-body">
-				<div class="card-title">Adicione um novo item</div>
-
-				<form class="space-y-5">
-					<fieldset class="space-y-3">
-						<section>
-							<label for="nome" class="label">
-								<span class="label-text">Nome do produto{nome ? ':' : ''} {nome}</span>
-							</label>
-							<input
-								bind:value={nome}
-								id="nome"
-								type="text"
-								class="input-bordered input-primary input w-full focus:valid:input-success focus:invalid:input-error"
-							/>
-						</section>
-						<section>
-							<label for="preco" class="label">
-								<span class="label-text"
-									>Preço do produto{preco ? ':' : ''} {preco ? `R$${preco}` : ''}</span
-								>
-							</label>
-							<input
-								bind:value={preco}
-								id="preco"
-								type="number"
-								pattern={String.raw`\d{1,7},\d{1,2}`}
-								class="input-bordered input-primary input w-full focus:valid:input-success focus:invalid:input-error"
-							/>
-						</section>
-						<section>
-							<label for="img" class="label">
-								<span class="label-text">Escolha uma imagem também</span>
-							</label>
-							<input
-								bind:value={img}
-								id="img"
-								type="text"
-								class="input-bordered input-primary input w-full focus:valid:input-success focus:invalid:input-error"
-							/>
-						</section>
-					</fieldset>
-					<div>
-						<button on:click={addItem} class="btn-primary btn-block btn">ADD</button>
-					</div>
-				</form>
-			</div>
-		</div>
+		<Button class="w-full" on:click={() => (formModal = true)}>Adicione um novo item</Button>
+		<Modal bind:open={formModal} autoclose>
+			<form class="flex flex-col space-y-6">
+				<Heading tag="h4">Adicione um novo item ao mercado</Heading>
+				<Label class="space-y-2">
+					<span>Nome do produto{nome ? ':' : ''} {nome}</span>
+					<Input type="email" bind:value={nome} required />
+				</Label>
+				<Label class="space-y-2">
+					<span>Preço do produto{preco ? ':' : ''} {preco ? `R$${preco}` : ''}</span>
+					<Input bind:value={preco} type="number" required />
+				</Label>
+				<Label class="space-y-2">
+					<span>Escolha uma imagem também</span>
+					<Input bind:value={img} type="text" />
+				</Label>
+				<Button on:click={addItem} class="w-full1">ADD</Button>
+			</form>
+		</Modal>
 	{/if}
 </section>
 
-<section class="grid grid-cols-1 gap-3 md:grid-cols-3">
+<Listgroup>
 	{#each $mercado as item, i (i)}
-		<div in:fly={{ y: 50, delay: 200 * i, easing: backOut }}>
-			<ItemCard nome={item.nome} preco={item.preco} img={item.img} />
+		<div in:slide={{duration: 500, delay: i * 200, easing: backOut}}>
+			<ItemCard img={item.img} nome={item.nome} preco={item.preco} />
 		</div>
 	{:else}
-		<section class="card bg-base-300">
-			<div class="card-body">
-				<div class="card-title">carregando items</div>
-			</div>
-		</section>
+		<ListPlaceholder />
 	{/each}
-</section>
+</Listgroup>

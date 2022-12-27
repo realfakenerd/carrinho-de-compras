@@ -1,11 +1,12 @@
 <script lang="ts">
 	import Icon from '$lib/components/Icon.svelte';
-	import { fly } from 'svelte/transition';
 	import '@fontsource/roboto';
+	import { DarkMode, Heading, Navbar, NavBrand, NavHamburger, NavLi, NavUl } from 'flowbite-svelte';
+	import { fly } from 'svelte/transition';
 	import '../app.scss';
 	import type { LayoutData } from './$types';
-	export let data: LayoutData;
 
+	export let data: LayoutData;
 	const routes = [
 		{
 			href: '/',
@@ -42,57 +43,42 @@
 	];
 </script>
 
+<header class="fixed w-full p-5 z-50">
+	<Navbar
+		navClass="px-5 py-3 border rounded-xl"
+		color="dark"
+		let:toggle
+		let:hidden
+	>
+		<NavBrand href="/">
+			<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
+				Carrinho de compras
+			</span>
+		</NavBrand>
+		<DarkMode />
+		<NavHamburger on:click={toggle} />
+		<NavUl {hidden}>
+			{#each routes as route, index (index)}
+				<NavLi
+					active={data.currentRoute === route.href}
+					class="flex flex-row gap-5"
+					activeClass="font-semibold"
+					href={route.href}
+				>
+					<Icon d={data.currentRoute === route.href ? route.d.filled : route.d.outlined} />
+					<Heading tag="h2" customSize="text-md" class="capitalize">{route.name}</Heading>
+				</NavLi>
+			{/each}
+		</NavUl>
+	</Navbar>
+</header>
+
 {#key data.currentRoute}
 	<main
-		class=" px-5 pt-10 pb-32"
+		class="px-5 pt-28 pb-32"
 		in:fly={{ y: -5, duration: 500, delay: 200 }}
 		out:fly={{ y: 5, duration: 200 }}
 	>
 		<slot />
 	</main>
 {/key}
-
-<footer>
-	<nav class="custom-navbar">
-		{#each routes as route, index (index)}
-			<a href={route.href}>
-				<div
-					style="background-color:{data.currentRoute === route.href ? 'hsl(220, 18%, 20%)' : ''} "
-				>
-					<span class="fill-base-content">
-						<Icon d={data.currentRoute === route.href ? route.d.filled : route.d.outlined} />
-					</span>
-				</div>
-				<h3>{route.name}</h3>
-			</a>
-		{/each}
-	</nav>
-</footer>
-
-<style lang="scss">
-	footer {
-		@apply fixed bottom-0 z-20 w-full;
-	}
-
-	.custom-navbar {
-		@apply flex h-20 flex-none flex-grow-0 flex-row items-start gap-2 bg-base-200 py-0 px-2;
-
-		a {
-			@apply order-[0] flex h-20 flex-none flex-grow flex-col items-center justify-center gap-1 px-0 pt-3 pb-4;
-
-			div {
-				@apply flex h-8 w-16 flex-col items-center justify-center rounded-2xl p-0 transition-all duration-300;
-				&:hover {
-					@apply bg-base-100;
-				}
-				span {
-					@apply flex h-8 w-16 flex-col items-center justify-center rounded-2xl p-0;
-				}
-			}
-
-			h3 {
-				@apply order-1 h-4 flex-none flex-grow-0 self-stretch text-center text-xs font-medium tracking-wide;
-			}
-		}
-	}
-</style>
