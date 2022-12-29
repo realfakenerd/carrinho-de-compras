@@ -4,10 +4,11 @@ import mercado from '$lib/stores/mercado.store';
 import type { Observable } from 'rxjs';
 
 interface Mercado extends DocumentData {
-	id: string;
+	id: number;
 	criado_em: string;
 	nome: string;
 	preco: string;
+	img: string;
 }
 
 export const load = (async ({ url }) => {

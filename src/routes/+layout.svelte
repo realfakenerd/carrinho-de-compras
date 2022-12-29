@@ -43,13 +43,8 @@
 	];
 </script>
 
-<header class="fixed w-full p-5 z-50">
-	<Navbar
-		navClass="px-5 py-3 border rounded-xl"
-		color="dark"
-		let:toggle
-		let:hidden
-	>
+<header class="fixed z-50 w-full p-5">
+	<Navbar navClass="px-5 py-3 border rounded-xl" color="dark" let:toggle let:hidden>
 		<NavBrand href="/">
 			<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
 				Carrinho de compras

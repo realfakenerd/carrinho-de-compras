@@ -1,13 +1,14 @@
 <script lang="ts">
-	import { mercadoRef } from '$lib/db';
+	import db from '$lib/db';
 	import user from '$lib/stores/user.store';
-	import { addDoc } from 'firebase/firestore';
+	import { doc, setDoc } from 'firebase/firestore';
 	import {
 		Button,
 		Heading,
 		Input,
 		Label,
-		Listgroup, ListPlaceholder,
+		Listgroup,
+		ListPlaceholder,
 		Modal
 	} from 'flowbite-svelte';
 	import { backOut } from 'svelte/easing';
@@ -22,14 +23,14 @@
 	export let data: PageData;
 	const { mercado } = data;
 
-	function addItem() {
-		addDoc(mercadoRef, {
+	async function addItem() {
+		const id = Date.now();
+		setDoc(doc(db, 'mercado', String(id)), {
 			nome,
 			preco,
 			img,
-			criado_em: Date.now()
+			id
 		});
-
 		img = nome = preco = '';
 	}
 
@@ -65,9 +66,9 @@
 </section>
 
 <Listgroup>
-	{#each $mercado as item, i (i)}
-		<div in:slide={{duration: 500, delay: i * 200, easing: backOut}}>
-			<ItemCard img={item.img} nome={item.nome} preco={item.preco} />
+	{#each $mercado as item, i (item.id)}
+		<div in:slide={{ duration: 500, delay: i * 200, easing: backOut }}>
+			<ItemCard {...item} />
 		</div>
 	{:else}
 		<ListPlaceholder />

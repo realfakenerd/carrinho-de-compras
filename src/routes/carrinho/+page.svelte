@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from '$lib/components/Icon.svelte';
 	import carrinho from '$lib/stores/carrinho.store';
-	import { Badge, Button, Card, Heading, Listgroup, ListgroupItem, P } from 'flowbite-svelte';
+	import { Badge, Button, Card, Heading, Hr, Listgroup, ListgroupItem, P } from 'flowbite-svelte';
 	function tirarDoCarrinho(nome: string) {
 		carrinho.update((val) => {
 			for (let i = 0; i < val.length; i++) {
@@ -52,7 +52,7 @@
 					</Badge>
 				</Heading>
 				<P>R${c.preco}</P>
-
+				<Hr height="h-1" />
 				<Button color="red" size="xs" on:click={tirarDoCarrinho(c.nome)}>
 					<Icon d="M19 13H5v-2h14v2z" />
 				</Button>

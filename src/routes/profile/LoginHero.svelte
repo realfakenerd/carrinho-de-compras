@@ -2,7 +2,7 @@
 	import { auth } from '$lib/firebase';
 	import type { FirebaseError } from 'firebase/app';
 	import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-	import { Card, Button, P, Heading} from 'flowbite-svelte';
+	import { Card, Button, P, Heading } from 'flowbite-svelte';
 
 	async function login() {
 		try {

@@ -1,9 +1,8 @@
 <script lang="ts">
-	
-import { auth } from '$lib/firebase';
+	import { auth } from '$lib/firebase';
 	import user from '$lib/stores/user.store';
 	import { signOut } from 'firebase/auth';
-	import { Avatar, Card,Heading, Button } from 'flowbite-svelte';
+	import { Avatar, Card, Heading, Button } from 'flowbite-svelte';
 
 	async function logout() {
 		await signOut(auth);
@@ -12,11 +11,10 @@ import { auth } from '$lib/firebase';
 
 <div class="hero">
 	<div class="hero-content">
-
 		<Card>
-			<div class="flex flex-col items-center pb-4 space-y-3">
+			<div class="flex flex-col items-center space-y-3 pb-4">
 				<Avatar size="lg" img={$user?.photoURL} />
-				<Heading tag='h1' customSize="text-xl">{$user?.displayName}</Heading>
+				<Heading tag="h1" customSize="text-xl">{$user?.displayName}</Heading>
 
 				<Button on:click={logout} class="w-full">logout</Button>
 			</div>
@@ -52,7 +50,7 @@ import { auth } from '$lib/firebase';
 			@apply col-start-1 row-start-1 h-full w-full;
 		}
 		&-content {
-			@apply z-0 flex items-center justify-center w-full;
+			@apply z-0 flex w-full items-center justify-center;
 		}
 	}
 </style>
