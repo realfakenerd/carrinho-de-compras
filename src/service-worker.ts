@@ -15,13 +15,7 @@ pageCache({
 	cacheName: cacheNames.prefix + 'pages' + cacheNames.suffix
 });
 
-pageCache({
-	cacheName: cacheNames.prefix + 'pages' + cacheNames.suffix
-});
-
-googleFontsCache({
-	cachePrefix: cacheNames.googleAnalytics
-});
+googleFontsCache();
 
 staticResourceCache({
 	cacheName: cacheNames.prefix + 'assets' + cacheNames.suffix,

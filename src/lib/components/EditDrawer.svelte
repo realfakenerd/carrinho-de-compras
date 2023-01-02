@@ -1,8 +1,8 @@
 <script lang="ts">
-	import db from '$lib/db';
+	import { db } from '$lib/firebase';
 	import { doc, updateDoc } from 'firebase/firestore';
-	import { Button, Drawer, Label, Input } from 'flowbite-svelte';
-	import { cubicInOut, sineIn, sineInOut } from 'svelte/easing';
+	import { Button, Drawer, Input, Label, Heading } from 'flowbite-svelte';
+	import { cubicInOut } from 'svelte/easing';
 	import Icon from './Icon.svelte';
 	let hidden = true;
 	let nome: string;
@@ -28,6 +28,7 @@
 </Button>
 <Drawer placement="bottom" width="w-full" size="xs" bind:hidden transitionType="slide" transitionParams={{duration: 300, easing: cubicInOut}}>
 	<form class="flex flex-col space-y-6">
+		<Heading tag="h4">Edite o item</Heading>
 		<Label class="space-y-2">
 			<span>Nome do produto{nome ? ':' : ''} {nome}</span>
 			<Input type="text" bind:value={nome} required />
@@ -40,6 +41,6 @@
 			<span>Img do produto</span>
 			<Input type="text" bind:value={img} required />
 		</Label>
-		<Button on:click={updateItem} class="w-full1">Edite o item</Button>
+		<Button on:click={updateItem} class="w-full1">salvar edição</Button>
 	</form>
 </Drawer>

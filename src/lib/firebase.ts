@@ -1,7 +1,16 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp, type FirebaseOptions } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
+import { collection, getFirestore } from 'firebase/firestore';
+import { getAnalytics } from 'firebase/analytics';
+import { browser } from '$app/environment';
 
+export interface Mercado {
+	id: string;
+	criado_em: string;
+	nome: string;
+	preco: number;
+}
 const firebaseConfig = {
 	apiKey: 'AIzaSyCneq-EFcWmsnH9kh-HqY1lwa3CJOUnWoc',
 	authDomain: 'carrinho-de-compras-bb6ea.firebaseapp.com',
@@ -13,7 +22,12 @@ const firebaseConfig = {
 } satisfies FirebaseOptions;
 
 // Initialize Firebase
-const firebase = initializeApp(firebaseConfig, 'carrinho-de-compras');
-export default firebase;
+const app = initializeApp(firebaseConfig, 'carrinho-de-compras');
 
-export const auth = getAuth(firebase);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const mercadoRef = collection(db, 'mercado');
+if (browser) getAnalytics(app);
+
+export { auth, db, mercadoRef };
+export default app;

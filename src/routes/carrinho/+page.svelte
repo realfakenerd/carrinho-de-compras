@@ -17,7 +17,10 @@
 	$: totalDeItens = (() => {
 		if ($carrinho.length === 0) return 0;
 		if ($carrinho.length === 1) return $carrinho[0].quantidade;
-		return $carrinho.reduce((a, b) => (a.quantidade + b.quantidade) as any) as unknown as number;
+		return $carrinho.reduce((a, b) => {
+			if (typeof a === 'number') return a + b.quantidade;
+			return (a.quantidade + b.quantidade) as any;
+		}) as unknown as number;
 	})();
 
 	$: total = (() => {

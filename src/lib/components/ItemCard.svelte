@@ -1,15 +1,18 @@
 <script lang="ts">
-	import EditModal from '$lib/components/EditModal.svelte';
+	import { PUBLIC_UID } from '$env/static/public';
+	import EditDrawer from '$lib/components/EditDrawer.svelte';
 	import Icon from '$lib/components/Icon.svelte';
+	import { db } from '$lib/firebase';
 	import { porNoCarrinho, porNoCarrinhoInput } from '$lib/stores/carrinho.store';
 	import user from '$lib/stores/user.store';
+	import { deleteDoc, doc } from 'firebase/firestore';
 	import { Button, ButtonGroup, Heading, Hr, Img, Input, ListgroupItem, P } from 'flowbite-svelte';
 	let preco: string;
 	let nome: string;
 	let img: string;
 	let id: number;
 	let customQuantidade: number;
-	
+
 	export { preco, nome, img, id };
 </script>
 
@@ -26,9 +29,14 @@
 				{nome}
 			</Heading>
 			<P class="font-normal leading-tight text-gray-700 dark:text-gray-400">R${preco}</P>
-			{#if $user}
-				<EditModal {preco} {nome} {img} {id}/>
-			{/if}
+			<div class="flex flex-row">
+				{#if $user}
+					<EditDrawer {preco} {nome} {img} {id} />
+				{/if}
+				{#if $user?.uid === PUBLIC_UID}
+					<Button color="red" on:click={() => deleteDoc(doc(db, 'mercado', String(id)))}>X</Button>
+				{/if}
+			</div>
 		</div>
 	</div>
 	<Hr />

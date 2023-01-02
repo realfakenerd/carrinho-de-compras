@@ -1,4 +1,4 @@
-import { mercadoRef } from '$lib/db';
+import { mercadoRef } from '$lib/firebase';
 import {
 	DocumentReference,
 	DocumentSnapshot,
@@ -10,6 +10,7 @@ import {
 	type SnapshotListenOptions
 } from 'firebase/firestore';
 import { map, Observable, startWith } from 'rxjs';
+
 
 function snapToData<T = DocumentData>(
 	snapshot: DocumentSnapshot<T>,
