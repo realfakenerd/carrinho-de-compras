@@ -44,6 +44,7 @@
 		<ButtonGroup size="xs">
 			<Button
 				size="xs"
+				color="primary"
 				on:click={porNoCarrinho({
 					nome: nome,
 					preco: preco,
