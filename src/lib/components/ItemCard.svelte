@@ -29,7 +29,7 @@
 				{nome}
 			</Heading>
 			<P class="font-normal leading-tight text-gray-700 dark:text-gray-400">R${preco}</P>
-			<div class="flex flex-row">
+			<div class="inline-flex place-self-end">
 				{#if $user}
 					<EditDrawer {preco} {nome} {img} {id} />
 				{/if}
