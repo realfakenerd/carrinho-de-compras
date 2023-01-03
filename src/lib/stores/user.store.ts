@@ -1,37 +1,5 @@
-import { onAuthStateChanged, type Auth, type User } from 'firebase/auth';
-import { Observable } from 'rxjs';
+import { userStore } from 'sveltefire';
 import { auth } from '../firebase';
-/**
- * @license
- * Copyright 2018 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * Create an observable of authentication state. The observer is only
- * triggered on sign-in or sign-out.
- * @param auth firebase.auth.Auth
- */
-export function authState(auth: Auth): Observable<User | null> {
-	return new Observable(function (subscriber) {
-		const unsubscribe = onAuthStateChanged(
-			auth,
-			subscriber.next.bind(subscriber),
-			subscriber.error.bind(subscriber),
-			subscriber.complete.bind(subscriber)
-		);
-		return { unsubscribe: unsubscribe };
-	});
-}
-const user = authState(auth);
+
+const user = userStore(auth);
 export default user;

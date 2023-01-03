@@ -5,12 +5,6 @@ import { collection, getFirestore } from 'firebase/firestore';
 import { getAnalytics } from 'firebase/analytics';
 import { browser } from '$app/environment';
 
-export interface Mercado {
-	id: string;
-	criado_em: string;
-	nome: string;
-	preco: number;
-}
 const firebaseConfig = {
 	apiKey: 'AIzaSyCneq-EFcWmsnH9kh-HqY1lwa3CJOUnWoc',
 	authDomain: 'carrinho-de-compras-bb6ea.firebaseapp.com',

@@ -1,22 +1,14 @@
 <script lang="ts">
-	import { db } from '$lib/firebase';
+	import AddDrawer from '$lib/components/AddDrawer.svelte';
+	import ItemCard from '$lib/components/ItemCard.svelte';
+	import mercado from '$lib/stores/mercado.store';
 	import user from '$lib/stores/user.store';
-	import { doc, setDoc } from 'firebase/firestore';
 	import {
-		Button, Drawer, Heading,
-		Input,
-		Label,
-		Listgroup,
+		Heading, Listgroup,
 		ListPlaceholder
 	} from 'flowbite-svelte';
-	import { backOut, sineOut } from 'svelte/easing';
+	import { backOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
-	import type { PageData } from './$types';
-	import ItemCard from '$lib/components/ItemCard.svelte';
-	import AddDrawer from '$lib/components/AddDrawer.svelte';
-
-	export let data: PageData;
-	const { mercado } = data;
 
 </script>
 

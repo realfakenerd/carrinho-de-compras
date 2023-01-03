@@ -27,6 +27,18 @@ export function porNoCarrinho({ nome, preco, quantidade = 1 }: Carrinho) {
 	return null;
 }
 
+export function tirarDoCarrinho(nome: string) {
+	carrinho.update((val) => {
+		for (let i = 0; i < val.length; i++) {
+			if (val[i].nome == nome) {
+				val.splice(i, 1);
+			}
+		}
+		return val;
+	});
+	return null;
+}
+
 export function porNoCarrinhoInput({ nome, preco, quantidade = 1 }: Carrinho) {
 	carrinho.update((val) => {
 		let i = 0;

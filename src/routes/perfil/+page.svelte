@@ -1,12 +1,11 @@
 <script lang="ts">
 	import user from '$lib/stores/user.store';
 	import LoginHero from './LoginHero.svelte';
-
 	import ProfileHero from './ProfileHero.svelte';
+	import {User} from 'sveltefire';
 </script>
 
-{#if $user}
+<User let:user>
 	<ProfileHero />
-{:else}
-	<LoginHero />
-{/if}
+	<LoginHero slot="signedOut"/>
+</User>

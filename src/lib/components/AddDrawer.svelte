@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { db } from '$lib/firebase';
 	import { doc, setDoc } from 'firebase/firestore';
 	import { Button, Drawer, Heading, Input, Label } from 'flowbite-svelte';
@@ -24,6 +24,7 @@
 	}
 
 	export let btnText = '';
+
 </script>
 
 <Button class="w-full" on:click={() => (hidden = false)}>{btnText}</Button>
