@@ -10,7 +10,9 @@ const config = {
 		sass: true
 	}),
 	kit: {
-		adapter: adapter()
+		adapter: adapter({
+			edge: true
+		})
 	}
 };
 
