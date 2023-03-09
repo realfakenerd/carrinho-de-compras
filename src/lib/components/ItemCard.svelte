@@ -15,7 +15,7 @@
 	export { preco, nome, img, id };
 </script>
 
-<li class="flex flex-col pl-4 pr-6 py-3">
+<li class="flex flex-col py-3 pl-4 pr-6">
 	<div class="flex flex-row items-center gap-x-4">
 		<img
 			class="h-16 w-16 rounded-lg object-cover"
@@ -23,7 +23,7 @@
 			alt=""
 		/>
 		<div class="grid w-full grid-cols-2 grid-rows-2 items-center">
-			<h2 class="col-span-2 capitalize body-large">
+			<h2 class="body-large col-span-2 capitalize">
 				{nome}
 			</h2>
 			<p class="body-large">R${preco}</p>
@@ -33,10 +33,12 @@
 				{/if}
 				{#if $user?.uid === PUBLIC_UID}
 					<button
-						class="h-10 w-10 rounded-full bg-primary grid place-items-center"
+						class="grid h-10 w-10 place-items-center rounded-full bg-primary"
 						on:click={() => deleteDoc(doc(db, 'mercado', String(id)))}
 					>
-						<Icon d={'M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z'} />
+						<Icon
+							d={'M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z'}
+						/>
 					</button>
 				{/if}
 			</div>
@@ -79,12 +81,12 @@
 			</button>
 		</ul>
 
-		<div class="w-full flex items-center relative">
+		<div class="relative flex w-full items-center">
 			<div class="absolute pl-4">
 				<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
 			</div>
 			<input
-				class="pl-12 pr-4 py-2 w-full border-b-2 border-primary rounded-t-md"
+				class="w-full rounded-t-md border-b-2 border-primary py-2 pl-12 pr-4"
 				type="number"
 				bind:value={customQuantidade}
 				on:keyup={porNoCarrinhoInput({
@@ -93,7 +95,6 @@
 					quantidade: customQuantidade
 				})}
 			/>
-
 		</div>
 	</div>
 </li>

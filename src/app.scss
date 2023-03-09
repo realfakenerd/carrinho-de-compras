@@ -21,7 +21,7 @@ h1 {
 .body-medium {
 	font-size: 0.875rem;
 	line-height: 1.25rem;
-	letter-spacing: .25px;
+	letter-spacing: 0.25px;
 }
 
 h2.body-large {
@@ -31,11 +31,11 @@ h2.body-large {
 .label-large {
 	font-size: 0.875rem;
 	line-height: 1.25rem;
-	letter-spacing: .1px;
+	letter-spacing: 0.1px;
 }
 
 .button {
-	@apply rounded-[100px] py-3 px-6 flex place-items-center bg-primary transition hover:bg-primary/70;
+	@apply flex justify-center items-center rounded-[100px] bg-primary py-3 px-6 text-primary-content transition hover:bg-primary/70;
 }
 
 .hero {

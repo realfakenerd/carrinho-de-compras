@@ -11,9 +11,10 @@ const config = {
 	}),
 	kit: {
 		adapter: adapter({
-			runtime:'edge'
+			runtime: 'edge'
 		})
-	}
+	},
+	inlineStyleThreshold: 2048
 };
 
 export default config;

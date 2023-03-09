@@ -6,7 +6,7 @@
 	import { FirebaseApp } from 'sveltefire';
 	import '../app.scss';
 	import type { LayoutData } from './$types';
-	
+
 	export let data: LayoutData;
 	const routes = [
 		{
@@ -35,7 +35,6 @@
 		}
 	];
 </script>
-
 
 <FirebaseApp {auth} firestore={db}>
 	{#key data.currentRoute}

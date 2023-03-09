@@ -9,6 +9,6 @@ export interface Mercado {
 	preco: number;
 }
 
-const mercRef = collection(db, 'mercado')
-const mercado = collectionStore<Mercado>(db, mercRef, [])
+const mercRef = collection(db, 'mercado');
+const mercado = collectionStore<Mercado>(db, mercRef, []);
 export default mercado;
