@@ -60,13 +60,13 @@
 						/>
 					</svg>
 				{/if}
-				<h1 class="body-large">{$user?.displayName}</h1>
+				<h1 class="text-title-large">{$user?.displayName}</h1>
 
 				<button on:click={() => signOut(auth)} class="button">logout</button>
 			</div>
 		{:else}
-			<h1 class="body-large">Faça o login aqui</h1>
-			<p class="body-medium pb-4">
+			<h1 class="text-body-large">Faça o login aqui</h1>
+			<p class="text-body-medium pb-4">
 				Hum... não fez o login ainda? Então não esta desfrutando de tudo o que o carrinho de compras
 				pode lhe oferecer. <br />
 				Faça agora, é rápido e simples. 😉
@@ -105,29 +105,34 @@
 	</section>
 
 	<section class="w-full max-w-sm rounded-xl border p-4">
-		<p class="body-medium">Itens no carrinho {totalDeItens}</p>
-		<p class="body-medium">vai pagar quanto? R${total.toFixed(2)}</p>
+		<p class="text-body-medium">Itens no carrinho {totalDeItens}</p>
+		<p class="text-body-medium">vai pagar quanto? R${total.toFixed(2)}</p>
 	</section>
 
 	<ul class="w-full bg-base-200 py-2">
 		{#each $carrinho as c}
 			<li class="py-3 pl-4 pr-6">
-				<h1 class="flex flex-row items-center gap-x-5 capitalize">
-					{c.nome}
-					<Badge>
-						{c.quantidade}
-					</Badge>
-				</h1>
-				<p>R${c.preco}</p>
-				<Hr height="h-1" />
-				<Button color="red" size="xs" on:click={tirarDoCarrinho(c.nome)}>
-					<Icon d="M19 13H5v-2h14v2z" />
-				</Button>
+				<div class="flex flex-row justify-between items-center">
+					<div>
+						<h1 class="flex flex-row text-body-large items-center gap-x-5 capitalize">
+							{c.nome}
+							<span class="text-body-small">
+								{c.quantidade}
+							</span>
+						</h1>
+						<p class="text-body-medium bg-primary">R${c.preco}</p>
+					</div>
+					
+					<button class="grid h-10 w-10 place-items-center rounded-full bg-primary" on:click={tirarDoCarrinho(c.nome)}>
+						<Icon d="M19 13H5v-2h14v2z" />
+					</button>
+				</div>
 			</li>
+			<hr class="h-1 w-full px-4 mb-2 bg-base-300" />
 		{:else}
 			<li class="py-2 pl-4 pr-6">
 				<h1>Oops!</h1>
-				<p class="body-medium">não há items dentro do carrinho</p>
+				<p class="text-text-body-medium">não há items dentro do carrinho</p>
 			</li>
 		{/each}
 	</ul>

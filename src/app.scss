@@ -6,25 +6,33 @@ body {
 	font-family: 'Roboto', sans-serif;
 }
 
-h1 {
+
+
+.text-title-large {
 	font-size: 1.375rem;
 	line-height: 1.75rem;
 	font-weight: 500;
 }
 
-.body-large {
+.text-body-large {
 	font-size: 1rem;
 	line-height: 1.5rem;
 	letter-spacing: 0.15px;
 }
 
-.body-medium {
+.text-body-medium {
 	font-size: 0.875rem;
 	line-height: 1.25rem;
 	letter-spacing: 0.25px;
 }
 
-h2.body-large {
+.text-body-small {
+	font-size: 0.75rem;
+	line-height: 1rem;
+	letter-spacing: 0.4px;
+}
+
+h2.text-body-large {
 	font-weight: 500;
 }
 
