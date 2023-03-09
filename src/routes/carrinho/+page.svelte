@@ -10,7 +10,7 @@
 		Badge,
 		Button,
 		Card,
-		Heading,
+
 		Hr,
 		Listgroup,
 		ListgroupItem,
@@ -57,29 +57,29 @@
 						size="lg"
 						src={'https://lh3.googleusercontent.com/a/AEdFTp5eZPpZfCI_5IlCd6fO1AIRc7dgqINsZHgSF3nA8w=s96-c'}
 					/>
-					<Heading color="primary" tag="h1" customSize="text-xl">{$user?.displayName}</Heading>
+					<h1>{$user?.displayName}</h1>
 					<Button color="primary" on:click={() => signOut(auth)} class="w-full">logout</Button>
 
 					<Hr color="primary" />
 					<div class="self-start ">
-						<P color="primary">Itens no carrinho {totalDeItens}</P>
-						<P color="primary">vai pagar quanto? R${total.toFixed(2)}</P>
+						<p color="primary">Itens no carrinho {totalDeItens}</p>
+						<p color="primary">vai pagar quanto? R${total.toFixed(2)}</p>
 					</div>
 				</div>
 			</Card>
 		{:else}
-			<Heading tag="h1" customSize="text-5xl">Faça o login aqui</Heading>
-			<P class="py-6">
+			<h1 >Faça o login aqui</h1>
+			<p class="py-6 body-large">
 				Hum... não fez o login ainda? Então não esta desfrutando de tudo o que o carrinho de compras
 				pode lhe oferecer. <br />
 				Faça agora, é rápido e simples. 😉
-			</P>
+			</p>
 
 			<Card>
 				<div class="flex flex-col items-center gap-5">
-					<Heading tag="h1" customSize="text-xl">Faça seu login com o google</Heading>
-					<Button on:click={login} class="w-2/3 justify-evenly">
-						<span>Login</span>
+					<h1>Faça seu login com o google</h1>
+					<button on:click={login} class="w-2/3 button justify-evenly">
+						<p class="label-large text-primary-content">Login</p>
 						<svg
 							class="rounded-full bg-white p-1"
 							xmlns="http://www.w3.org/2000/svg"
@@ -105,7 +105,7 @@
 							/>
 							<path d="M1 1h22v22H1z" fill="none" />
 						</svg>
-					</Button>
+					</button>
 				</div>
 			</Card>
 		{/if}
@@ -113,17 +113,15 @@
 		<Listgroup class="w-full max-w-sm">
 			{#each $carrinho as c}
 				<ListgroupItem>
-					<Heading
-						tag="h1"
-						class="flex flex-row items-center gap-x-5 font-semibold capitalize"
-						customSize="text-lg"
+					<h1
+						class="flex flex-row items-center gap-x-5 capitalize"
 					>
 						{c.nome}
 						<Badge>
 							{c.quantidade}
 						</Badge>
-					</Heading>
-					<P>R${c.preco}</P>
+					</h1>
+					<p>R${c.preco}</p>
 					<Hr height="h-1" />
 					<Button color="red" size="xs" on:click={tirarDoCarrinho(c.nome)}>
 						<Icon d="M19 13H5v-2h14v2z" />
@@ -131,8 +129,8 @@
 				</ListgroupItem>
 			{:else}
 				<ListgroupItem>
-					<Heading tag="h1" class="font-semibold" customSize="text-lg">Oops!</Heading>
-					<P>não há items dentro do carrinho</P>
+					<h1>Oops!</h1>
+					<p class="body-medium">não há items dentro do carrinho</p>
 				</ListgroupItem>
 			{/each}
 		</Listgroup>

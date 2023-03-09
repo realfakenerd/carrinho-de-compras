@@ -6,7 +6,6 @@
 	import { porNoCarrinho, porNoCarrinhoInput } from '$lib/stores/carrinho.store';
 	import user from '$lib/stores/user.store';
 	import { deleteDoc, doc } from 'firebase/firestore';
-	import { Button, ButtonGroup, Heading, Hr, Img, Input, ListgroupItem, P } from 'flowbite-svelte';
 	let preco: string;
 	let nome: string;
 	let img: string;
@@ -16,35 +15,38 @@
 	export { preco, nome, img, id };
 </script>
 
-<ListgroupItem class="flex flex-col gap-y-5">
-	<div class="flex flex-row items-center gap-x-5">
-		<Img
-			size="w-20"
-			imgClass="h-20 object-cover"
-			class="rounded-lg"
+<li class="flex flex-col pl-4 pr-6 py-3">
+	<div class="flex flex-row items-center gap-x-4">
+		<img
+			class="h-16 w-16 rounded-lg object-cover"
 			src={img || 'https://dummyimage.com/80x80/fff/111'}
+			alt=""
 		/>
 		<div class="grid w-full grid-cols-2 grid-rows-2 items-center">
-			<Heading tag="h2" customSize="text-xl" class="col-span-2 font-semibold capitalize">
+			<h2 class="col-span-2 capitalize body-large">
 				{nome}
-			</Heading>
-			<P class="font-normal leading-tight text-gray-700 dark:text-gray-400">R${preco}</P>
+			</h2>
+			<p class="body-large">R${preco}</p>
 			<div class="inline-flex place-self-end">
 				{#if $user}
 					<EditDrawer {preco} {nome} {img} {id} />
 				{/if}
 				{#if $user?.uid === PUBLIC_UID}
-					<Button color="red" on:click={() => deleteDoc(doc(db, 'mercado', String(id)))}>X</Button>
+					<button
+						class="h-10 w-10 rounded-full bg-primary grid place-items-center"
+						on:click={() => deleteDoc(doc(db, 'mercado', String(id)))}
+					>
+						<Icon d={'M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z'} />
+					</button>
 				{/if}
 			</div>
 		</div>
 	</div>
-	<Hr />
+	<div class="divider" />
 	<div class="flex flex-row items-center gap-3">
-		<ButtonGroup size="xs">
-			<Button
-				size="xs"
-				color="primary"
+		<ul class="inline-flex h-10 rounded-full border">
+			<button
+				class="cus-btn rounded-l-full"
 				on:click={porNoCarrinho({
 					nome: nome,
 					preco: preco,
@@ -52,9 +54,9 @@
 				})}
 			>
 				<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-			</Button>
-			<Button
-				size="xs"
+			</button>
+			<button
+				class="cus-btn border-r border-l"
 				on:click={porNoCarrinho({
 					nome: nome,
 					preco: preco,
@@ -62,10 +64,10 @@
 				})}
 			>
 				<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-				<span>5</span>
-			</Button>
-			<Button
-				size="xs"
+				<p class="body-medium">5</p>
+			</button>
+			<button
+				class="cus-btn rounded-r-full"
 				on:click={porNoCarrinho({
 					nome: nome,
 					preco: preco,
@@ -73,14 +75,17 @@
 				})}
 			>
 				<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-				<span>10</span>
-			</Button>
-		</ButtonGroup>
+				<p class="body-medium">10</p>
+			</button>
+		</ul>
 
-		<Input class="w-full" let:props>
+		<div class="w-full flex items-center relative">
+			<div class="absolute pl-4">
+				<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+			</div>
 			<input
+				class="pl-12 pr-4 py-2 w-full border-b-2 border-primary rounded-t-md"
 				type="number"
-				{...props}
 				bind:value={customQuantidade}
 				on:keyup={porNoCarrinhoInput({
 					nome: nome,
@@ -89,9 +94,12 @@
 				})}
 			/>
 
-			<div slot="right">
-				<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-			</div>
-		</Input>
+		</div>
 	</div>
-</ListgroupItem>
+</li>
+
+<style lang="scss">
+	.cus-btn {
+		@apply flex place-items-center bg-primary px-3 transition hover:bg-primary/70;
+	}
+</style>

@@ -1,7 +1,7 @@
 import { sveltekit } from '@sveltejs/kit/vite';
-import removeConsole from 'vite-plugin-remove-console';
-import viteCompression from 'vite-plugin-compression';
 import type { UserConfig } from 'vite';
+import viteCompression from 'vite-plugin-compression';
+import removeConsole from 'vite-plugin-remove-console';
 
 const config = {
 	define: {

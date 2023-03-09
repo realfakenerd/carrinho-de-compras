@@ -6,6 +6,38 @@ body {
 	font-family: 'Roboto', sans-serif;
 }
 
+h1 {
+	font-size: 1.375rem;
+	line-height: 1.75rem;
+	font-weight: 500;
+}
+
+.body-large {
+	font-size: 1rem;
+	line-height: 1.5rem;
+	letter-spacing: 0.15px;
+}
+
+.body-medium {
+	font-size: 0.875rem;
+	line-height: 1.25rem;
+	letter-spacing: .25px;
+}
+
+h2.body-large {
+	font-weight: 500;
+}
+
+.label-large {
+	font-size: 0.875rem;
+	line-height: 1.25rem;
+	letter-spacing: .1px;
+}
+
+.button {
+	@apply rounded-[100px] py-3 px-6 flex place-items-center bg-primary transition hover:bg-primary/70;
+}
+
 .hero {
 	@apply grid w-full place-items-center bg-cover bg-center;
 	& > * {
