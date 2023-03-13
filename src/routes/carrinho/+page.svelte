@@ -39,7 +39,7 @@
 </script>
 
 <div class="flex flex-col items-center gap-y-3">
-	<section class="w-full max-w-sm rounded-xl border p-4">
+	<section class="w-full sm:rounded-xl bg-surface-variant p-4">
 		{#if $user}
 			<div class="flex flex-col space-y-3 pb-4">
 				{#if $user.photoURL}
@@ -65,7 +65,7 @@
 				<button on:click={() => signOut(auth)} class="button">logout</button>
 			</div>
 		{:else}
-			<h1 class="text-body-large">Faça o login aqui</h1>
+			<h1 class="text-title-large">Faça o login aqui</h1>
 			<p class="text-body-medium pb-4">
 				Hum... não fez o login ainda? Então não esta desfrutando de tudo o que o carrinho de compras
 				pode lhe oferecer. <br />
@@ -98,37 +98,39 @@
 						/>
 						<path d="M1 1h22v22H1z" fill="none" />
 					</svg>
-					<p class="label-large text-primary-content">Login</p>
+					<p class="label-large text-on-primary">Login</p>
 				</button>
 			</div>
 		{/if}
 	</section>
 
-	<section class="w-full max-w-sm rounded-xl border p-4">
+	<section class="w-full sm:rounded-xl bg-surface-variant p-4">
 		<p class="text-body-medium">Itens no carrinho {totalDeItens}</p>
-		<p class="text-body-medium">vai pagar quanto? R${total.toFixed(2)}</p>
+		<p class="text-body-medium">Vai pagar quanto? R${total.toFixed(2)}</p>
 	</section>
 
-	<ul class="w-full bg-base-200 py-2">
+	<ul class="w-full sm:rounded-xl bg-surface-variant hover: py-2">
 		{#each $carrinho as c}
-			<li class="py-3 pl-4 pr-6">
-				<div class="flex flex-row justify-between items-center">
-					<div>
-						<h1 class="flex flex-row text-body-large items-center gap-x-5 capitalize">
-							{c.nome}
-							<span class="text-body-small">
-								{c.quantidade}
-							</span>
-						</h1>
-						<p class="text-body-medium bg-primary">R${c.preco}</p>
+			<li class="transition-colors hover:bg-surface-1">
+				<section class="py-3 pl-4 pr-6">
+					<div class="flex flex-row justify-between items-center">
+						<div>
+							<h1 class="text-body-large capitalize">
+								{c.nome}
+								<span class="text-body-small bg-secondary text-on-secondary px-1 rounded-xl">
+									{c.quantidade}
+								</span>
+							</h1>
+							<p class="text-body-medium">R${c.preco}</p>
+						</div>
+						
+						<button class="grid h-10 w-10 place-items-center rounded-full bg-primary fill-on-primary hover:bg-primary/50 hover:fill-on-primary/50 transition-colors" on:click={tirarDoCarrinho(c.nome)}>
+							<Icon d="M19 13H5v-2h14v2z" />
+						</button>
 					</div>
-					
-					<button class="grid h-10 w-10 place-items-center rounded-full bg-primary" on:click={tirarDoCarrinho(c.nome)}>
-						<Icon d="M19 13H5v-2h14v2z" />
-					</button>
-				</div>
+				</section>
+				<hr class="h-1 my-2 bg-outline-variant" />
 			</li>
-			<hr class="h-1 w-full px-4 mb-2 bg-base-300" />
 		{:else}
 			<li class="py-2 pl-4 pr-6">
 				<h1>Oops!</h1>

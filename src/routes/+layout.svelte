@@ -39,7 +39,7 @@
 <FirebaseApp {auth} firestore={db}>
 	{#key data.currentRoute}
 		<main
-			class="py-10"
+			class="pt-8 pb-24 sm:px-4"
 			in:fly={{ y: -5, duration: 500, delay: 200 }}
 			out:fly={{ y: 5, duration: 200 }}
 		>
@@ -50,14 +50,13 @@
 	<footer class="fixed bottom-0 z-50 w-full">
 		<nav class="custom-navbar">
 			{#each routes as route, index (index)}
-				<a href={route.href}>
+				<a href={route.href} class="group">
 					<div
-						style="background-color:{data.currentRoute === route.href ? 'hsl(220, 18%, 20%)' : ''} "
+						class="group-hover:bg-secondary"
+						style="background-color:{data.currentRoute === route.href ? '#4A4458' : ''} "
 					>
-						<span class="text-white">
-							<span>
-								<Icon d={data.currentRoute === route.href ? route.d.filled : route.d.outlined} />
-							</span>
+						<span class="fill-on-background group-hover:fill-on-secondary">
+							<Icon d={data.currentRoute === route.href ? route.d.filled : route.d.outlined} />
 						</span>
 					</div>
 					<h3>{route.name}</h3>
@@ -69,14 +68,12 @@
 
 <style lang="scss">
 	.custom-navbar {
-		@apply flex h-20 flex-none flex-grow-0 flex-row items-start gap-2 bg-base-200 py-0 px-2;
+		@apply flex h-20 flex-none flex-grow-0 flex-row items-start gap-2 bg-surface-2 py-0 px-2;
 		a {
 			@apply order-[0] flex h-20 flex-none flex-grow flex-col items-center justify-center gap-1 px-0 pt-3 pb-4;
 			div {
 				@apply flex h-8 w-16 flex-col items-center justify-center rounded-2xl p-0 transition-all duration-300;
-				&:hover {
-					@apply bg-base-100;
-				}
+
 				span {
 					@apply flex h-8 w-16 flex-col items-center justify-center rounded-2xl p-0;
 				}

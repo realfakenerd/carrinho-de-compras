@@ -23,17 +23,17 @@
 			alt=""
 		/>
 		<div class="grid w-full grid-cols-2 grid-rows-2 items-center">
-			<h2 class="body-large col-span-2 capitalize">
+			<h2 class="text-body-large col-span-2 capitalize">
 				{nome}
 			</h2>
-			<p class="body-large">R${preco}</p>
+			<p class="text-body-medium text-on-surface-variant">R${preco}</p>
 			<div class="inline-flex place-self-end">
 				{#if $user}
 					<EditDrawer {preco} {nome} {img} {id} />
 				{/if}
 				{#if $user?.uid === PUBLIC_UID}
 					<button
-						class="grid h-10 w-10 place-items-center rounded-full bg-primary"
+						class="grid h-10 w-10 place-items-center rounded-full bg-primary fill-on-primary hover:bg-primary/50"
 						on:click={() => deleteDoc(doc(db, 'mercado', String(id)))}
 					>
 						<Icon
@@ -44,9 +44,9 @@
 			</div>
 		</div>
 	</div>
-	<div class="divider" />
+	<hr class="my-2 h-1 bg-outline-variant" />
 	<div class="flex flex-row items-center gap-3">
-		<ul class="inline-flex h-10 rounded-full border">
+		<ul class="inline-flex h-10">
 			<button
 				class="cus-btn rounded-l-full"
 				on:click={porNoCarrinho({
@@ -58,7 +58,7 @@
 				<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
 			</button>
 			<button
-				class="cus-btn border-r border-l"
+				class="cus-btn border-on-outline-variant border-r border-l"
 				on:click={porNoCarrinho({
 					nome: nome,
 					preco: preco,
@@ -82,11 +82,11 @@
 		</ul>
 
 		<div class="relative flex w-full items-center">
-			<div class="absolute pl-4">
+			<div class="absolute pl-2 fill-on-surface-variant">
 				<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
 			</div>
 			<input
-				class="w-full rounded-t-md border-b-2 border-primary py-2 pl-12 pr-4"
+				class="w-full rounded-md ring-1 border-nonex ring-on-surface-variant bg-background py-2 pl-12 pr-4 transition focus:ring-2 focus:ring-on-surface-variant"
 				type="number"
 				bind:value={customQuantidade}
 				on:keyup={porNoCarrinhoInput({
@@ -101,6 +101,6 @@
 
 <style lang="scss">
 	.cus-btn {
-		@apply flex place-items-center bg-primary px-3 transition hover:bg-primary/70;
+		@apply flex place-items-center bg-primary text-on-primary fill-on-primary  px-3 transition hover:bg-primary/70;
 	}
 </style>

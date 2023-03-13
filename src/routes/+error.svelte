@@ -1,13 +1,12 @@
 <script>
 	import { page } from '$app/stores';
-	import { Heading, P } from 'flowbite-svelte';
 </script>
 
-<div class="hero">
-	<div class="hero-content">
+<div>
+	<div>
 		<section>
-			<Heading tag="h1">{$page.status}</Heading>
-			<P>{$page.error?.message}</P>
+			<h1>{$page.status}</h1>
+			<p>{$page.error?.message}</p>
 		</section>
 	</div>
 </div>
