@@ -6,7 +6,8 @@ export interface Mercado {
 	id: string;
 	criado_em: string;
 	nome: string;
-	preco: number;
+	preco: string;
+	img: string;
 }
 
 const mercRef = collection(db, 'mercado');

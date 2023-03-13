@@ -1,7 +1,8 @@
 // Import the functions you need from the SDKs you need
+import { browser } from '$app/environment';
 import { initializeApp, type FirebaseOptions } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { enableIndexedDbPersistence, getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyCneq-EFcWmsnH9kh-HqY1lwa3CJOUnWoc',
@@ -17,6 +18,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig, 'carrinho-de-compras');
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+if(browser) enableIndexedDbPersistence(db).catch(console.error);
 
 export { auth, db };
 export default app;

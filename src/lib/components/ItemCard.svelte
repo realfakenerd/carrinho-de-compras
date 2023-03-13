@@ -1,18 +1,15 @@
 <script lang="ts">
-	import { PUBLIC_UID } from '$env/static/public';
 	import EditDrawer from '$lib/components/EditDrawer.svelte';
 	import Icon from '$lib/components/Icon.svelte';
-	import { db } from '$lib/firebase';
 	import { porNoCarrinho, porNoCarrinhoInput } from '$lib/stores/carrinho.store';
 	import user from '$lib/stores/user.store';
-	import { deleteDoc, doc } from 'firebase/firestore';
 	let preco: string;
 	let nome: string;
 	let img: string;
-	let id: number;
+	let id: number | string;
 	let customQuantidade: number;
 
-	export { preco, nome, img, id };
+	export { preco, nome, img, id }
 </script>
 
 <li class="flex flex-col py-3 pl-4 pr-6">
@@ -29,22 +26,13 @@
 			<p class="text-body-medium text-on-surface-variant">R${preco}</p>
 			<div class="inline-flex place-self-end">
 				{#if $user}
-					<EditDrawer {preco} {nome} {img} {id} />
+					<EditDrawer {preco} {nome} {img} id={String(id)} />
 				{/if}
-				{#if $user?.uid === PUBLIC_UID}
-					<button
-						class="grid h-10 w-10 place-items-center rounded-full bg-primary fill-on-primary hover:bg-primary/50"
-						on:click={() => deleteDoc(doc(db, 'mercado', String(id)))}
-					>
-						<Icon
-							d={'M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z'}
-						/>
-					</button>
-				{/if}
+				
 			</div>
 		</div>
 	</div>
-	<hr class="my-2 h-1 bg-outline-variant" />
+	<hr  />
 	<div class="flex flex-row items-center gap-3">
 		<ul class="inline-flex h-10">
 			<button

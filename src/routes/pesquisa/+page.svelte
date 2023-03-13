@@ -2,11 +2,11 @@
 	import AddDrawer from '$lib/components/AddDrawer.svelte';
 	import Icon from '$lib/components/Icon.svelte';
 	import ItemCard from '$lib/components/ItemCard.svelte';
-	import mercado from '$lib/stores/mercado.store';
-	import user from '$lib/stores/user.store'
-	import type { DocumentData } from 'firebase/firestore';
+	import mercado, { type Mercado } from '$lib/stores/mercado.store';
+	import user from '$lib/stores/user.store';
+	
 	let value = '';
-	let resultado: DocumentData[] = [];
+	let resultado: Mercado[] = [];
 	function pesquisa() {
 		resultado = $mercado.filter((val) => {
 			if (value) return (val.nome as string).toLowerCase().includes(value.trim().toLowerCase());
@@ -19,7 +19,7 @@
 	<input
 		class="w-full bg-surface-variant ring-1 ring-on-surface-variant 
 			focus:ring-2 focus:ring-on-surface-variant placeholder:text-on-surface-variant 
-			rounded-full pl-4 border-none focus:bg-surface-1 transition"
+			rounded-full pl-4 py-2 border-none focus:bg-surface-1 transition"
 		bind:value
 		on:keyup={pesquisa}
 		type="text"
@@ -37,7 +37,7 @@
 	{#each resultado as r, i (i)}
 		<li>
 			<ItemCard {...r} />
-			<hr class="h-1 my-2 bg-outline-variant"/>
+			<hr/>
 		</li>
 	{:else}
 		<li>

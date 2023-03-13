@@ -5,7 +5,7 @@
 	import user from '$lib/stores/user.store';
 	import type { FirebaseError } from 'firebase/app';
 	import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
-	import { Avatar, Badge, Button, Hr } from 'flowbite-svelte';
+	
 	$: totalDeItens = (() => {
 		if ($carrinho.length === 0) return 0;
 		if ($carrinho.length === 1) return $carrinho[0].quantidade;
@@ -62,7 +62,7 @@
 				{/if}
 				<h1 class="text-title-large">{$user?.displayName}</h1>
 
-				<button on:click={() => signOut(auth)} class="button">logout</button>
+				<button on:click={() => signOut(auth)} class="button">Logout</button>
 			</div>
 		{:else}
 			<h1 class="text-title-large">Faça o login aqui</h1>
@@ -129,7 +129,7 @@
 						</button>
 					</div>
 				</section>
-				<hr class="h-1 my-2 bg-outline-variant" />
+				<hr />
 			</li>
 		{:else}
 			<li class="py-2 pl-4 pr-6">

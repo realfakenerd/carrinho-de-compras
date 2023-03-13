@@ -2,6 +2,7 @@
 	import Icon from '$lib/components/Icon.svelte';
 	import { auth, db } from '$lib/firebase';
 	import '@fontsource/roboto';
+	import { expoIn, expoOut } from 'svelte/easing';
 	import { fly } from 'svelte/transition';
 	import { FirebaseApp } from 'sveltefire';
 	import '../app.scss';
@@ -40,8 +41,8 @@
 	{#key data.currentRoute}
 		<main
 			class="pt-8 pb-24 sm:px-4"
-			in:fly={{ y: -5, duration: 500, delay: 200 }}
-			out:fly={{ y: 5, duration: 200 }}
+			in:fly={{ x: -5, duration: 500, delay: 200, easing: expoOut }}
+			out:fly={{ x: 5, duration: 200, easing: expoIn}}
 		>
 			<slot />
 		</main>

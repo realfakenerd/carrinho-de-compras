@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { db } from '$lib/firebase';
 	import { doc, updateDoc } from 'firebase/firestore';
+	import { expoIn, expoOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
 	import Icon from './Icon.svelte';
 	let hidden = true;
@@ -59,7 +60,8 @@
 		use:clickOutside={() => !hidden && handleDrawer()}
 		{id}
 		class="z-50 overflow-y-auto  bg-surface-1 sm:rounded-t-xl md:mx-6 px-4 py-6 fixed inset-x-0 bottom-20"
-		transition:slide
+		in:slide={{duration: 400, easing: expoIn}}
+        out:slide={{duration: 200, easing: expoOut}}
 		tabindex="-1"
 		aria-controls={id}
 		aria-labelledby={id}

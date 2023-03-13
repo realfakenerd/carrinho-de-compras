@@ -2,11 +2,12 @@
 	import { page } from '$app/stores';
 </script>
 
-<div>
-	<div>
-		<section>
-			<h1>{$page.status}</h1>
-			<p>{$page.error?.message}</p>
-		</section>
+
+<section class="w-full sm:rounded-xl bg-surface-variant p-4">
+	<div class="mb-2">
+		<h1 class="text-title-large">{$page.status}</h1>
+		<p class="text-body-large">{$page.error?.message}</p>
 	</div>
-</div>
+	<a class="button" href='/'>para o inicio</a>
+</section>
+
