@@ -3,6 +3,7 @@ import { browser } from '$app/environment';
 import { initializeApp, type FirebaseOptions } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { enableIndexedDbPersistence, getFirestore } from 'firebase/firestore';
+import { getAnalytics } from 'firebase/analytics';
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyCneq-EFcWmsnH9kh-HqY1lwa3CJOUnWoc',
@@ -19,7 +20,10 @@ const app = initializeApp(firebaseConfig, 'carrinho-de-compras');
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-if(browser) enableIndexedDbPersistence(db).catch(console.error);
+if (browser) {
+	enableIndexedDbPersistence(db).catch(console.error);
+	getAnalytics(app);
+}
 
 export { auth, db };
 export default app;

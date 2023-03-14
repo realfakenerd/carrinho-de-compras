@@ -1,15 +1,18 @@
 <script lang="ts">
 	import { Icon } from '$lib/components';
 	import { auth } from '$lib/firebase';
-	import carrinho, { tirarDoCarrinho } from '$lib/stores/carrinho.store';
+	import carrinho from '$lib/stores/carrinho.store';
+	import {tirarDoCarrinho} from '$lib/servicos/carrinho-crud';
 	import user from '$lib/stores/user.store';
 	import type { FirebaseError } from 'firebase/app';
 	import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
-	
+	import { ItemTipo } from '$lib/stores/mercado.store';
+
 	$: totalDeItens = (() => {
 		if ($carrinho.length === 0) return 0;
 		if ($carrinho.length === 1) return $carrinho[0].quantidade;
 		return $carrinho.reduce((a, b) => {
+			if (a.tipo === ItemTipo.KILO || b.tipo === ItemTipo.KILO) return 0;
 			if (typeof a === 'number') return a + b.quantidade;
 			return (a.quantidade + b.quantidade) as any;
 		}) as unknown as number;
@@ -19,8 +22,10 @@
 		if ($carrinho.length === 0) return 0;
 
 		const lista = $carrinho.map((val) => {
-			return parseFloat(val.preco) * val.quantidade;
+			if(val.tipo === ItemTipo.UNIDADE) return parseFloat(val.preco) * val.quantidade;
+			return parseFloat((parseFloat(val.preco) * val.quantidade).toFixed(2));
 		});
+
 
 		if (lista.length === 1) return lista[0];
 		return lista.reduce((a, b) => a + b);
@@ -38,8 +43,8 @@
 	}
 </script>
 
-<div class="flex flex-col items-center gap-y-3">
-	<section class="w-full sm:rounded-xl bg-surface-variant p-4">
+<div class="flex flex-col items-center gap-y-2">
+	<section class="w-full bg-surface-variant p-4 sm:rounded-xl">
 		{#if $user}
 			<div class="flex flex-col space-y-3 pb-4">
 				{#if $user.photoURL}
@@ -104,32 +109,35 @@
 		{/if}
 	</section>
 
-	<section class="w-full sm:rounded-xl bg-surface-variant p-4">
+	<section class="w-full bg-surface-variant p-4 sm:rounded-xl">
 		<p class="text-body-medium">Itens no carrinho {totalDeItens}</p>
 		<p class="text-body-medium">Vai pagar quanto? R${total.toFixed(2)}</p>
 	</section>
 
-	<ul class="w-full sm:rounded-xl bg-surface-variant hover: py-2">
+	<ul class="hover: w-full bg-surface-variant py-2 sm:rounded-xl">
 		{#each $carrinho as c}
-			<li class="transition-colors hover:bg-surface-1">
+			<li class="transition-colors hover:bg-surface-1 ">
 				<section class="py-3 pl-4 pr-6">
-					<div class="flex flex-row justify-between items-center">
+					<div class="flex flex-row items-center justify-between">
 						<div>
-							<h1 class="text-body-large capitalize">
-								{c.nome}
-								<span class="text-body-small bg-secondary text-on-secondary px-1 rounded-xl">
-									{c.quantidade}
+							<div class="flex items-center gap-x-2">
+								<h1 class="text-body-large capitalize">{c.nome}</h1>
+								<span class="text-body-small rounded-xl bg-secondary px-1 text-on-secondary">
+									{c.quantidade} {c.tipo === ItemTipo.KILO ? 'Kg' : 'Uni'}
 								</span>
-							</h1>
+							</div>
 							<p class="text-body-medium">R${c.preco}</p>
 						</div>
-						
-						<button class="grid h-10 w-10 place-items-center rounded-full bg-primary fill-on-primary hover:bg-primary/50 hover:fill-on-primary/50 transition-colors" on:click={tirarDoCarrinho(c.nome)}>
+
+						<button
+							class="grid h-10 w-10 place-items-center rounded-full bg-primary fill-on-primary transition-colors hover:bg-primary/50 hover:fill-on-primary/50"
+							on:click={tirarDoCarrinho(c.nome)}
+						>
 							<Icon d="M19 13H5v-2h14v2z" />
 						</button>
 					</div>
 				</section>
-				<hr />
+				<hr/>
 			</li>
 		{:else}
 			<li class="py-2 pl-4 pr-6">
@@ -139,3 +147,9 @@
 		{/each}
 	</ul>
 </div>
+
+<style lang="postcss">
+	li:last-child hr{
+		@apply hidden;
+	}
+</style>

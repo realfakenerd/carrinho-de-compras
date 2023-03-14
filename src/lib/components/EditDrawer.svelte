@@ -1,18 +1,15 @@
 <script lang="ts">
-	import { db } from '$lib/firebase';
-	import { doc, updateDoc } from 'firebase/firestore';
+	import { updateItem } from '$lib/servicos/mercado-crud';
+	import type { CollectionReference } from 'firebase/firestore';
 	import { expoIn, expoOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
 	import Icon from './Icon.svelte';
 	let hidden = true;
-	let nome: string;
-	let preco: string;
-	let img: string;
-	let id: string;
-
-	function handleDrawer() {
-		hidden = !hidden;
-	}
+	let ref: CollectionReference;
+	let nome = '',
+		preco = '',
+		img = '',
+		id = '';
 
 	function clickOutside(node: HTMLElement, callback: () => void) {
 		const handleClick = (event: Event) => {
@@ -28,20 +25,19 @@
 			}
 		};
 	}
-	
-	async function updateItem() {
-		await updateDoc(doc(db, 'mercado', String(id)), {
-			preco,
-			nome,
-			img
-		});
+
+	async function localUpdateItem() {
+		if (nome !== '' && preco !== '') {
+			await updateItem({nome, preco, img, ref})
+			hidden = true;
+		}
 	}
 
-	export { nome, preco, img, id };
+	export { nome, preco, img, id, ref };
 </script>
 
 <button
-	on:click={() => hidden = false}
+	on:click={() => (hidden = false)}
 	class="grid h-10 w-10 place-items-center justify-self-center rounded-full bg-primary fill-on-primary transition-colors hover:bg-primary/50"
 >
 	<Icon
@@ -53,15 +49,15 @@
 	<div
 		role="presentation"
 		class="fixed top-0 left-0 z-50 h-full w-full bg-surface-2 bg-opacity-95 transition"
-		on:click={() => !hidden && handleDrawer()}
+		on:click={() => !hidden && (hidden = !hidden)}
 	/>
 
 	<div
-		use:clickOutside={() => !hidden && handleDrawer()}
+		use:clickOutside={() => !hidden && (hidden = !hidden)}
 		{id}
-		class="z-50 overflow-y-auto  bg-surface-1 sm:rounded-t-xl md:mx-6 px-4 py-6 fixed inset-x-0 bottom-20"
-		in:slide={{duration: 400, easing: expoIn}}
-        out:slide={{duration: 200, easing: expoOut}}
+		class="fixed inset-x-0  bottom-20 z-50 overflow-y-auto bg-surface-1 px-4 py-6 sm:rounded-t-xl md:mx-6"
+		in:slide={{ duration: 400, easing: expoOut }}
+		out:slide={{ duration: 200, easing: expoIn }}
 		tabindex="-1"
 		aria-controls={id}
 		aria-labelledby={id}
@@ -73,24 +69,24 @@
 				<input type="text" bind:value={nome} required />
 			</label>
 			<label class="space-y-2">
-				<span class="text-label-medium">Preço do produto{preco ? ':' : ''} {preco ? `R$${preco}` : ''}</span>
+				<span class="text-label-medium"
+					>Preço do produto{preco ? ':' : ''} {preco ? `R$${preco}` : ''}</span
+				>
 				<input type="number" bind:value={preco} required />
 			</label>
 			<label class="space-y-2">
 				<span class="text-label-medium">Img do produto</span>
-				<input type="text" bind:value={img} required />
+				<input type="text" bind:value={img} />
 			</label>
-			<button on:click={updateItem} class="button w-full1">salvar edição</button>
+			<button on:click={localUpdateItem} class="button w-full1">Salvar edição</button>
 		</form>
 	</div>
 {/if}
 
-<style>
-	
+<style lang="postcss">
 	input {
-		@apply w-full bg-surface-variant ring-1 ring-on-surface-variant 
-			 
-			rounded-full pl-4 border-none  transition;
+		@apply w-full rounded-full border-none bg-surface-variant 
+		pl-4 ring-1 ring-on-surface-variant  transition py-2;
 	}
 
 	input:placeholder {
@@ -98,6 +94,6 @@
 	}
 
 	input:focus {
-		@apply ring-2 ring-on-surface-variant bg-surface-1;
+		@apply bg-surface-1 ring-2 ring-on-surface-variant;
 	}
 </style>

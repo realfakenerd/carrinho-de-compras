@@ -6,9 +6,8 @@
 	import { fly } from 'svelte/transition';
 	import { FirebaseApp } from 'sveltefire';
 	import '../app.scss';
-	import type { LayoutData } from './$types';
+	export let data;
 
-	export let data: LayoutData;
 	const routes = [
 		{
 			href: '/',
@@ -42,7 +41,7 @@
 		<main
 			class="pt-8 pb-24 sm:px-4"
 			in:fly={{ x: -5, duration: 500, delay: 200, easing: expoOut }}
-			out:fly={{ x: 5, duration: 200, easing: expoIn}}
+			out:fly={{ x: 5, duration: 200, easing: expoIn }}
 		>
 			<slot />
 		</main>
