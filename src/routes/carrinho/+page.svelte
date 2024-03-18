@@ -2,11 +2,12 @@
 	import { Icon } from '$lib/components';
 	import { auth } from '$lib/firebase';
 	import carrinho from '$lib/stores/carrinho.store';
-	import {tirarDoCarrinho} from '$lib/servicos/carrinho-crud';
+	import { tirarDoCarrinho } from '$lib/servicos/carrinho-crud';
 	import user from '$lib/stores/user.store';
 	import type { FirebaseError } from 'firebase/app';
 	import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 	import { ItemTipo } from '$lib/stores/mercado.store';
+	import {createAvatar, melt} from '@melt-ui/svelte'
 
 	$: totalDeItens = (() => {
 		if ($carrinho.length === 0) return 0;
@@ -22,10 +23,9 @@
 		if ($carrinho.length === 0) return 0;
 
 		const lista = $carrinho.map((val) => {
-			if(val.tipo === ItemTipo.UNIDADE) return parseFloat(val.preco) * val.quantidade;
+			if (val.tipo === ItemTipo.UNIDADE) return parseFloat(val.preco) * val.quantidade;
 			return parseFloat((parseFloat(val.preco) * val.quantidade).toFixed(2));
 		});
-
 
 		if (lista.length === 1) return lista[0];
 		return lista.reduce((a, b) => a + b);
@@ -41,30 +41,25 @@
 			});
 		}
 	}
+
+	const {elements: {image, fallback}} = createAvatar({
+		src: $user?.photoURL!,
+		delayMs: 500
+	})
 </script>
 
 <div class="flex flex-col items-center gap-y-2">
 	<section class="w-full bg-surface-variant p-4 sm:rounded-xl">
 		{#if $user}
 			<div class="flex flex-col space-y-3 pb-4">
-				{#if $user.photoURL}
-					<figure>
-						<img class="rounded-full" src={$user.photoURL} width="96" height="96" alt="profile" />
-					</figure>
-				{:else}
-					<svg
-						class="rounded-full bg-gray-100 text-gray-400 dark:bg-gray-600"
-						fill="currentColor"
-						viewBox="0 0 16 16"
-						xmlns="http://www.w3.org/2000/svg"
+				<figure style="height: 96px" class="rounded-full flex w-24 items-center justify-center bg-surface-1">
+					<img class="rounded-[inherit]" use:melt={$image} width="96" height="96" alt="profile" />
+					<span 
+						use:melt={$fallback} class="font-medium"
 					>
-						<path
-							fill-rule="evenodd"
-							d="M8 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-							clip-rule="evenodd"
-						/>
-					</svg>
-				{/if}
+						{$user.displayName?.split(' ')[0][0]}
+					</span>
+				</figure>
 				<h1 class="text-title-large">{$user?.displayName}</h1>
 
 				<button on:click={() => signOut(auth)} class="button">Logout</button>
@@ -116,14 +111,15 @@
 
 	<ul class="hover: w-full bg-surface-variant py-2 sm:rounded-xl">
 		{#each $carrinho as c}
-			<li class="transition-colors hover:bg-surface-1 ">
+			<li class="transition-colors hover:bg-surface-1">
 				<section class="py-3 pl-4 pr-6">
 					<div class="flex flex-row items-center justify-between">
 						<div>
 							<div class="flex items-center gap-x-2">
 								<h1 class="text-body-large capitalize">{c.nome}</h1>
 								<span class="text-body-small rounded-xl bg-secondary px-1 text-on-secondary">
-									{c.quantidade} {c.tipo === ItemTipo.KILO ? 'Kg' : 'Uni'}
+									{c.quantidade}
+									{c.tipo === ItemTipo.KILO ? 'Kg' : 'Uni'}
 								</span>
 							</div>
 							<p class="text-body-medium">R${c.preco}</p>
@@ -137,7 +133,7 @@
 						</button>
 					</div>
 				</section>
-				<hr/>
+				<hr />
 			</li>
 		{:else}
 			<li class="py-2 pl-4 pr-6">
@@ -149,7 +145,7 @@
 </div>
 
 <style lang="postcss">
-	li:last-child hr{
+	li:last-child hr {
 		@apply hidden;
 	}
 </style>

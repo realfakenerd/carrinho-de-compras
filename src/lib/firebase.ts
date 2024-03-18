@@ -1,9 +1,9 @@
 // Import the functions you need from the SDKs you need
 import { browser } from '$app/environment';
+import { getAnalytics } from 'firebase/analytics';
 import { initializeApp, type FirebaseOptions } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { enableIndexedDbPersistence, getFirestore } from 'firebase/firestore';
-import { getAnalytics } from 'firebase/analytics';
+import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyCneq-EFcWmsnH9kh-HqY1lwa3CJOUnWoc',
@@ -21,7 +21,6 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 if (browser) {
-	enableIndexedDbPersistence(db).catch(console.error);
 	getAnalytics(app);
 }
 

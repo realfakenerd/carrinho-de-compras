@@ -17,7 +17,7 @@
 	const id = String(Date.now());
 	function addItem() {
 		if (nome !== '' && preco !== '') {
-			createItem({nome, preco, img, tipo})
+			createItem({ nome, preco, img, tipo });
 			img = nome = preco = '';
 			tipo = ItemTipo.UNIDADE;
 			hidden = true;
@@ -38,7 +38,6 @@
 			}
 		};
 	}
-	
 </script>
 
 <Fab on:click={() => (hidden = false)} d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
@@ -53,7 +52,7 @@
 	<div
 		use:clickOutside={() => !hidden && (hidden = !hidden)}
 		{id}
-		class="fixed inset-x-0  bottom-20 z-50 overflow-y-auto bg-surface-1 px-4 py-6 sm:rounded-t-xl md:mx-6"
+		class="fixed inset-x-0 bottom-20 z-50 overflow-y-auto bg-surface-1 px-4 py-6 sm:rounded-t-xl md:mx-6"
 		in:slide={{ duration: 400, easing: expoOut }}
 		out:slide={{ duration: 200, easing: expoIn }}
 		tabindex="-1"
@@ -67,7 +66,9 @@
 				<input type="text" bind:value={nome} required />
 			</label>
 			<label class="space-y-2">
-				<span class="text-label-medium">Preço do produto{preco ? ':' : ''} {preco ? `R$${preco}` : ''}</span>
+				<span class="text-label-medium"
+					>Preço do produto{preco ? ':' : ''} {preco ? `R$${preco}` : ''}</span
+				>
 				<input bind:value={preco} type="number" required />
 			</label>
 			<label class="space-y-2">
@@ -76,16 +77,23 @@
 			</label>
 			<section class="flex flex-col gap-y-3">
 				<div class="inline-flex items-center gap-x-2">
-					<input bind:group={tipo} value={ItemTipo.UNIDADE} type="radio" name="tipo" id="UNIDADE" checked>
+					<input
+						bind:group={tipo}
+						value={ItemTipo.UNIDADE}
+						type="radio"
+						name="tipo"
+						id="UNIDADE"
+						checked
+					/>
 					<label class="text-label-large w-full" for="UNIDADE">Unidade</label>
 				</div>
 				<div class="inline-flex items-center gap-x-2">
-					<input bind:group={tipo} value={ItemTipo.KILO} type="radio" name="tipo" id="KILO">
+					<input bind:group={tipo} value={ItemTipo.KILO} type="radio" name="tipo" id="KILO" />
 					<label class="text-label-large w-full" for="KILO">Kilo</label>
 				</div>
 			</section>
 			<button on:click={addItem} class="button w-full1">ADD</button>
-			<hr/>
+			<hr />
 			<div class="flex flex-row items-center gap-3">
 				<ul class="inline-flex h-10">
 					<button
@@ -146,21 +154,21 @@
 {/if}
 
 <style lang="postcss">
-	[type="radio"] {
+	[type='radio'] {
 		@apply form-radio w-5 h-5 text-on-surface-variant transition border-2 border-on-surface-variant ease-in-out bg-transparent outline-none;
 	}
 
-	[type="radio"]:checked {
+	[type='radio']:checked {
 		@apply text-primary-container;
 	}
 
-	[type="radio"]:focus {
+	[type='radio']:focus {
 		@apply ring-primary-container;
 	}
 
 	input:not(input[type='radio']) {
 		@apply w-full rounded-full border-none bg-surface-variant 
-		pl-4 ring-1 ring-on-surface-variant  transition py-2;	 
+		pl-4 ring-1 ring-on-surface-variant  transition py-2;
 	}
 	input:not(input[type='radio']):placeholder {
 		@apply text-on-surface-variant;

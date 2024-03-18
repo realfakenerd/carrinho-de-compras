@@ -1,9 +1,10 @@
 <script lang="ts">
 	import EditDrawer from '$lib/components/EditDrawer.svelte';
-	import Icon from '$lib/components/Icon.svelte';
+	import Icon from '@iconify/svelte';
 	import { porNoCarrinho, porNoCarrinhoInput } from '$lib/servicos/carrinho-crud';
 	import { ItemTipo } from '$lib/stores/mercado.store';
 	import user from '$lib/stores/user.store';
+	import {melt, createSeparator} from '@melt-ui/svelte';
 	import type { CollectionReference } from 'firebase/firestore';
 	let preco: string;
 	let nome: string;
@@ -12,6 +13,13 @@
 	let id: number | string;
 	let ref: CollectionReference;
 	let customQuantidade: number;
+
+	const {
+		elements: { root: horizontal }
+	} = createSeparator({
+		decorative: false,
+		orientation: 'horizontal'
+	})
 
 	export { preco, nome, img, id, ref, tipo };
 </script>
@@ -27,7 +35,8 @@
 		/>
 		<div class="grid w-full grid-cols-2 grid-rows-2 items-center">
 			<h2 class="text-body-large col-span-2 capitalize">
-				{nome} {tipo === ItemTipo.KILO ? 'Kg' : 'Uni'}
+				{nome}
+				{tipo === ItemTipo.KILO ? 'Kg' : 'Uni'}
 			</h2>
 			<p class="text-body-medium text-on-surface-variant">R${preco}</p>
 			<div class="inline-flex place-self-end">
@@ -37,7 +46,7 @@
 			</div>
 		</div>
 	</div>
-	<hr />
+	<hr use:melt={$horizontal}/>
 	<div class="flex flex-row items-center gap-3">
 		<ul class="inline-flex h-10">
 			<button
@@ -49,7 +58,8 @@
 					tipo
 				})}
 			>
-				<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+
+				<Icon icon="mdi:plus-one" width="24px" />
 			</button>
 			<button
 				class="cus-btn border-on-outline-variant border-r border-l"
@@ -60,7 +70,7 @@
 					tipo
 				})}
 			>
-				<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+				<Icon icon="mdi:plus" width="24px"/>
 				<p class="body-medium">2</p>
 			</button>
 			<button
@@ -72,14 +82,14 @@
 					tipo
 				})}
 			>
-				<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+				<Icon icon="mdi:plus" width="24px"/>
 				<p class="body-medium">6</p>
 			</button>
 		</ul>
 
 		<div class="relative flex w-full items-center">
 			<div class="absolute fill-on-surface-variant pl-2">
-				<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+				<Icon icon="mdi:plus" width="24px"/>
 			</div>
 			<input
 				class="border-nonex w-full rounded-md bg-background py-2 pl-12 pr-4 ring-1 ring-on-surface-variant transition focus:ring-2 focus:ring-on-surface-variant"

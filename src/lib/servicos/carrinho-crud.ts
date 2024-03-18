@@ -1,5 +1,5 @@
-import carrinho from "$lib/stores/carrinho.store";
-import type { Carrinho } from "$lib/types";
+import carrinho from '$lib/stores/carrinho.store';
+import type { Carrinho } from '$lib/types';
 
 function porNoCarrinho({ nome, preco, tipo, quantidade = 1 }: Carrinho) {
 	carrinho.update((val) => {
@@ -30,7 +30,7 @@ function tirarDoCarrinho(nome: string) {
 	return null;
 }
 
-function porNoCarrinhoInput({ nome, preco, tipo,quantidade = 1 }: Carrinho) {
+function porNoCarrinhoInput({ nome, preco, tipo, quantidade = 1 }: Carrinho) {
 	carrinho.update((val) => {
 		let i = 0;
 		for (i; i < val.length; i++) {
@@ -47,8 +47,4 @@ function porNoCarrinhoInput({ nome, preco, tipo,quantidade = 1 }: Carrinho) {
 	return null;
 }
 
-export {
-    porNoCarrinho,
-    porNoCarrinhoInput,
-    tirarDoCarrinho
-}
+export { porNoCarrinho, porNoCarrinhoInput, tirarDoCarrinho };

@@ -1,51 +1,58 @@
 <script lang="ts">
-	import Icon from '$lib/components/Icon.svelte';
+	import { onNavigate } from '$app/navigation';
+	import Icon, {enableCache} from '@iconify/svelte';
 	import { auth, db } from '$lib/firebase';
 	import '@fontsource/roboto';
-	import { expoIn, expoOut } from 'svelte/easing';
-	import { fly } from 'svelte/transition';
 	import { FirebaseApp } from 'sveltefire';
 	import '../app.scss';
 	export let data;
+
+	enableCache('all')
+	onNavigate((navigation) => {
+		if (!document.startViewTransition) return;
+		return new Promise((resolve) => {
+			document.startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
+		});
+	});
 
 	const routes = [
 		{
 			href: '/',
 			name: 'home',
 			d: {
-				outlined: `M12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81l5-4.5M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z`,
-				filled: `M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z`
+				outlined: `mdi:home-variant-outline`,
+				filled: `mdi:home-variant`
 			}
 		},
 		{
 			href: '/pesquisa',
 			name: 'Pesquisa',
 			d: {
-				outlined: `M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z`,
-				filled: `M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z`
+				outlined: `mdi:search`,
+				filled: `mdi:search`
 			}
 		},
 		{
 			href: '/carrinho',
 			name: 'carrinho',
 			d: {
-				outlined: `M15.55 13c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.37-.66-.11-1.48-.87-1.48H5.21l-.94-2H1v2h2l3.6 7.59-1.35 2.44C4.52 15.37 5.48 17 7 17h12v-2H7l1.1-2h7.45zM6.16 6h12.15l-2.76 5H8.53L6.16 6zM7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z`,
-				filled: `M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z`
+				outlined: `mdi:local-grocery-store`,
+				filled: `mdi:local-grocery-store`
 			}
 		}
 	];
 </script>
 
 <FirebaseApp {auth} firestore={db}>
-	{#key data.currentRoute}
 		<main
+			style="view-transition-name: card;"
 			class="pt-8 pb-24 sm:px-4"
-			in:fly={{ x: -5, duration: 500, delay: 200, easing: expoOut }}
-			out:fly={{ x: 5, duration: 200, easing: expoIn }}
 		>
 			<slot />
 		</main>
-	{/key}
 
 	<footer class="fixed bottom-0 z-50 w-full">
 		<nav class="custom-navbar">
@@ -56,7 +63,7 @@
 						style="background-color:{data.currentRoute === route.href ? '#4A4458' : ''} "
 					>
 						<span class="fill-on-background group-hover:fill-on-secondary">
-							<Icon d={data.currentRoute === route.href ? route.d.filled : route.d.outlined} />
+							<Icon icon={data.currentRoute === route.href ? route.d.filled : route.d.outlined} />
 						</span>
 					</div>
 					<h3>{route.name}</h3>
@@ -82,5 +89,41 @@
 				@apply order-1 h-4 flex-none flex-grow-0 self-stretch text-center text-xs font-medium tracking-wide;
 			}
 		}
+	}
+
+	@keyframes fade-in {
+		from {
+			opacity: 0;
+		}
+	}
+
+	@keyframes fade-out {
+		to {
+			opacity: 0;
+		}
+	}
+
+	@keyframes slide-from-right {
+		from {
+			transform: translateY(30px);
+		}
+	}
+
+	@keyframes slide-to-left {
+		to {
+			transform: translateY(-30px);
+		}
+	}
+
+	:root::view-transition-old(card) {
+		animation:
+			110ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
+			250ms cubic-bezier(0.291, 0.281, 0, 1.2) both slide-to-left;
+	}
+
+	:root::view-transition-new(card) {
+		animation:
+			210ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+			500ms cubic-bezier(0.291, 0.281, 0, 1.2) both slide-from-right;
 	}
 </style>

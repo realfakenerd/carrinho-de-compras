@@ -1,4 +1,4 @@
-<li class="animate-pulse space-y-4  p-4">
+<li class="animate-pulse space-y-4 p-4">
 	<section class="flex flex-col">
 		<div class="inline-flex w-full items-end justify-between">
 			<div class="flex items-center gap-x-2">
@@ -8,7 +8,7 @@
 					<div class="h-2 w-32 rounded-full bg-surface-5" />
 				</div>
 			</div>
-			<div class="h-10  w-10 rounded-full bg-background" />
+			<div class="h-10 w-10 rounded-full bg-background" />
 		</div>
 
 		<hr />
@@ -28,7 +28,7 @@
 					<div class="h-2 w-32 rounded-full bg-surface-5" />
 				</div>
 			</div>
-			<div class="h-10  w-10 rounded-full bg-background" />
+			<div class="h-10 w-10 rounded-full bg-background" />
 		</div>
 
 		<hr />
@@ -48,7 +48,7 @@
 					<div class="h-2 w-32 rounded-full bg-surface-5" />
 				</div>
 			</div>
-			<div class="h-10  w-10 rounded-full bg-background" />
+			<div class="h-10 w-10 rounded-full bg-background" />
 		</div>
 
 		<hr />
@@ -68,7 +68,7 @@
 					<div class="h-2 w-32 rounded-full bg-surface-5" />
 				</div>
 			</div>
-			<div class="h-10  w-10 rounded-full bg-background" />
+			<div class="h-10 w-10 rounded-full bg-background" />
 		</div>
 
 		<hr />

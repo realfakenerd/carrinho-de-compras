@@ -1,10 +1,10 @@
-import { ItemTipo } from "./stores/mercado.store";
+import { ItemTipo } from './stores/mercado.store';
 
 export interface Carrinho {
 	nome: string;
 	preco: string;
 	quantidade: number;
-    tipo: ItemTipo;
+	tipo: ItemTipo;
 }
 
 export interface Mercado {
@@ -13,5 +13,5 @@ export interface Mercado {
 	preco: string;
 	tipo: ItemTipo;
 	readonly id?: string;
-	readonly ref?: CollectionReference
+	readonly ref?: CollectionReference;
 }

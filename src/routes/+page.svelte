@@ -3,6 +3,8 @@
 	import ItemCard from '$lib/components/ItemCard.svelte';
 	import ItemCardSkeleton from '$lib/components/ItemCardSkeleton.svelte';
 	import user from '$lib/stores/user.store';
+	import { onMount } from 'svelte';
+	import { createMercadoIndex } from '$lib/search';
 
 	export let data;
 	const { mercado } = data;
