@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { updateItem } from '$lib/servicos/mercado-crud';
-	import type { CollectionReference } from 'firebase/firestore';
-	import { expoIn, expoOut } from 'svelte/easing';
-	import { slide } from 'svelte/transition';
-	import {melt, createLabel} from '@melt-ui/svelte';
 	import Icon from '@iconify/svelte';
+	import { createLabel, melt } from '@melt-ui/svelte';
+	import type { CollectionReference } from 'firebase/firestore';
+	import { Drawer } from "vaul-svelte";
+
 	let hidden = true;
 	let ref: CollectionReference;
 	let nome = '',
@@ -41,54 +41,43 @@
 	export { nome, preco, img, id, ref };
 </script>
 
-<button
-	on:click={() => (hidden = false)}
+
+<Drawer.Root>
+
+<Drawer.Trigger
 	class="grid h-10 w-10 place-items-center justify-self-center rounded-full bg-primary text-on-primary transition-colors hover:bg-primary/50"
 >
 	<Icon
 		width="24px"
 		icon="mdi:edit"
 	/>
-</button>
+</Drawer.Trigger>
 
-{#if !hidden}
-	<div
-		role="presentation"
-		class="fixed top-0 left-0 z-50 h-full w-full bg-surface-2 bg-opacity-95 transition"
-		on:click={() => !hidden && (hidden = !hidden)}
-	/>
+<Drawer.Portal>
+	<Drawer.Overlay clas="fixed top-0 left-0 z-50 h-full w-full bg-surface-2 bg-opacity-95 transition"/>
+	<Drawer.Content class="fixed inset-x-0 bottom-20 z-50 overflow-y-auto bg-surface-1 px-4 py-6 sm:rounded-t-xl md:mx-6">
+	<form class="flex flex-col space-y-6">
+		<h2 class="text-title-medium">Edite o item</h2>
+		<label class="space-y-2" use:melt={$root}>
+			<span class="text-label-medium">Nome do produto{nome ? ':' : ''} {nome}</span>
+			<input type="text" bind:value={nome} required />
+		</label>
+		<label class="space-y-2" use:melt={$root}>
+			<span class="text-label-medium"
+				>Preço do produto{preco ? ':' : ''} {preco ? `R$${preco}` : ''}</span
+			>
+			<input type="number" bind:value={preco} required />
+		</label>
+		<label class="space-y-2" use:melt={$root}>
+			<span class="text-label-medium">Img do produto</span>
+			<input type="text" bind:value={img} />
+		</label>
+		<button on:click={localUpdateItem} class="button w-full1">Salvar edição</button>
+	</form>
+	</Drawer.Content>
+</Drawer.Portal>
 
-	<div
-		use:clickOutside={() => !hidden && (hidden = !hidden)}
-		{id}
-		class="fixed inset-x-0 bottom-20 z-50 overflow-y-auto bg-surface-1 px-4 py-6 sm:rounded-t-xl md:mx-6"
-		in:slide={{ duration: 400, easing: expoOut }}
-		out:slide={{ duration: 200, easing: expoIn }}
-		tabindex="-1"
-		aria-controls={id}
-		aria-labelledby={id}
-	>
-		<form class="flex flex-col space-y-6">
-			<h2 class="text-title-medium">Edite o item</h2>
-			<label class="space-y-2" use:melt={$root}>
-				<span class="text-label-medium">Nome do produto{nome ? ':' : ''} {nome}</span>
-				<input type="text" bind:value={nome} required />
-			</label>
-			<label class="space-y-2" use:melt={$root}>
-				<span class="text-label-medium"
-					>Preço do produto{preco ? ':' : ''} {preco ? `R$${preco}` : ''}</span
-				>
-				<input type="number" bind:value={preco} required />
-			</label>
-			<label class="space-y-2" use:melt={$root}>
-				<span class="text-label-medium">Img do produto</span>
-				<input type="text" bind:value={img} />
-			</label>
-			<button on:click={localUpdateItem} class="button w-full1">Salvar edição</button>
-		</form>
-	</div>
-{/if}
-
+</Drawer.Root>
 <style lang="postcss">
 	input {
 		@apply w-full rounded-full border-none bg-surface-variant 
