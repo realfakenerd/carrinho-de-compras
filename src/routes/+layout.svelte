@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { onNavigate } from '$app/navigation';
-	import Icon, {enableCache} from '@iconify/svelte';
+	import Icon, { enableCache } from '@iconify/svelte';
 	import { auth, db } from '$lib/firebase';
 	import '@fontsource/roboto';
 	import { FirebaseApp } from 'sveltefire';
-	import '../app.scss';
+	import '../app.css';
 	export let data;
 
-	enableCache('all')
+	enableCache('all');
 	onNavigate((navigation) => {
 		if (!document.startViewTransition) return;
 		return new Promise((resolve) => {
@@ -47,12 +47,9 @@
 </script>
 
 <FirebaseApp {auth} firestore={db}>
-		<main
-			style="view-transition-name: card;"
-			class="pt-8 pb-24 sm:px-4"
-		>
-			<slot />
-		</main>
+	<main style="view-transition-name: card;">
+		<slot />
+	</main>
 
 	<footer class="fixed bottom-0 z-50 w-full">
 		<nav class="custom-navbar">

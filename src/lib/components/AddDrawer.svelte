@@ -1,157 +1,111 @@
 <script lang="ts">
-	import { createItem } from '$lib/servicos/mercado-crud';
 	import { porNoCarrinho, porNoCarrinhoInput } from '$lib/servicos/carrinho-crud';
+	import { createItem } from '$lib/servicos/mercado-crud';
 	import { ItemTipo } from '$lib/stores/mercado.store';
-	import { expoIn, expoOut } from 'svelte/easing';
-	import { slide } from 'svelte/transition';
 	import Fab from './FAB.svelte';
 	import Icon from './Icon.svelte';
+	import type { Unsplash } from './drawer';
+	import { RadioGroup, RadioGroupItem } from './radio-group';
+	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from './vaul';
 
-	let hidden = true;
 	let customQuantidade: number;
 	let nome = '',
 		preco = '',
 		img = '',
 		tipo = ItemTipo.UNIDADE;
 
-	const id = String(Date.now());
 	function addItem() {
-		if (nome !== '' && preco !== '') {
+		if (nome !== '' && preco !== '') {			
 			createItem({ nome, preco, img, tipo });
 			img = nome = preco = '';
-			tipo = ItemTipo.UNIDADE;
-			hidden = true;
+			tipo = ItemTipo.UNIDADE
 		}
 	}
 
-	function clickOutside(node: HTMLElement, callback: () => void) {
-		const handleClick = (event: Event) => {
-			if (!event?.target) return;
-			if (node && !node.contains(event.target as HTMLElement) && !event.defaultPrevented) {
-				callback();
+	let images: Unsplash = [];
+	async function unsplash(){
+		console.log('img',img);
+		
+		if(img === '') return;
+		const res = await fetch(`https://api.unsplash.com/search/photos/?query=${img}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Client-ID g4OdDhmb2xX2x_YlHP6EnHru--MGm1cxdddPrHcQx4o'
 			}
-		};
-		document.addEventListener('click', handleClick, true);
-		return {
-			destroy() {
-				document.removeEventListener('click', handleClick, true);
-			}
-		};
+		});
+
+		images = await res.json() as Unsplash;
 	}
+
+	/**
+	 * Creates a debounced version of the provided function which will only be executed after the specified delay
+	 * since the last call. The function is called with the same arguments as the original function and the `this`
+	 * context is preserved.
+	 * @param fn The function to be debounced
+	 * @param delay The delay in milliseconds
+	 * @returns A function that will only be executed after the specified delay since the last call.
+	 */
+	function debounce<F extends (...args: any[]) => any>(
+		fn: F,
+		delay: number
+	): (...args: Parameters<F>) => ReturnType<F> {
+		let timeout: ReturnType<typeof setTimeout>
+		return function (this: ThisParameterType<F>, ...args: Parameters<F>): ReturnType<F> {
+			clearTimeout(timeout)
+			timeout = setTimeout(() => fn.apply(this, args), delay)
+		}
+	}
+
 </script>
 
-<Fab on:click={() => (hidden = false)} d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+<Drawer>
+	<DrawerTrigger>
+		<Fab />
+	</DrawerTrigger>
 
-{#if !hidden}
-	<div
-		role="presentation"
-		class="fixed top-0 left-0 z-50 h-full w-full bg-surface-2 bg-opacity-95 transition"
-		on:click={() => !hidden && (hidden = !hidden)}
-	/>
-
-	<div
-		use:clickOutside={() => !hidden && (hidden = !hidden)}
-		{id}
-		class="fixed inset-x-0 bottom-20 z-50 overflow-y-auto bg-surface-1 px-4 py-6 sm:rounded-t-xl md:mx-6"
-		in:slide={{ duration: 400, easing: expoOut }}
-		out:slide={{ duration: 200, easing: expoIn }}
-		tabindex="-1"
-		aria-controls={id}
-		aria-labelledby={id}
-	>
+	<DrawerContent class="max-h-[96%]">
+		<DrawerTitle class="text-title-medium">Adicione um novo item ao mercado</DrawerTitle>
 		<form class="flex flex-col space-y-6">
-			<h2 class="text-title-medium">Adicione um novo item ao mercado</h2>
-			<label class="space-y-2">
+			<label>
 				<span class="text-label-medium">Nome do produto{nome ? ':' : ''} {nome}</span>
 				<input type="text" bind:value={nome} required />
 			</label>
-			<label class="space-y-2">
+			<label>
 				<span class="text-label-medium"
 					>Preço do produto{preco ? ':' : ''} {preco ? `R$${preco}` : ''}</span
 				>
 				<input bind:value={preco} type="number" required />
 			</label>
-			<label class="space-y-2">
-				<span class="text-label-medium">Escolha uma imagem também</span>
-				<input bind:value={img} type="text" />
-			</label>
-			<section class="flex flex-col gap-y-3">
-				<div class="inline-flex items-center gap-x-2">
-					<input
-						bind:group={tipo}
-						value={ItemTipo.UNIDADE}
-						type="radio"
-						name="tipo"
-						id="UNIDADE"
-						checked
-					/>
-					<label class="text-label-large w-full" for="UNIDADE">Unidade</label>
-				</div>
-				<div class="inline-flex items-center gap-x-2">
-					<input bind:group={tipo} value={ItemTipo.KILO} type="radio" name="tipo" id="KILO" />
-					<label class="text-label-large w-full" for="KILO">Kilo</label>
-				</div>
-			</section>
-			<button on:click={addItem} class="button w-full1">ADD</button>
-			<hr />
-			<div class="flex flex-row items-center gap-3">
-				<ul class="inline-flex h-10">
-					<button
-						class="cus-btn rounded-l-full"
-						on:click={porNoCarrinho({
-							nome,
-							preco,
-							quantidade: 1,
-							tipo
-						})}
-					>
-						<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-					</button>
-					<button
-						class="cus-btn border-on-outline-variant border-r border-l"
-						on:click={porNoCarrinho({
-							nome,
-							preco,
-							quantidade: 5,
-							tipo
-						})}
-					>
-						<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-						<p class="body-medium">5</p>
-					</button>
-					<button
-						class="cus-btn rounded-r-full"
-						on:click={porNoCarrinho({
-							nome,
-							preco,
-							quantidade: 10,
-							tipo
-						})}
-					>
-						<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-						<p class="body-medium">10</p>
-					</button>
-				</ul>
 
-				<div class="relative flex w-full items-center">
-					<div class="absolute fill-on-surface-variant pl-2">
-						<Icon d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-					</div>
-					<input
-						type="number"
-						bind:value={customQuantidade}
-						on:keyup={porNoCarrinhoInput({
-							nome,
-							preco,
-							quantidade: customQuantidade,
-							tipo
-						})}
-					/>
-				</div>
+			<div>
+				<label>
+					<span class="text-label-medium">Escolha uma imagem também</span>
+					<input bind:value={img} type="text" on:keydown={debounce(unsplash, 300)}/>
+				</label>
+
+				{#if images && images?.results?.length}
+					<ul class="flex flex-wrap gap-2 justify-center overflow-y-scroll h-32">
+						{#each images.results as image}
+							<figure>
+								<img
+									src={image.urls.regular}
+									alt={image.description}
+									class="aspect-square object-cover h-24 bg-surface-variant"
+								/>
+							</figure>
+						{/each}
+					</ul>
+				{/if}
 			</div>
+			<RadioGroup defaultValue={String(ItemTipo.UNIDADE)}>
+				<RadioGroupItem bind:value={tipo} label="Unidade" option={String(ItemTipo.UNIDADE)} />
+				<RadioGroupItem bind:value={tipo} label="Kilo" option={String(ItemTipo.KILO)} />
+			</RadioGroup>
+			<button on:click={addItem} class="button w-full1">ADD</button>
 		</form>
-	</div>
-{/if}
+	</DrawerContent>
+</Drawer>
 
 <style lang="postcss">
 	[type='radio'] {

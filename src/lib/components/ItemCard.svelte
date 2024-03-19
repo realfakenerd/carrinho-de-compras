@@ -1,113 +1,136 @@
 <script lang="ts">
-	import EditDrawer from '$lib/components/EditDrawer.svelte';
-	import Icon from '@iconify/svelte';
-	import { porNoCarrinho, porNoCarrinhoInput } from '$lib/servicos/carrinho-crud';
 	import { ItemTipo } from '$lib/stores/mercado.store';
-	import user from '$lib/stores/user.store';
-	import {melt, createSeparator} from '@melt-ui/svelte';
+	import Icon from '@iconify/svelte';
 	import type { CollectionReference } from 'firebase/firestore';
+	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from './vaul';
+	import { porNoCarrinho } from '$lib/servicos/carrinho-crud';
+
 	let preco: string;
 	let nome: string;
-	let img: string;
+	let img: string | null;
 	let tipo: ItemTipo;
-	let id: number | string;
-	let ref: CollectionReference;
-	let customQuantidade: number;
+	let quantidade = 0;
 
-	const {
-		elements: { root: horizontal }
-	} = createSeparator({
-		decorative: false,
-		orientation: 'horizontal'
-	})
+	let open = false;
+	function addAndDismiss() {
+		porNoCarrinho({ nome, preco, tipo, quantidade });
+		open = false;
+	}
 
-	export { preco, nome, img, id, ref, tipo };
+	export { preco, nome, img, tipo };
+
+	let valorAPagar = 0;
+	$: {
+		if (tipo === ItemTipo.UNIDADE) valorAPagar = parseFloat(preco) * quantidade;
+		else valorAPagar = parseFloat((parseFloat(preco) * quantidade).toFixed(2));
+	}
+
+	function increment(){
+		if(tipo === ItemTipo.UNIDADE){
+			quantidade++;
+			return
+		}
+		quantidade += 0.1;
+		return;
+	}
+
+	function decrement(){
+		if(tipo === ItemTipo.UNIDADE){
+			quantidade--;
+			return
+		}
+		quantidade -= 0.1;
+		return;
+	}
 </script>
 
-<li class="flex flex-col py-3 pl-4 pr-6">
-	<div class="flex flex-row items-center gap-x-4">
+<section
+	class="bg-surface-variant rounded-2xl flex flex-col items-center w-full max-w-52 overflow-hidden"
+>
+	<figure>
 		<img
-			class="h-16 w-16 rounded-lg object-cover"
-			src={img || 'https://dummyimage.com/80x80/fff/111'}
-			alt=""
-			height="64"
-			width="64"
+			style="height: 208px;"
+			class="rounded-lg object-cover aspect-square"
+			loading="lazy"
+			src={img || 'https://dummyimage.com/200x200/fff/111.gif&text=Imagem+indisponível'}
+			alt={nome}
+			width="208px"
+			height="208px"
 		/>
-		<div class="grid w-full grid-cols-2 grid-rows-2 items-center">
-			<h2 class="text-body-large col-span-2 capitalize">
+	</figure>
+
+	<div class="flex flex-row justify-between w-full">
+		<div class="flex flex-col p-4 w-full overflow-hidden">
+			<h2
+				class="text-label-medium col-span-2 capitalize overflow-hidden whitespace-nowrap text-ellipsis"
+			>
 				{nome}
-				{tipo === ItemTipo.KILO ? 'Kg' : 'Uni'}
 			</h2>
-			<p class="text-body-medium text-on-surface-variant">R${preco}</p>
-			<div class="inline-flex place-self-end">
-				{#if $user}
-					<EditDrawer {ref} {preco} {nome} {img} id={String(id)} />
-				{/if}
-			</div>
+			<p
+				class="text-title-medium text-on-surface-variant overflow-hidden whitespace-nowrap text-ellipsis"
+			>
+				R$ {preco}
+				{tipo === ItemTipo.KILO ? 'Kg' : 'Uni'}
+			</p>
 		</div>
+		<Drawer {open}>
+			<DrawerTrigger
+				on:click={() => (open = true)}
+				class="px-6 overflow-hidden text-primary hover:text-primary/70 transition-colors"
+			>
+				<Icon icon="mdi:cart-plus" />
+			</DrawerTrigger>
+
+			<DrawerContent class="flex flex-col gap-10">
+				<hgroup>
+					<DrawerTitle class="text-headline-large">{nome}</DrawerTitle>
+					<h2>R$ {preco} {tipo === ItemTipo.KILO ? 'Kg' : 'Uni'} / R$ {valorAPagar}</h2>
+				</hgroup>
+
+				<figure>
+					<img
+						style="height: 238px;"
+						class="rounded-lg object-cover"
+						loading="lazy"
+						src={img || 'https://dummyimage.com/200x200/fff/111.gif&text=Imagem+indisponível'}
+						alt={nome}
+						width="238px"
+						height="238px"
+					/>
+				</figure>
+
+				<div class="p-4 pb-0">
+					<div class="flex items-center justify-center space-x-2">
+						<button
+							on:click={decrement}
+							disabled={quantidade <= 0}
+							class="flex items-center justify-center h-8 w-8 ring-1 hover:ring-2 ring-error rounded-full"
+						>
+							<Icon icon="mdi:minus" class="h-4 w-4" />
+							<span class="sr-only">Decrease</span>
+						</button>
+
+						<div class="flex-1 text-center">
+							<div class="text-headline-large font-bold">
+								{quantidade.toFixed(1)}
+							</div>
+							<div class="text-label-large uppercase">
+								{quantidade > 1 ? 'unidades' : 'unidade'}
+							</div>
+						</div>
+						<button
+							on:click={increment}
+							class="flex items-center justify-center h-8 w-8 ring-1 hover:ring-2 ring-primary rounded-full"
+						>
+							<Icon icon="mdi:plus" class="h-4 w-4" />
+							<span class="sr-only">Increase</span>
+						</button>
+					</div>
+				</div>
+				<button on:click={() => addAndDismiss()} class="bg-primary py-2 rounded-xl w-full">
+					Adicionar no carrinho
+				</button>
+			</DrawerContent>
+		</Drawer>
 	</div>
-	<hr use:melt={$horizontal}/>
-	<div class="flex flex-row items-center gap-3">
-		<ul class="inline-flex h-10">
-			<button
-				class="cus-btn rounded-l-full"
-				on:click={porNoCarrinho({
-					nome,
-					preco,
-					quantidade: 1,
-					tipo
-				})}
-			>
-
-				<Icon icon="mdi:plus-one" width="24px" />
-			</button>
-			<button
-				class="cus-btn border-on-outline-variant border-r border-l"
-				on:click={porNoCarrinho({
-					nome,
-					preco,
-					quantidade: 2,
-					tipo
-				})}
-			>
-				<Icon icon="mdi:plus" width="24px"/>
-				<p class="body-medium">2</p>
-			</button>
-			<button
-				class="cus-btn rounded-r-full"
-				on:click={porNoCarrinho({
-					nome,
-					preco,
-					quantidade: 6,
-					tipo
-				})}
-			>
-				<Icon icon="mdi:plus" width="24px"/>
-				<p class="body-medium">6</p>
-			</button>
-		</ul>
-
-		<div class="relative flex w-full items-center">
-			<div class="absolute fill-on-surface-variant pl-2">
-				<Icon icon="mdi:plus" width="24px"/>
-			</div>
-			<input
-				class="border-nonex w-full rounded-md bg-background py-2 pl-12 pr-4 ring-1 ring-on-surface-variant transition focus:ring-2 focus:ring-on-surface-variant"
-				type="number"
-				bind:value={customQuantidade}
-				on:keyup={porNoCarrinhoInput({
-					nome,
-					preco,
-					quantidade: customQuantidade,
-					tipo
-				})}
-			/>
-		</div>
-	</div>
-</li>
-
-<style lang="postcss">
-	.cus-btn {
-		@apply flex place-items-center bg-primary fill-on-primary px-3  text-on-primary transition hover:bg-primary/70;
-	}
-</style>
+</section>

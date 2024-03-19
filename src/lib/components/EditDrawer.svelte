@@ -3,7 +3,7 @@
 	import Icon from '@iconify/svelte';
 	import { createLabel, melt } from '@melt-ui/svelte';
 	import type { CollectionReference } from 'firebase/firestore';
-	import { Drawer } from "vaul-svelte";
+	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '$lib/components/vaul';
 
 	let ref: CollectionReference;
 	let nome = '',
@@ -17,49 +17,42 @@
 	}
 
 	const {
-		elements: {root}
-	} = createLabel()
+		elements: { root }
+	} = createLabel();
 
 	export { nome, preco, img, ref };
 </script>
 
+<Drawer>
+	<DrawerTrigger
+		class="flex justify-center items-center h-10 w-10 rounded-full bg-primary text-on-primary transition-colors hover:bg-primary/50"
+	>
+		<Icon width="24px" icon="mdi:edit" />
+	</DrawerTrigger>
+	<DrawerContent
+		class="fixed inset-x-0 bottom-20 z-50 bg-surface-1 px-4 py-6 sm:rounded-t-xl md:mx-6"
+	>
+		<form class="flex flex-col space-y-6">
+			<DrawerTitle class="text-title-large">Edite o item</DrawerTitle>
+			<label class="space-y-2" use:melt={$root}>
+				<span class="text-label-medium">Nome do produto{nome ? ':' : ''} {nome}</span>
+				<input type="text" bind:value={nome} required />
+			</label>
+			<label class="space-y-2" use:melt={$root}>
+				<span class="text-label-medium"
+					>Preço do produto{preco ? ':' : ''} {preco ? `R$${preco}` : ''}</span
+				>
+				<input type="number" bind:value={preco} required />
+			</label>
+			<label class="space-y-2" use:melt={$root}>
+				<span class="text-label-medium">Img do produto</span>
+				<input type="text" bind:value={img} />
+			</label>
+			<button on:click={localUpdateItem} class="button w-full1">Salvar edição</button>
+		</form>
+	</DrawerContent>
+</Drawer>
 
-<Drawer.Root>
-
-<Drawer.Trigger
-	class="grid h-10 w-10 place-items-center justify-self-center rounded-full bg-primary text-on-primary transition-colors hover:bg-primary/50"
->
-	<Icon
-		width="24px"
-		icon="mdi:edit"
-	/>
-</Drawer.Trigger>
-
-<Drawer.Portal>
-	<Drawer.Overlay class="fixed top-0 left-0 z-50 h-full w-full bg-surface-2 bg-opacity-95 transition"/>
-	<Drawer.Content class="fixed inset-x-0 bottom-20 z-50 overflow-y-auto bg-surface-1 px-4 py-6 sm:rounded-t-xl md:mx-6">
-	<form class="flex flex-col space-y-6">
-		<h2 class="text-title-medium">Edite o item</h2>
-		<label class="space-y-2" use:melt={$root}>
-			<span class="text-label-medium">Nome do produto{nome ? ':' : ''} {nome}</span>
-			<input type="text" bind:value={nome} required />
-		</label>
-		<label class="space-y-2" use:melt={$root}>
-			<span class="text-label-medium"
-				>Preço do produto{preco ? ':' : ''} {preco ? `R$${preco}` : ''}</span
-			>
-			<input type="number" bind:value={preco} required />
-		</label>
-		<label class="space-y-2" use:melt={$root}>
-			<span class="text-label-medium">Img do produto</span>
-			<input type="text" bind:value={img} />
-		</label>
-		<button on:click={localUpdateItem} class="button w-full1">Salvar edição</button>
-	</form>
-	</Drawer.Content>
-</Drawer.Portal>
-
-</Drawer.Root>
 <style lang="postcss">
 	input {
 		@apply w-full rounded-full border-none bg-surface-variant 
