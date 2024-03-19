@@ -5,32 +5,14 @@
 	import type { CollectionReference } from 'firebase/firestore';
 	import { Drawer } from "vaul-svelte";
 
-	let hidden = true;
 	let ref: CollectionReference;
 	let nome = '',
 		preco = '',
-		img = '',
-		id = '';
-
-	function clickOutside(node: HTMLElement, callback: () => void) {
-		const handleClick = (event: Event) => {
-			if (!event?.target) return;
-			if (node && !node.contains(event.target as HTMLElement) && !event.defaultPrevented) {
-				callback();
-			}
-		};
-		document.addEventListener('click', handleClick, true);
-		return {
-			destroy() {
-				document.removeEventListener('click', handleClick, true);
-			}
-		};
-	}
+		img = '';
 
 	async function localUpdateItem() {
 		if (nome !== '' && preco !== '') {
 			await updateItem({ nome, preco, img, ref });
-			hidden = true;
 		}
 	}
 
@@ -38,7 +20,7 @@
 		elements: {root}
 	} = createLabel()
 
-	export { nome, preco, img, id, ref };
+	export { nome, preco, img, ref };
 </script>
 
 
@@ -54,7 +36,7 @@
 </Drawer.Trigger>
 
 <Drawer.Portal>
-	<Drawer.Overlay clas="fixed top-0 left-0 z-50 h-full w-full bg-surface-2 bg-opacity-95 transition"/>
+	<Drawer.Overlay class="fixed top-0 left-0 z-50 h-full w-full bg-surface-2 bg-opacity-95 transition"/>
 	<Drawer.Content class="fixed inset-x-0 bottom-20 z-50 overflow-y-auto bg-surface-1 px-4 py-6 sm:rounded-t-xl md:mx-6">
 	<form class="flex flex-col space-y-6">
 		<h2 class="text-title-medium">Edite o item</h2>
