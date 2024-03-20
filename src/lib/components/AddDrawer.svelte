@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { porNoCarrinho, porNoCarrinhoInput } from '$lib/servicos/carrinho-crud';
 	import { createItem } from '$lib/servicos/mercado-crud';
 	import { ItemTipo } from '$lib/stores/mercado.store';
 	import Fab from './FAB.svelte';
-	import Icon from './Icon.svelte';
 	import type { Unsplash } from './drawer';
 	import { RadioGroup, RadioGroupItem } from './radio-group';
 	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from './vaul';
@@ -15,27 +13,27 @@
 		tipo = ItemTipo.UNIDADE;
 
 	function addItem() {
-		if (nome !== '' && preco !== '') {			
+		if (nome !== '' && preco !== '') {
 			createItem({ nome, preco, img, tipo });
 			img = nome = preco = '';
-			tipo = ItemTipo.UNIDADE
+			tipo = ItemTipo.UNIDADE;
 		}
 	}
 
 	let images: Unsplash = [];
-	async function unsplash(){
-		console.log('img',img);
-		
-		if(img === '') return;
+	async function unsplash() {
+		console.log('img', img);
+
+		if (img === '') return;
 		const res = await fetch(`https://api.unsplash.com/search/photos/?query=${img}`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
-				'Authorization': 'Client-ID g4OdDhmb2xX2x_YlHP6EnHru--MGm1cxdddPrHcQx4o'
+				Authorization: 'Client-ID g4OdDhmb2xX2x_YlHP6EnHru--MGm1cxdddPrHcQx4o'
 			}
 		});
 
-		images = await res.json() as Unsplash;
+		images = (await res.json()) as Unsplash;
 	}
 
 	/**
@@ -50,13 +48,13 @@
 		fn: F,
 		delay: number
 	): (...args: Parameters<F>) => ReturnType<F> {
-		let timeout: ReturnType<typeof setTimeout>
+		let timeout: ReturnType<typeof setTimeout>;
 		return function (this: ThisParameterType<F>, ...args: Parameters<F>): ReturnType<F> {
-			clearTimeout(timeout)
-			timeout = setTimeout(() => fn.apply(this, args), delay)
-		}
+			clearTimeout(timeout);
+			timeout = setTimeout(() => fn.apply(this, args), delay);
+			return fn.apply(this, args);
+		};
 	}
-
 </script>
 
 <Drawer>
@@ -81,7 +79,7 @@
 			<div>
 				<label>
 					<span class="text-label-medium">Escolha uma imagem também</span>
-					<input bind:value={img} type="text" on:keydown={debounce(unsplash, 300)}/>
+					<input bind:value={img} type="text" on:keydown={debounce(unsplash, 300)} />
 				</label>
 
 				{#if images && images?.results?.length}
@@ -108,18 +106,6 @@
 </Drawer>
 
 <style lang="postcss">
-	[type='radio'] {
-		@apply form-radio w-5 h-5 text-on-surface-variant transition border-2 border-on-surface-variant ease-in-out bg-transparent outline-none;
-	}
-
-	[type='radio']:checked {
-		@apply text-primary-container;
-	}
-
-	[type='radio']:focus {
-		@apply ring-primary-container;
-	}
-
 	input:not(input[type='radio']) {
 		@apply w-full rounded-full border-none bg-surface-variant 
 		pl-4 ring-1 ring-on-surface-variant  transition py-2;

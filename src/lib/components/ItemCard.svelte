@@ -25,19 +25,19 @@
 		else valorAPagar = parseFloat((parseFloat(preco) * quantidade).toFixed(2));
 	}
 
-	function increment(){
-		if(tipo === ItemTipo.UNIDADE){
+	function increment() {
+		if (tipo === ItemTipo.UNIDADE) {
 			quantidade++;
-			return
+			return;
 		}
 		quantidade += 0.1;
 		return;
 	}
 
-	function decrement(){
-		if(tipo === ItemTipo.UNIDADE){
+	function decrement() {
+		if (tipo === ItemTipo.UNIDADE) {
 			quantidade--;
-			return
+			return;
 		}
 		quantidade -= 0.1;
 		return;

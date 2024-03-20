@@ -1,35 +1,32 @@
 <script lang="ts">
-	import { Icon } from '$lib/components';
 	import { auth } from '$lib/firebase';
-	import carrinho from '$lib/stores/carrinho.store';
 	import { tirarDoCarrinho } from '$lib/servicos/carrinho-crud';
+	import carrinho from '$lib/stores/carrinho.store';
+	import { ItemTipo } from '$lib/stores/mercado.store';
 	import user from '$lib/stores/user.store';
+	import Icon from '@iconify/svelte';
+	import { createAvatar } from '@melt-ui/svelte';
 	import type { FirebaseError } from 'firebase/app';
 	import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
-	import { ItemTipo } from '$lib/stores/mercado.store';
-	import {createAvatar, melt} from '@melt-ui/svelte'
 
-	$: totalDeItens = (() => {
-		if ($carrinho.length === 0) return 0;
-		if ($carrinho.length === 1) return $carrinho[0].quantidade;
-		return $carrinho.reduce((a, b) => {
-			if (a.tipo === ItemTipo.KILO || b.tipo === ItemTipo.KILO) return 0;
-			if (typeof a === 'number') return a + b.quantidade;
-			return (a.quantidade + b.quantidade) as any;
-		}) as unknown as number;
-	})();
+	let totalDeItens = 0;
 
-	$: total = (() => {
-		if ($carrinho.length === 0) return 0;
+	carrinho.subscribe((val) => {
+		totalDeItens = val.reduce((a, { quantidade, tipo }) => {
+			if (tipo === ItemTipo.KILO) return a;
+			return a + quantidade;
+		}, 0);
+	});
 
-		const lista = $carrinho.map((val) => {
-			if (val.tipo === ItemTipo.UNIDADE) return parseFloat(val.preco) * val.quantidade;
-			return parseFloat((parseFloat(val.preco) * val.quantidade).toFixed(2));
-		});
 
-		if (lista.length === 1) return lista[0];
-		return lista.reduce((a, b) => a + b);
-	})();
+	let total = 0;
+	$: {
+		for (let i = 0; i < $carrinho.length; i++) {
+			const item = $carrinho[i];
+			if (item.tipo === ItemTipo.UNIDADE) total += parseFloat(item.preco) * item.quantidade;
+			else total += +((parseFloat(item.preco) * item.quantidade).toFixed(2));
+		}
+	}
 
 	async function login() {
 		try {
@@ -42,21 +39,24 @@
 		}
 	}
 
-	const {elements: {image, fallback}} = createAvatar({
+	const {
+		elements: { image, fallback }
+	} = createAvatar({
 		src: $user?.photoURL!,
 		delayMs: 500
-	})
+	});
 </script>
 
-<div class="flex flex-col items-center gap-y-2">
+<div class="flex-col items-center gap-y-2 flex">
 	<section class="w-full bg-surface-variant p-4 sm:rounded-xl">
 		{#if $user}
 			<div class="flex flex-col space-y-3 pb-4">
-				<figure style="height: 96px" class="rounded-full flex w-24 items-center justify-center bg-surface-1">
+				<figure
+					style="height: 96px"
+					class="rounded-full flex w-24 items-center justify-center bg-surface-1"
+				>
 					<img class="rounded-[inherit]" use:melt={$image} width="96" height="96" alt="profile" />
-					<span 
-						use:melt={$fallback} class="font-medium"
-					>
+					<span use:melt={$fallback} class="font-medium">
 						{$user.displayName?.split(' ')[0][0]}
 					</span>
 				</figure>
@@ -129,7 +129,7 @@
 							class="grid h-10 w-10 place-items-center rounded-full bg-primary fill-on-primary transition-colors hover:bg-primary/50 hover:fill-on-primary/50"
 							on:click={tirarDoCarrinho(c.nome)}
 						>
-							<Icon d="M19 13H5v-2h14v2z" />
+							<Icon icon="mdi:minus" />
 						</button>
 					</div>
 				</section>

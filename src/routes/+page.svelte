@@ -1,7 +1,6 @@
 <script lang="ts">
 	import AddDrawer from '$lib/components/AddDrawer.svelte';
 	import ItemCard from '$lib/components/ItemCard.svelte';
-	import ItemCardSkeleton from '$lib/components/ItemCardSkeleton.svelte';
 	import user from '$lib/stores/user.store';
 
 	export let data;

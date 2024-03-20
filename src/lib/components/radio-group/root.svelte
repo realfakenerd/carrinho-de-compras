@@ -14,7 +14,7 @@
 	setContext(key, ctx);
 
 	const {
-		elements: { root, hiddenInput },
+		elements: { root, hiddenInput }
 	} = ctx;
 
 	/** Additional classes applied to the root element. */

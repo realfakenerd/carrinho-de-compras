@@ -4,14 +4,51 @@
 	"private": true,
 	"scripts": {
 		"dev": "vite dev --host",
-		"build": "vite build",
+		"build": "wireit",
 		"preview": "vite preview --host",
 		"test": "playwright test",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test:unit": "vitest",
-		"lint": "prettier --cache --plugin-search-dir . --check . --write . && eslint .",
-		"format": "prettier --cache --plugin-search-dir . --check . --write ."
+		"lint": "wireit",
+		"format": "wireit"
+	},
+	"wireit": {
+		"build": {
+			"outputs": [
+				".svelte-kit/**",
+				".vercel/**"
+			],
+			"files": [
+				"tsconfig.json",
+				"src/**",
+				"static/**"
+			],
+			"command": "vite build",
+			"clean": "if-file-deleted"
+		},
+		"lint": {
+			"command": "eslint --color --cache --cache-location .eslintcache .",
+			"dependencies": [
+				"format"
+			],
+			"files": [
+				"src/**",
+				".eslintignore",
+				".eslintrc.cjs",
+				".eslintcache"
+			],
+			"output": []
+		},
+		"format": {
+			"command": "prettier --cache --check . --write .",
+			"files": [
+				"src/**",
+				".prettierrc",
+				".prettierignore"
+			],
+			"output": []
+		}
 	},
 	"devDependencies": {
 		"@fontsource/roboto": "^5.0.12",
@@ -54,6 +91,7 @@
 		"vite-plugin-compression": "^0.5.1",
 		"vite-plugin-remove-console": "^2.2.0",
 		"vitest": "^1.4.0",
+		"wireit": "^0.14.4",
 		"workbox-core": "^7.0.0",
 		"workbox-recipes": "^7.0.0"
 	},

@@ -1,10 +1,10 @@
 export interface Unsplash {
 	total: number;
 	total_pages: number;
-	results: Result[];
+	results: UnsplashResult[];
 }
 
-export interface Result {
+export interface UnsplashResult {
 	id: string;
 	slug: string;
 	alternative_slugs: AlternativeSlugs;

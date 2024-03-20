@@ -3,7 +3,4 @@ import Item from './item.svelte';
 
 export const key = Symbol('RadioGroup');
 
-export {
-	Root as RadioGroup,
-	Item as RadioGroupItem
-}
+export { Root as RadioGroup, Item as RadioGroupItem };

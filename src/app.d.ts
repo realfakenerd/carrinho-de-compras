@@ -35,7 +35,6 @@ declare global {
 		skipTransition(): void;
 	}
 
-
 	/**
 	 * Start a transition for a view, which can be skipped, and provides a promise
 	 * that resolves when the transition is finished.
@@ -46,5 +45,4 @@ declare global {
 	interface Document {
 		startViewTransition(updateCallback: () => Promise<void>): Promise<void>;
 	}
-
 }
