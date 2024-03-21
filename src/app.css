@@ -19,20 +19,3 @@ img {
 hr {
 	@apply my-2 border-outline-variant;
 }
-
-.button {
-	@apply flex items-center justify-center rounded-[100px] bg-primary py-3 px-6 text-on-primary transition hover:bg-primary/70;
-}
-
-.hero {
-	@apply grid w-full place-items-center bg-cover bg-center;
-	& > * {
-		@apply col-start-1 row-start-1;
-	}
-	&-overlay {
-		@apply col-start-1 row-start-1 h-full w-full;
-	}
-	&-content {
-		@apply z-0 flex w-full items-center justify-center;
-	}
-}

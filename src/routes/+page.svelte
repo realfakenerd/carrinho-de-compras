@@ -13,9 +13,9 @@
 	</section>
 
 	<ul class="grid gap-2 justify-center">
-		{#each $mercado as item (item.id)}
+		{#each $mercado as {img, nome, preco, tipo}, i (i)}
 			<li>
-				<ItemCard {...item} />
+				<ItemCard {img} {nome} {preco} {tipo}/>
 			</li>
 		{:else}
 			<li>
@@ -35,11 +35,7 @@
 	<AddDrawer />
 {/if}
 
-<style lang="postcss">
-	li:last-child hr {
-		@apply hidden;
-	}
-
+<style>
 	ul.grid {
 		grid-template-columns: repeat(auto-fit, minmax(0, 184px));
 	}

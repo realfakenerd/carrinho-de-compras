@@ -4,6 +4,7 @@
 	import { auth, db } from '$lib/firebase';
 	import '@fontsource/roboto';
 	import { FirebaseApp } from 'sveltefire';
+	import {navdown} from 'navdown';
 	import '../app.css';
 	export let data;
 
@@ -47,12 +48,12 @@
 </script>
 
 <FirebaseApp {auth} firestore={db}>
-	<main style="view-transition-name: card;">
+	<main style="view-transition-name: card;" class="flex-1 relative min-h-dvh">
 		<slot />
 	</main>
 
-	<footer class="fixed bottom-0 z-50 w-full">
-		<nav class="custom-navbar">
+	<footer class="fixed bottom-0 z-[999] w-full">
+		<nav use:navdown class="custom-navbar">
 			{#each routes as route, index (index)}
 				<a href={route.href} class="group">
 					<div
@@ -60,7 +61,7 @@
 						style="background-color:{data.currentRoute === route.href ? '#4A4458' : ''} "
 					>
 						<span class="fill-on-background group-hover:fill-on-secondary">
-							<Icon icon={data.currentRoute === route.href ? route.d.filled : route.d.outlined} />
+							<Icon width="24px" icon={data.currentRoute === route.href ? route.d.filled : route.d.outlined} />
 						</span>
 					</div>
 					<h3>{route.name}</h3>
@@ -72,9 +73,9 @@
 
 <style lang="scss">
 	.custom-navbar {
-		@apply flex h-20 flex-none flex-grow-0 flex-row items-start gap-2 bg-surface-2 py-0 px-2;
+		@apply flex h-20 flex-none flex-grow-0 flex-row items-start gap-2 bg-surface-variant py-0 px-2;
 		a {
-			@apply order-[0] flex h-20 flex-none flex-grow flex-col items-center justify-center gap-1 px-0 pt-3 pb-4;
+			@apply flex h-20 flex-none flex-grow flex-col items-center justify-center gap-1 px-0 pt-3 pb-4;
 			div {
 				@apply flex h-8 w-16 flex-col items-center justify-center rounded-2xl p-0 transition-all duration-300;
 
@@ -83,7 +84,7 @@
 				}
 			}
 			h3 {
-				@apply order-1 h-4 flex-none flex-grow-0 self-stretch text-center text-xs font-medium tracking-wide;
+				@apply h-4 flex-none flex-grow-0 self-stretch text-center text-xs font-medium tracking-wide;
 			}
 		}
 	}

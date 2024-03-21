@@ -6,7 +6,6 @@
 	import { RadioGroup, RadioGroupItem } from './radio-group';
 	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from './vaul';
 
-	let customQuantidade: number;
 	let nome = '',
 		preco = '',
 		img = '',
@@ -107,14 +106,21 @@
 
 <style lang="postcss">
 	input:not(input[type='radio']) {
-		@apply w-full rounded-full border-none bg-surface-variant 
-		pl-4 ring-1 ring-on-surface-variant  transition py-2;
+		width: 100%;
+		border-radius: 100%;
+		border: none;
+		background-color: theme('colors.surface-variant');
+		padding-inline-start: 1rem;
+		padding-block: .5rem;
+		transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+
+		@apply  ring-1 ring-on-surface-variant;
 	}
 	input:not(input[type='radio']):placeholder {
 		@apply text-on-surface-variant;
 	}
 	input:not(input[type='radio']):focus {
-		@apply bg-surface-1 ring-2 ring-on-surface-variant;
+		@apply bg-surface-variant ring-2 ring-on-surface-variant;
 	}
 	.cus-btn {
 		@apply flex place-items-center bg-primary fill-on-primary px-3  text-on-primary transition;

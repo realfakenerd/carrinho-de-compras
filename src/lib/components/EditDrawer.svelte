@@ -55,8 +55,15 @@
 
 <style lang="postcss">
 	input {
-		@apply w-full rounded-full border-none bg-surface-variant 
-		pl-4 ring-1 ring-on-surface-variant  transition py-2;
+		width: 100%;
+		border-radius: 999px;
+		border: none;
+		background-color: theme('colors.surface-variant');
+		padding-inline-start: 1rem;
+		padding-block: .5rem;
+		transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+
+		@apply ring-1 ring-on-surface-variant ;
 	}
 
 	input:placeholder {
@@ -64,6 +71,6 @@
 	}
 
 	input:focus {
-		@apply bg-surface-1 ring-2 ring-on-surface-variant;
+		@apply bg-surface-variant ring-2 ring-on-surface-variant;
 	}
 </style>

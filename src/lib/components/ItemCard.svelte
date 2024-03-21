@@ -1,9 +1,8 @@
 <script lang="ts">
+	import { porNoCarrinho } from '$lib/servicos/carrinho-crud';
 	import { ItemTipo } from '$lib/stores/mercado.store';
 	import Icon from '@iconify/svelte';
-	import type { CollectionReference } from 'firebase/firestore';
 	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from './vaul';
-	import { porNoCarrinho } from '$lib/servicos/carrinho-crud';
 
 	let preco: string;
 	let nome: string;
@@ -42,6 +41,23 @@
 		quantidade -= 0.1;
 		return;
 	}
+
+	let timer: ReturnType<typeof setTimeout> | undefined;
+
+	function startIncrement() {
+		timer = setTimeout(increment, 150);
+	}
+
+	function startDecrement() {
+		if (quantidade > 0.0) {
+			timer = setTimeout(decrement, 100);
+		}
+	}
+
+	function stopIncrement() {
+		clearTimeout(timer);
+		timer = undefined;
+	}
 </script>
 
 <section
@@ -49,6 +65,7 @@
 >
 	<figure>
 		<img
+			on:contextmenu|preventDefault
 			style="height: 208px;"
 			class="rounded-lg object-cover aspect-square"
 			loading="lazy"
@@ -103,10 +120,13 @@
 					<div class="flex items-center justify-center space-x-2">
 						<button
 							on:click={decrement}
+							on:touchstart={startDecrement}
+							on:touchend={stopIncrement}
 							disabled={quantidade <= 0}
 							class="flex items-center justify-center h-8 w-8 ring-1 hover:ring-2 ring-error rounded-full"
 						>
 							<Icon icon="mdi:minus" class="h-4 w-4" />
+
 							<span class="sr-only">Decrease</span>
 						</button>
 
@@ -115,11 +135,17 @@
 								{quantidade.toFixed(1)}
 							</div>
 							<div class="text-label-large uppercase">
-								{quantidade > 1 ? 'unidades' : 'unidade'}
+								{#if tipo === ItemTipo.UNIDADE}
+									{quantidade > 1 ? 'unidades' : 'unidade'}
+								{:else}
+									{quantidade > 1 ? 'quilos' : 'quilo'}
+								{/if}
 							</div>
 						</div>
 						<button
 							on:click={increment}
+							on:touchstart={startIncrement}
+							on:touchend={stopIncrement}
 							class="flex items-center justify-center h-8 w-8 ring-1 hover:ring-2 ring-primary rounded-full"
 						>
 							<Icon icon="mdi:plus" class="h-4 w-4" />
