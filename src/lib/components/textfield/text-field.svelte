@@ -50,6 +50,7 @@
 			/>
 		{:else}
 			<input
+				autocomplete="off"
 				on:input
 				on:keydown
 				{name}

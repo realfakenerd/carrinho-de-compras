@@ -13,20 +13,15 @@
 	</section>
 
 	<ul class="grid gap-2 justify-center">
-		{#each $mercado as {img, nome, preco, tipo}, i (i)}
+		{#each $mercado as { img, nome, preco, tipo }, i (i)}
 			<li>
-				<ItemCard {img} {nome} {preco} {tipo}/>
+				<ItemCard {img} {nome} {preco} {tipo} />
 			</li>
 		{:else}
-			<li>
-				<div class="w-full h-32 bg-surface-variant"></div>
-			</li>
-			<li>
-				<div class="w-full h-32 bg-surface-variant"></div>
-			</li>
-			<li>
-				<div class="w-full h-32 bg-surface-variant"></div>
-			</li>
+		<li class="max-w-52 w-full rounded-xl min-h-[280px] bg-surface-variant animate-pulse"></li>
+		<li class="max-w-52 w-full rounded-xl min-h-[280px] bg-surface-variant animate-pulse"></li>
+		<li class="max-w-52 w-full rounded-xl min-h-[280px] bg-surface-variant animate-pulse"></li>
+		<li class="max-w-52 w-full rounded-xl min-h-[280px] bg-surface-variant animate-pulse"></li>
 		{/each}
 	</ul>
 </section>

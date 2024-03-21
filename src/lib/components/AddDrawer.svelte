@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { createItem } from '$lib/servicos/mercado-crud';
 	import { ItemTipo } from '$lib/stores/mercado.store';
+	import Icon from '@iconify/svelte';
 	import Fab from './FAB.svelte';
 	import type { Unsplash } from './drawer';
 	import { RadioGroup, RadioGroupItem } from './radio-group';
-	import {TextField} from './textfield';
+	import { TextField } from './textfield';
+	import { melt, createRadioGroup } from '@melt-ui/svelte';
 	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from './vaul';
 
 	let nome = '',
@@ -12,15 +14,24 @@
 		img = '',
 		tipo = ItemTipo.UNIDADE;
 
+	const {
+		elements: { root, item },
+		states: { value }
+	} = createRadioGroup();
+
 	function addItem() {
 		if (nome !== '' && preco !== '') {
-			createItem({ nome, preco, img, tipo });
+			createItem({ nome, preco, img: $value, tipo });
 			img = nome = preco = '';
 			tipo = ItemTipo.UNIDADE;
 		}
 	}
 
-	let images: Unsplash = [];
+	let images: Unsplash | null = {
+		total: 0,
+		total_pages: 0,
+		results: []
+	};
 	async function unsplash() {
 		console.log('img', img);
 
@@ -62,22 +73,28 @@
 		<Fab />
 	</DrawerTrigger>
 
-	<DrawerContent class="max-h-[96%]">
+	<DrawerContent class="max-h-[96dvh] h-full flex flex-col gap-4 overflow-y-scroll">
 		<DrawerTitle class="text-title-medium">Adicione um novo item ao mercado</DrawerTitle>
 		<form class="flex flex-col space-y-6">
-			<TextField title="Nome do produto" bind:value={nome} style="outlined"/>
-			<TextField title="Preço do produto" bind:value={preco} style="outlined"/>
+			<TextField title="Nome do produto" bind:value={nome} style="outlined" />
+			<TextField title="Preço do produto" bind:value={preco} style="outlined" />
 			<div>
-				<TextField on:keydown={debounce(unsplash, 300)} title="Escolha uma imagem" bind:value={img} style="outlined"/>
-			
+				<TextField
+					on:keydown={debounce(unsplash, 300)}
+					title="Escolha uma imagem"
+					bind:value={img}
+					style="outlined"
+				/>
+
 				{#if images && images?.results?.length}
-					<ul class="flex flex-wrap gap-2 justify-center overflow-y-scroll h-32">
+					<ul use:melt={$root} class="flex flex-wrap gap-4 justify-center py-4">
 						{#each images.results as image}
-							<figure>
+							<figure on:m-click={() => (images = null)} use:melt={$item(image.urls.regular)}>
 								<img
-									src={image.urls.regular}
+									src={image.urls.thumb}
 									alt={image.description}
-									class="aspect-square object-cover h-24 bg-surface-variant"
+									height="96px"
+									class="aspect-square rounded-xl ring-2 ring-background hover:ring-primary hover:ring-4 transition object-cover h-24 bg-surface-variant"
 								/>
 							</figure>
 						{/each}
@@ -88,7 +105,10 @@
 				<RadioGroupItem bind:value={tipo} label="Unidade" option={String(ItemTipo.UNIDADE)} />
 				<RadioGroupItem bind:value={tipo} label="Kilo" option={String(ItemTipo.KILO)} />
 			</RadioGroup>
-			<button on:click={addItem} class="button w-full1">ADD</button>
+			<button on:click={() => addItem()} class="btn text-label-large btn-filled w-full">
+				<Icon icon="mdi:plus" width="24px" />
+				<span> Adicionar </span>
+			</button>
 		</form>
 	</DrawerContent>
 </Drawer>
