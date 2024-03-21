@@ -60,9 +60,7 @@
 	}
 </script>
 
-<section
-	class="bg-surface-variant rounded-2xl flex flex-col items-center w-full max-w-52 overflow-hidden"
->
+<section class="card p-0 card-filled w-full max-w-52 overflow-hidden">
 	<figure>
 		<img
 			on:contextmenu|preventDefault
@@ -98,7 +96,7 @@
 				<Icon icon="mdi:cart-plus" />
 			</DrawerTrigger>
 
-			<DrawerContent class="flex flex-col gap-10">
+			<DrawerContent class="flex flex-col gap-6 mb-20">
 				<hgroup>
 					<DrawerTitle class="text-headline-large">{nome}</DrawerTitle>
 					<h2>R$ {preco} {tipo === ItemTipo.KILO ? 'Kg' : 'Uni'} / R$ {valorAPagar}</h2>
@@ -123,15 +121,15 @@
 							on:touchstart={startDecrement}
 							on:touchend={stopIncrement}
 							disabled={quantidade <= 0}
-							class="flex items-center justify-center h-8 w-8 ring-1 hover:ring-2 ring-error rounded-full"
+							class="flex items-center text-on-surface-variant justify-center h-10 w-10 ring-1 hover:text-error hover:ring-2 transition ring-error rounded-full"
 						>
-							<Icon icon="mdi:minus" class="h-4 w-4" />
+							<Icon icon="mdi:minus" width="24px" />
 
 							<span class="sr-only">Decrease</span>
 						</button>
 
 						<div class="flex-1 text-center">
-							<div class="text-headline-large font-bold">
+							<div class="text-headline-large">
 								{quantidade.toFixed(1)}
 							</div>
 							<div class="text-label-large uppercase">
@@ -146,9 +144,9 @@
 							on:click={increment}
 							on:touchstart={startIncrement}
 							on:touchend={stopIncrement}
-							class="flex items-center justify-center h-8 w-8 ring-1 hover:ring-2 ring-primary rounded-full"
+							class="flex items-center justify-center h-10 w-10 ring-1 hover:ring-2 text-on-surface-variant hover:text-primary ring-primary rounded-full"
 						>
-							<Icon icon="mdi:plus" class="h-4 w-4" />
+							<Icon icon="mdi:plus" width="24px" />
 							<span class="sr-only">Increase</span>
 						</button>
 					</div>

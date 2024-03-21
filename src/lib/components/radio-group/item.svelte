@@ -12,7 +12,7 @@
 
 	export let option: string;
 	export let label: string | undefined = option;
-	export let value = '';
+	export let value: string | any = '';
 
 	$: value = $localValue;
 </script>

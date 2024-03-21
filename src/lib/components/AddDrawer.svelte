@@ -4,6 +4,7 @@
 	import Fab from './FAB.svelte';
 	import type { Unsplash } from './drawer';
 	import { RadioGroup, RadioGroupItem } from './radio-group';
+	import {TextField} from './textfield';
 	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from './vaul';
 
 	let nome = '',
@@ -64,23 +65,11 @@
 	<DrawerContent class="max-h-[96%]">
 		<DrawerTitle class="text-title-medium">Adicione um novo item ao mercado</DrawerTitle>
 		<form class="flex flex-col space-y-6">
-			<label>
-				<span class="text-label-medium">Nome do produto{nome ? ':' : ''} {nome}</span>
-				<input type="text" bind:value={nome} required />
-			</label>
-			<label>
-				<span class="text-label-medium"
-					>Preço do produto{preco ? ':' : ''} {preco ? `R$${preco}` : ''}</span
-				>
-				<input bind:value={preco} type="number" required />
-			</label>
-
+			<TextField title="Nome do produto" bind:value={nome} style="outlined"/>
+			<TextField title="Preço do produto" bind:value={preco} style="outlined"/>
 			<div>
-				<label>
-					<span class="text-label-medium">Escolha uma imagem também</span>
-					<input bind:value={img} type="text" on:keydown={debounce(unsplash, 300)} />
-				</label>
-
+				<TextField on:keydown={debounce(unsplash, 300)} title="Escolha uma imagem" bind:value={img} style="outlined"/>
+			
 				{#if images && images?.results?.length}
 					<ul class="flex flex-wrap gap-2 justify-center overflow-y-scroll h-32">
 						{#each images.results as image}
@@ -103,29 +92,3 @@
 		</form>
 	</DrawerContent>
 </Drawer>
-
-<style lang="postcss">
-	input:not(input[type='radio']) {
-		width: 100%;
-		border-radius: 100%;
-		border: none;
-		background-color: theme('colors.surface-variant');
-		padding-inline-start: 1rem;
-		padding-block: .5rem;
-		transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
-
-		@apply  ring-1 ring-on-surface-variant;
-	}
-	input:not(input[type='radio']):placeholder {
-		@apply text-on-surface-variant;
-	}
-	input:not(input[type='radio']):focus {
-		@apply bg-surface-variant ring-2 ring-on-surface-variant;
-	}
-	.cus-btn {
-		@apply flex place-items-center bg-primary fill-on-primary px-3  text-on-primary transition;
-	}
-	.cus-btn:hover {
-		@apply bg-primary/70;
-	}
-</style>

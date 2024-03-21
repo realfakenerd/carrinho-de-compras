@@ -9,12 +9,12 @@
 </script>
 
 <DrawerPrimitive.Portal>
-	<DrawerPrimitive.Overlay class="fixed inset-0 bg-surface-2 bg-opacity-95" />
+	<DrawerPrimitive.Overlay class="fixed inset-0 bg-surface/95" />
 	<DrawerPrimitive.Content
 		style="translate: -50%"
 		{...$$restProps}
 		class={cn(
-			'fixed left-1/2 bottom-0 z-50 bg-surface-1 px-4 py-6 w-full max-w-[640px] rounded-t-xl',
+			'fixed left-1/2 bottom-0 z-50 bg-surface-variant px-4 py-6 w-full max-w-[640px] rounded-t-xl',
 			className
 		)}
 	>
