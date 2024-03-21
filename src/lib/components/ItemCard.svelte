@@ -45,17 +45,19 @@
 	let timer: ReturnType<typeof setTimeout> | undefined;
 
 	function startIncrement() {
-		timer = setTimeout(increment, 150);
+		console.log('touch');
+		
+		timer = setInterval(increment, 150);
 	}
 
 	function startDecrement() {
 		if (quantidade > 0.0) {
-			timer = setTimeout(decrement, 100);
+			timer = setInterval(decrement, 100);
 		}
 	}
 
 	function stopIncrement() {
-		clearTimeout(timer);
+		clearInterval(timer);
 		timer = undefined;
 	}
 </script>
