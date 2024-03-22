@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { cn } from '$lib/utils';
 	import Icon from '@iconify/svelte';
+	import type { ClassValue } from 'clsx';
 
 	let wrapper: HTMLDivElement | null = null,
 		textarea: HTMLTextAreaElement | null = null;
@@ -27,7 +29,7 @@
 	}
 </script>
 
-<fieldset>
+<fieldset class="w-full">
 	<div
 		class="text-field-container style-{style} {error ? 'error' : ''} {icon ? 'has-icon' : ''}"
 		bind:this={wrapper}
@@ -148,7 +150,7 @@
 		@apply py-4;
 	}
 	.style-outlined .text-field-input:is(:focus, .value, :required:valid, [type='date']) ~ label {
-		background-color: theme('colors.surface-variant');
+		background-color: rgb(var(--color-surface-variant));
 		@apply -top-2 left-3 px-1;
 	}
 

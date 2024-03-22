@@ -48,5 +48,5 @@ export default withMaterialColors(
 		plugins: [tail],
 		darkMode: 'class'
 	},
-	{ primary: '#ffb778' }
+	{ primary: '#E05917' }
 );

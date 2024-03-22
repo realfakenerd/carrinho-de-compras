@@ -9,7 +9,8 @@ const config = {
 	preprocess: sequence([vitePreprocess(), preprocessMeltUI()]),
 	kit: {
 		adapter: adapter({
-			runtime: 'edge'
+			runtime: 'edge',
+			
 		})
 	},
 	inlineStyleThreshold: 2048

@@ -49,6 +49,8 @@
 		src: $user?.photoURL!,
 		delayMs: 500
 	});
+
+
 </script>
 
 <div class="flex flex-col md:flex-row items-start gap-4 p-4">

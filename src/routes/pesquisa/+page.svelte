@@ -1,6 +1,7 @@
 <script lang="ts">
 	import AddDrawer from '$lib/components/AddDrawer.svelte';
 	import EditDrawer from '$lib/components/EditDrawer.svelte';
+	import { TextField } from '$lib/components/textfield';
 	import { createMercadoIndex, searchMercadoIndex } from '$lib/search';
 	import { porNoCarrinho, porNoCarrinhoInput } from '$lib/servicos/carrinho-crud';
 	import type { Mercado } from '$lib/stores/mercado.store';
@@ -30,20 +31,6 @@
 </script>
 
 <div class="relative mb-6 flex w-full items-center">
-	<label class="sr-only" for="pesquise">Pesquise o item:</label>
-	<input
-		autocomplete="off"
-		spellcheck="false"
-		class="w-full max-w-3xl rounded-full border-none bg-surface-3
-			py-4 px-4 transition placeholder:text-on-background focus:bg-surface-1"
-		bind:value
-		type="text"
-		id="pesquise"
-		placeholder="Pesquise o item:"
-	/>
-	<div class="absolute right-4 fill-on-background">
-		<Icon icon="mdi:search" />
-	</div>
 </div>
 
 <ul class="bg-surface-variant sm:rounded-xl">

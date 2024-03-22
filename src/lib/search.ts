@@ -12,21 +12,22 @@ export function createMercadoIndex(data: Mercado[]) {
 	});
 
 	mercado = data;
+	
 }
 
 function replaceTextWithMarker(text: string, match: string) {
 	const regex = new RegExp(match, 'gi');
-	return text.replaceAll(regex, (match) => `<mark>${match}</mark>`);
+	return text.replaceAll(regex, (match) => `<mark>${match}</mark>}`);
 }
 
-export function searchMercadoIndex(searchTerm: string) {
+export function searchMercadoIndex(searchTerm: string) {	
 	const match = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 	const result = mercadoIndex.search(match);
 	return result
 		.map((index) => mercado[index as number])
 		.map(({ nome, preco, img, tipo }) => {
 			return {
-				nome: replaceTextWithMarker(nome, match),
+				nome,
 				preco,
 				img,
 				tipo
