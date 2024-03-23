@@ -13,7 +13,20 @@ const config = {
 	build: {
 		reportCompressedSize: false,
 		target: 'esnext',
-		minify: 'terser'
+		minify: 'terser',
+		terserOptions: {
+			compress: {
+				drop_console: true,
+				arrows: true,
+				dead_code: true,
+				drop_debugger: true,
+				ie8: false
+			},
+			ecma: 2020,
+			ie8: false,
+			mangle: true,
+			safari10: false
+		}
 	},
 	plugins: [
 		sveltekit(),

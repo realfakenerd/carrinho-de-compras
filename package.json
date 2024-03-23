@@ -33,6 +33,10 @@
 			"files": [
 				"tsconfig.json",
 				"src/**",
+				"vite.config.ts",
+				"postcss.config.cjs",
+				"tailwind.config.ts",
+				"svelte.config.js",
 				"static/**"
 			],
 			"dependencies": [
