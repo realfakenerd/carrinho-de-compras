@@ -20,7 +20,16 @@ const config = {
 				arrows: true,
 				dead_code: true,
 				drop_debugger: true,
-				ie8: false
+				pure_getters: true,
+				keep_infinity: true,
+				ie8: false,
+			},
+			module: true,
+			parse: {
+				html5_comments: false
+			},
+			output: {
+				comments: false
 			},
 			ecma: 2020,
 			ie8: false,
