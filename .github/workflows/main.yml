@@ -1,28 +1,47 @@
-name: Build
+# This action builds the project using pnpm
+#
+# It assumes that you have a pnpm lockfile (pnpm-lock.yaml)
+# in the root of your repository
+
+name: It's build time
 on:
   push:
+
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [18]
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v3
+      - name: Checkout code # Checkout the code so we can build it
+        uses: actions/checkout@v3
+
+      - name: Setup pnpm # Setup pnpm environment
+        uses: pnpm/action-setup@v3
         with:
           version: 8
-      - name: Use Node.js ${{ matrix.node-version }}
+
+      - name: Use Node.js ${{ matrix.node-version }} # Use the Node.js version from the matrix
         run: echo "Using Node.js version ${{ matrix.node-version }}"
-      - uses: actions/setup-node@v3
+
+      - name: Setup Node.js # Setup Node.js environment
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
-      - name: Install Dependencies
+
+      - name: Setup caching # Setup caching for pnpm
+        uses: google/wireit@setup-github-actions-caching/v1
+
+      - name: Install dependencies # Install dependencies
         run: pnpm install
-      - name: Build
+
+      - name: Build # Build the code
         run: pnpm build
-      - name: Cache installed modules
+
+      - name: Cache installed modules # Cache installed modules
         uses: actions/cache@v3
         id: cache-pnpm
         with:
