@@ -17,6 +17,9 @@
 			return a + quantidade;
 		}, 0);
 
+		console.log(totalDeItens);
+		
+
 		pesoDoCarrinho = val.reduce((a, { quantidade, tipo }) => {
 			if (tipo === ItemTipo.UNIDADE) return a;
 			return a + quantidade;

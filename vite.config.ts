@@ -13,7 +13,7 @@ const config = {
 	build: {
 		reportCompressedSize: false,
 		target: 'esnext',
-		minify: 'esbuild'
+		minify: 'terser'
 	},
 	plugins: [
 		sveltekit(),
