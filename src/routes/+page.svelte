@@ -2,26 +2,16 @@
 	import AddDrawer from '$lib/components/AddDrawer.svelte';
 	import ItemCard from '$lib/components/ItemCard.svelte';
 	import { TextField } from '$lib/components/textfield/index.js';
-	import { createMercadoIndex, searchMercadoIndex } from '$lib/search.js';
-	import user from '$lib/stores/user.store';
-	import type { Mercado } from '$lib/types.js';
-	import Icon from '@iconify/svelte';
-	import { onMount } from 'svelte';
+	import { db } from '$lib/db';
+	import { liveQuery } from 'dexie';
 
-	export let data;
-	const { mercado } = data;
-
-	let result: Mercado[] = $mercado;
-	let isReady = 'loading';
-	onMount(() => {
-		createMercadoIndex($mercado);
-		isReady = 'ready';
-	});
-
-	console.log(result);
 	let value: string;
-	$: if (isReady === 'ready') {
-		result = searchMercadoIndex(value);
+	let mercado = liveQuery(() => db.mercado.toArray());
+
+	$: if (value) {
+		mercado = liveQuery(() => db.mercado.where('nome').startsWithIgnoreCase(value).toArray());
+	} else {
+		mercado = liveQuery(() => db.mercado.toArray());
 	}
 </script>
 
@@ -35,26 +25,23 @@
 	</section>
 
 	<ul class="grid gap-2 justify-center">
-		{#each result as { img, nome, preco, tipo }, i (i)}
-			<li>
-				<ItemCard {img} {nome} {preco} {tipo} />
-			</li>
-		{:else}
+		{#if $mercado}
 			{#each $mercado as { img, nome, preco, tipo }, i (i)}
-				<ItemCard {img} {nome} {preco} {tipo} />
+				<li>
+					<ItemCard {img} {nome} {preco} {tipo} />
+				</li>
 			{:else}
-				<li class="max-w-52 w-full rounded-xl min-h-[280px] bg-surface-variant animate-pulse"></li>
-				<li class="max-w-52 w-full rounded-xl min-h-[280px] bg-surface-variant animate-pulse"></li>
-				<li class="max-w-52 w-full rounded-xl min-h-[280px] bg-surface-variant animate-pulse"></li>
-				<li class="max-w-52 w-full rounded-xl min-h-[280px] bg-surface-variant animate-pulse"></li>
+				<li class="card card-filled gap-1 w-full">
+					<h1 class="text-title-large">Oops!</h1>
+					<p class="text-body-medium">Nenhum item encontrado</p>
+					<p class="text-body-medium">Tente Adicionar algo na lista</p>
+				</li>
 			{/each}
-		{/each}
+		{/if}
 	</ul>
 </section>
 
-{#if $user && $user.emailVerified}
-	<AddDrawer />
-{/if}
+<AddDrawer />
 
 <style>
 	ul.grid {

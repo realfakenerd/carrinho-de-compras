@@ -7,11 +7,10 @@ export interface Carrinho {
 	tipo: ItemTipo;
 }
 
-export interface Mercado {
+
+
+export interface Mercado extends Omit<Carrinho, 'quantidade'> {
 	img: string;
-	nome: string;
-	preco: string;
-	tipo: ItemTipo;
 	readonly id?: string;
 	readonly ref?: CollectionReference;
 }

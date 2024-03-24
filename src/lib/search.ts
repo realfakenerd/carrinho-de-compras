@@ -21,6 +21,8 @@ function replaceTextWithMarker(text: string, match: string) {
 }
 
 export function searchMercadoIndex(searchTerm: string) {	
+	console.log(searchTerm);
+	
 	const match = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 	const result = mercadoIndex.search(match);
 	return result

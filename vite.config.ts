@@ -22,7 +22,7 @@ const config = {
 				drop_debugger: true,
 				pure_getters: true,
 				keep_infinity: true,
-				ie8: false,
+				ie8: false
 			},
 			module: true,
 			parse: {

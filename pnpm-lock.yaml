@@ -55,6 +55,9 @@ devDependencies:
   cssnano:
     specifier: ^6.1.0
     version: 6.1.0(postcss@8.4.36)
+  dexie:
+    specifier: 4.0.1-rc.1
+    version: 4.0.1-rc.1
   eslint:
     specifier: ^8.57.0
     version: 8.57.0
@@ -2343,6 +2346,10 @@ packages:
 
   /devalue@4.3.2:
     resolution: {integrity: sha512-KqFl6pOgOW+Y6wJgu80rHpo2/3H07vr8ntR9rkkFIRETewbf5GaYYcakYfiKz89K+sLsuPkQIZaXDMjUObZwWg==}
+    dev: true
+
+  /dexie@4.0.1-rc.1:
+    resolution: {integrity: sha512-rfdQX5NQmXjLxxFusgnaczT+3hHz96Nz68atDyhWdAAjfFeTmrco7JkLdWHA0YpX7be1O1NRZ5AyAYILhmgoZg==}
     dev: true
 
   /didyoumean@1.2.2:

@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { createItem } from '$lib/servicos/mercado-crud';
+	import { addItemToMercado } from '$lib/db';
 	import { ItemTipo } from '$lib/stores/mercado.store';
 	import Icon from '@iconify/svelte';
+	import { createRadioGroup, melt } from '@melt-ui/svelte';
 	import Fab from './FAB.svelte';
 	import type { Unsplash } from './drawer';
 	import { RadioGroup, RadioGroupItem } from './radio-group';
 	import { TextField } from './textfield';
-	import { melt, createRadioGroup } from '@melt-ui/svelte';
 	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from './vaul';
 
 	let nome = '',
@@ -21,7 +21,7 @@
 
 	function addItem() {
 		if (nome !== '' && preco !== '') {
-			createItem({ nome, preco, img: $value, tipo });
+			addItemToMercado({ nome, preco, img: $value, tipo });
 			img = nome = preco = '';
 			tipo = ItemTipo.UNIDADE;
 		}
