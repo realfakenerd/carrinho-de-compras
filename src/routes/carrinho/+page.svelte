@@ -1,16 +1,16 @@
 <script lang="ts">
-	import { auth } from '$lib/firebase';
+	import TextField from '$lib/components/textfield/text-field.svelte';
+	import { db } from '$lib/db';
 	import { tirarDoCarrinho } from '$lib/servicos/carrinho-crud';
 	import carrinho from '$lib/stores/carrinho.store';
 	import { ItemTipo } from '$lib/stores/mercado.store';
-	import user from '$lib/stores/user.store';
 	import Icon from '@iconify/svelte';
-	import { createAvatar, melt } from '@melt-ui/svelte';
-	import type { FirebaseError } from 'firebase/app';
-	import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+
+	const user = db.cloud.currentUser;
 
 	let totalDeItens = 0;
 	let pesoDoCarrinho = 0;
+
 	carrinho.subscribe((val) => {
 		totalDeItens = val.reduce((a, { quantidade, tipo }) => {
 			if (tipo === ItemTipo.KILO) return a;
@@ -18,7 +18,6 @@
 		}, 0);
 
 		console.log(totalDeItens);
-		
 
 		pesoDoCarrinho = val.reduce((a, { quantidade, tipo }) => {
 			if (tipo === ItemTipo.UNIDADE) return a;
@@ -27,6 +26,7 @@
 	});
 
 	let total = 0;
+
 	$: {
 		for (let i = 0; i < $carrinho.length; i++) {
 			const item = $carrinho[i];
@@ -35,59 +35,30 @@
 		}
 	}
 
-	async function login() {
-		try {
-			await signInWithPopup(auth, new GoogleAuthProvider());
-		} catch (err) {
-			const error = err as FirebaseError;
-			throw new Error(error.message, {
-				cause: error.cause
-			});
-		}
-	}
-
-	const {
-		elements: { image, fallback }
-	} = createAvatar({
-		src: $user?.photoURL!,
-		delayMs: 500
-	});
-
-
+	let email = '';
 </script>
 
 <div class="flex flex-col md:flex-row items-start gap-4 p-4">
 	<section class="card card-filled flex-1 items-center justify-between w-full min-h-[40dvh]">
-		{#if $user}
+		{#if $user.isLoggedIn}
 			<div class="flex flex-col gap-y-4 items-center">
-				<figure
-					style="height: 96px"
-					class="rounded-full flex w-24 items-center justify-center bg-surface-1"
-				>
-					<img class="rounded-[inherit]" use:melt={$image} width="96" height="96" alt="profile" />
-					<span use:melt={$fallback} class="font-medium">
-						{$user.displayName
-							?.split(' ')
-							.slice(0, 2)
-							.map((nome) => nome[0])
-							.join('')}
-					</span>
-				</figure>
-				<h1 class="text-title-large">{$user?.displayName}</h1>
+				<h1 class="text-title-large">{$user?.name}</h1>
+				<p>{$user.email}</p>
 			</div>
-
-			<button on:click={() => signOut(auth)} class="btn interactive-bg-error">Logout</button>
+			<button on:click={() => db.cloud.logout()} class="btn interactive-bg-error">Logout</button>
 		{:else}
 			<div class="flex flex-col gap-y-4">
 				<h1 class="text-headline-large">Faça o login aqui</h1>
-				<p class="text-body-large">
-					Hum... não fez o login ainda? Então não esta desfrutando de tudo o que o carrinho de
-					compras pode lhe oferecer. <br />
-					Faça agora, é rápido e simples. 😉
-				</p>
 			</div>
-			<button on:click={login} class="btn interactive-bg-primary w-2/3 gap-x-3">
-				<Icon width="24px" icon="devicon:google" class="p-1 rounded-full bg-white" />
+			<TextField bind:value={email} icon="mdi:email" title="Email" />
+			<button
+				on:click={() =>
+					db.cloud.login({
+						email
+					})}
+				class="btn interactive-bg-primary w-2/3 gap-x-3"
+			>
+				<!-- <Icon width="24px" icon="devicon:google" class="p-1 rounded-full bg-white" /> -->
 				<p class="text-label-large">Login</p>
 			</button>
 		{/if}
@@ -99,7 +70,7 @@
 				<p>Itens no carrinho</p>
 				<span>{totalDeItens}</span>
 			</div>
-			<hr class="border border-outline"/>
+			<hr class="border border-outline" />
 			<div>
 				<p>Peso do carrinho</p>
 				<span>{pesoDoCarrinho.toFixed(2)} Kg</span>

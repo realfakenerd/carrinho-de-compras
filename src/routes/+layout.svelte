@@ -28,14 +28,14 @@
 				filled: `mdi:home-variant`
 			}
 		},
-		{
-			href: '/pesquisa',
-			name: 'Pesquisa',
-			d: {
-				outlined: `mdi:search`,
-				filled: `mdi:search`
-			}
-		},
+		// {
+		// 	href: '/pesquisa',
+		// 	name: 'Pesquisa',
+		// 	d: {
+		// 		outlined: `mdi:search`,
+		// 		filled: `mdi:search`
+		// 	}
+		// },
 		{
 			href: '/carrinho',
 			name: 'carrinho',
@@ -58,7 +58,7 @@
 				<a href={route.href} class="group">
 					<div
 						class="group-hover:bg-secondary"
-						style="background-color:{data.currentRoute === route.href ? '#4A4458' : ''} "
+						style="background-color:{data.currentRoute === route.href ? 'rgb(var(--color-secondary))' : ''}; color: {data.currentRoute === route.href ? 'rgb(var(--color-on-secondary))' : ''};"
 					>
 						<span class="fill-on-background group-hover:fill-on-secondary">
 							<Icon width="24px" icon={data.currentRoute === route.href ? route.d.filled : route.d.outlined} />

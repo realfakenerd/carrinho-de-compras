@@ -1,0 +1,8 @@
+{
+	"demoUsers": {
+	  "lucas@demo.com": {
+		"name": "Lucas Ouverney"
+	  },
+	  "bob@demo.com": {}
+	}
+  }

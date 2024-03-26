@@ -3,10 +3,11 @@
 	import ItemCard from '$lib/components/ItemCard.svelte';
 	import { TextField } from '$lib/components/textfield/index.js';
 	import { db } from '$lib/db';
-	import { liveQuery } from 'dexie';
-
-	let value: string;
-	let mercado = liveQuery(() => db.mercado.toArray());
+	import type { Mercado } from '$lib/types';
+	import { liveQuery, type Observable } from 'dexie';
+	
+	let value = '';
+	let mercado: Observable<Mercado[]> | undefined;
 
 	$: if (value) {
 		mercado = liveQuery(() => db.mercado.where('nome').startsWithIgnoreCase(value).toArray());

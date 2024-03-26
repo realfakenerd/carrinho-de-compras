@@ -11,6 +11,4 @@ export interface Carrinho {
 
 export interface Mercado extends Omit<Carrinho, 'quantidade'> {
 	img: string;
-	readonly id?: string;
-	readonly ref?: CollectionReference;
 }
