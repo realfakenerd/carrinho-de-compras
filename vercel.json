@@ -1,4 +1,15 @@
 {
 	"$schema": "http://openapi.vercel.sh/vercel.json",
-	"trailingSlash": false
+	"trailingSlash": false,
+	"headers": [
+		{
+			"source": "https://zv2kkg59b.dexie.cloud/*",
+			"headers": [
+				{
+					"key": "Access-Control-Allow-Origin",
+					"value": "*"
+				}
+			]
+		}
+	]
 }

@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { onNavigate } from '$app/navigation';
-	import Icon, { enableCache } from '@iconify/svelte';
 	import { auth, db } from '$lib/firebase';
 	import '@fontsource/roboto';
+	import Icon, { enableCache } from '@iconify/svelte';
+	import { navdown } from 'navdown';
 	import { FirebaseApp } from 'sveltefire';
-	import {navdown} from 'navdown';
 	import '../app.css';
 	export let data;
 
