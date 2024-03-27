@@ -157,6 +157,7 @@
 				<button on:click={() => addAndDismiss()} class="bg-primary py-2 rounded-xl w-full">
 					Adicionar no carrinho
 				</button>
+				
 			</DrawerContent>
 		</Drawer>
 	</div>

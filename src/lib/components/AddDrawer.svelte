@@ -3,12 +3,12 @@
 	import { ItemTipo } from '$lib/stores/mercado.store';
 	import Icon from '@iconify/svelte';
 	import { createRadioGroup, melt } from '@melt-ui/svelte';
+	import { fade } from 'svelte/transition';
 	import Fab from './FAB.svelte';
 	import type { Unsplash } from './drawer';
 	import { RadioGroup, RadioGroupItem } from './radio-group';
 	import { TextField } from './textfield';
 	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger, drawerState } from './vaul';
-	import { decode } from 'blurhash';
 
 	let nome = '',
 		preco = '',
@@ -83,14 +83,14 @@
 		};
 	}
 
-	function blurhash(node: HTMLCanvasElement, hash: string) {
-		const height = node.height;
-		const width = node.width;
-		const ctx = node.getContext('2d');
-		const imageData = ctx?.createImageData(width, height);
-		imageData?.data.set(decode(hash, width, height));
-		ctx?.putImageData(imageData!, 0, 0);
-	}
+	// function blurhash(node: HTMLCanvasElement, hash: string) {
+	// 	const height = node.height;
+	// 	const width = node.width;
+	// 	const ctx = node.getContext('2d');
+	// 	const imageData = ctx?.createImageData(width, height);
+	// 	imageData?.data.set(decode(hash, width, height));
+	// 	ctx?.putImageData(imageData!, 0, 0);
+	// }
 </script>
 
 <Drawer open={$drawerState}>
@@ -111,15 +111,11 @@
 					style="outlined"
 				/>
 
-				<ul
-					use:melt={$root}
-					style="transition: grid-template-rows 500ms;"
-					style:grid-template-rows={gridTemplateRows}
-					class="grid grid-cols-3 gap-4 justify-center py-4"
-				>
+				<ul use:melt={$root} class="grid grid-cols-3 h-full gap-4 justify-center py-4">
 					{#if images && images?.results?.length}
-						{#each images.results as image}
+						{#each images.results as image, i (i)}
 							<figure
+								transition:fade
 								class="relative overflow-hidden rounded-xl ring-2 ring-primary hover:ring-primary hover:ring-4 transition"
 								on:m-click={() => {
 									images = null;
@@ -138,12 +134,7 @@
 									style:--tw-ring-color={image.color}
 									class="object-cover h-[80px] w-[200px] bg-surface-variant"
 								/>
-								<canvas
-									class="absolute z-[-1] inset-0"
-									height="80px"
-									width="200px"
-									use:blurhash={image.blur_hash}
-								/>
+								
 							</figure>
 						{/each}
 					{/if}
