@@ -7,9 +7,7 @@ export class MercadoDatabase extends Dexie {
 	carrinho!: Table<Carrinho, string>;
 
 	constructor() {
-		super('mercado', {
-			addons: [dexieCloud]
-		});
+		super('mercado');
 		this.version(1).stores({
 			mercado: '@id, nome, preco, img, tipo',
 			carrinho: '@id, nome, preco, quantidade, tipo'
