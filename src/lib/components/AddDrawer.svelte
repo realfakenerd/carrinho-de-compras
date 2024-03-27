@@ -7,7 +7,7 @@
 	import type { Unsplash } from './drawer';
 	import { RadioGroup, RadioGroupItem } from './radio-group';
 	import { TextField } from './textfield';
-	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from './vaul';
+	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger, drawerState } from './vaul';
 	import { decode } from 'blurhash';
 
 	let nome = '',
@@ -25,6 +25,7 @@
 		total_pages: 0,
 		results: []
 	};
+	let gridTemplateRows = '0fr';
 	async function unsplash() {
 		if (img === '') return;
 		const res = await fetch(`https://api.unsplash.com/search/photos/?query=${img}`, {
@@ -35,6 +36,7 @@
 			}
 		});
 
+		gridTemplateRows = '1fr';
 		images = (await res.json()) as Unsplash;
 		console.log(images);
 	}
@@ -43,13 +45,19 @@
 
 	function addItem() {
 		if (nome !== '' && preco !== '') {
-			const string = $value.split('|') as StringToIMG;			
-			addItemToMercado({ nome, preco, img: {
-				src: string[0],
-				alt: string[1],
-				color: string[2],
-				blur_hash: string[3]
-			}, tipo });
+			const string = $value.split('|') as StringToIMG;
+			addItemToMercado({
+				nome,
+				preco,
+				img: {
+					src: string[0],
+					alt: string[1],
+					color: string[2],
+					blur_hash: string[3]
+				},
+				tipo
+			});
+			drawerState.set(false);
 			img = nome = preco = '';
 			tipo = ItemTipo.UNIDADE;
 		}
@@ -85,8 +93,8 @@
 	}
 </script>
 
-<Drawer>
-	<DrawerTrigger>
+<Drawer open={$drawerState}>
+	<DrawerTrigger on:click={() => drawerState.set(true)}>
 		<Fab />
 	</DrawerTrigger>
 
@@ -103,14 +111,22 @@
 					style="outlined"
 				/>
 
-				{#if images && images?.results?.length}
-					<ul use:melt={$root} class="grid grid-cols-3 gap-4 justify-center py-4">
+				<ul
+					use:melt={$root}
+					style="transition: grid-template-rows 500ms;"
+					style:grid-template-rows={gridTemplateRows}
+					class="grid grid-cols-3 gap-4 justify-center py-4"
+				>
+					{#if images && images?.results?.length}
 						{#each images.results as image}
 							<figure
-								class="relative rounded-xl overflow-hidden ring-2 ring-primary hover:ring-primary hover:ring-4 transition"
-								on:m-click={() => (images = null)}
+								class="relative overflow-hidden rounded-xl ring-2 ring-primary hover:ring-primary hover:ring-4 transition"
+								on:m-click={() => {
+									images = null;
+									gridTemplateRows = '0fr';
+								}}
 								use:melt={$item({
-									value: `${image.urls.regular}|${image.alternative_slugs.pt}|${image.color}|${image.blur_hash}`,
+									value: `${image.urls.regular}|${image.alternative_slugs.pt}|${image.color}|${image.blur_hash}`
 								})}
 							>
 								<img
@@ -130,8 +146,8 @@
 								/>
 							</figure>
 						{/each}
-					</ul>
-				{/if}
+					{/if}
+				</ul>
 			</div>
 			<RadioGroup defaultValue={String(ItemTipo.UNIDADE)}>
 				<RadioGroupItem bind:value={tipo} label="Unidade" option={String(ItemTipo.UNIDADE)} />
