@@ -1,5 +1,5 @@
 import Dexie, { type Table } from 'dexie';
-import { dexieCloud } from 'dexie-cloud-addon';
+// import { dexieCloud } from 'dexie-cloud-addon';
 import type { Carrinho, Mercado } from './types';
 
 export class MercadoDatabase extends Dexie {
@@ -15,11 +15,11 @@ export class MercadoDatabase extends Dexie {
 			carrinho: '@id, nome, preco, quantidade, tipo'
 		});
 
-		this.cloud.configure({
+		/** this.cloud.configure({
 			databaseUrl: 'https://zv2kkg59b.dexie.cloud',
 			requireAuth: false,
 			tryUseServiceWorker: true
-		});
+		});*/
 	}
 }
 
