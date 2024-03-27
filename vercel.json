@@ -3,11 +3,11 @@
 	"trailingSlash": false,
 	"headers": [
 		{
-			"source": "(https://zv2kkg59b.dexie.cloud/(.*))",
+			"source": "https://zv2kkg59b.dexie.cloud",
 			"headers": [
 				{
 					"key": "Access-Control-Allow-Origin",
-					"value": "*" 
+					"value": "https://carrinhodecompras.vercel.app" 
 				}
 			]
 		}
