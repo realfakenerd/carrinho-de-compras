@@ -46,6 +46,9 @@ devDependencies:
   autoprefixer:
     specifier: ^10.4.19
     version: 10.4.19(postcss@8.4.38)
+  blurhash:
+    specifier: ^2.0.5
+    version: 2.0.5
   clsx:
     specifier: ^2.1.0
     version: 2.1.0
@@ -1953,6 +1956,10 @@ packages:
       '@melt-ui/svelte': 0.68.0(svelte@4.2.12)
       nanoid: 5.0.6
       svelte: 4.2.12
+    dev: true
+
+  /blurhash@2.0.5:
+    resolution: {integrity: sha512-cRygWd7kGBQO3VEhPiTgq4Wc43ctsM+o46urrmPOiuAe+07fzlSB9OJVdpgDL0jPqXUVQ9ht7aq7kxOeJHRK+w==}
     dev: true
 
   /boolbase@1.0.0:

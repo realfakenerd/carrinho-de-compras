@@ -1,12 +1,8 @@
 <script lang="ts">
-	import TextField from '$lib/components/textfield/text-field.svelte';
-	import { db } from '$lib/db';
 	import { tirarDoCarrinho } from '$lib/servicos/carrinho-crud';
 	import carrinho from '$lib/stores/carrinho.store';
 	import { ItemTipo } from '$lib/stores/mercado.store';
 	import Icon from '@iconify/svelte';
-
-	const user = db.cloud.currentUser;
 
 	let totalDeItens = 0;
 	let pesoDoCarrinho = 0;
@@ -34,34 +30,11 @@
 			else total += +(parseFloat(item.preco) * item.quantidade).toFixed(2);
 		}
 	}
-
-	let email = '';
 </script>
 
 <div class="flex flex-col md:flex-row items-start gap-4 p-4">
 	<section class="card card-filled flex-1 items-center justify-between w-full min-h-[40dvh]">
-		{#if $user.isLoggedIn}
-			<div class="flex flex-col gap-y-4 items-center">
-				<h1 class="text-title-large">{$user?.name}</h1>
-				<p>{$user.email}</p>
-			</div>
-			<button on:click={() => db.cloud.logout()} class="btn interactive-bg-error">Logout</button>
-		{:else}
-			<div class="flex flex-col gap-y-4">
-				<h1 class="text-headline-large">Faça o login aqui</h1>
-			</div>
-			<TextField bind:value={email} icon="mdi:email" title="Email" />
-			<button
-				on:click={() =>
-					db.cloud.login({
-						email
-					})}
-				class="btn interactive-bg-primary w-2/3 gap-x-3"
-			>
-				<!-- <Icon width="24px" icon="devicon:google" class="p-1 rounded-full bg-white" /> -->
-				<p class="text-label-large">Login</p>
-			</button>
-		{/if}
+		<h1>Seu Carrinho</h1>
 	</section>
 
 	<section class="w-full md:w-1/2 flex flex-col gap-2">

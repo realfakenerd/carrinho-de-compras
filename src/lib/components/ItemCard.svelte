@@ -3,10 +3,11 @@
 	import { ItemTipo } from '$lib/stores/mercado.store';
 	import Icon from '@iconify/svelte';
 	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from './vaul';
-
+	import type { IMG } from '$lib/types';
+	import { decode } from 'blurhash';
 	let preco: string;
 	let nome: string;
-	let img: string | null;
+	let img: IMG;
 	let tipo: ItemTipo;
 	let quantidade = 0;
 
@@ -46,7 +47,7 @@
 
 	function startIncrement() {
 		console.log('touch');
-		
+
 		timer = setInterval(increment, 150);
 	}
 
@@ -69,8 +70,8 @@
 			style="height: 208px;"
 			class="rounded-lg object-cover aspect-square"
 			loading="lazy"
-			src={img || 'https://dummyimage.com/200x200/fff/111.gif&text=Imagem+indisponível'}
-			alt={nome}
+			src={img.src || 'https://dummyimage.com/200x200/fff/111.gif&text=Imagem+indisponível'}
+			alt={img.alt || 'Imagem indisponível'}
 			width="208px"
 			height="208px"
 		/>
@@ -98,7 +99,7 @@
 				<Icon icon="mdi:cart-plus" />
 			</DrawerTrigger>
 
-			<DrawerContent class="flex flex-col gap-6 mb-20">
+			<DrawerContent class="flex flex-col gap-6">
 				<hgroup>
 					<DrawerTitle class="text-headline-large">{nome}</DrawerTitle>
 					<h2>R$ {preco} {tipo === ItemTipo.KILO ? 'Kg' : 'Uni'} / R$ {valorAPagar}</h2>
@@ -109,8 +110,8 @@
 						style="height: 238px;"
 						class="rounded-lg object-cover"
 						loading="lazy"
-						src={img || 'https://dummyimage.com/200x200/fff/111.gif&text=Imagem+indisponível'}
-						alt={nome}
+						src={img.src || 'https://dummyimage.com/200x200/fff/111.gif&text=Imagem+indisponível'}
+						alt={img.alt || 'Imagem indisponível'}
 						width="238px"
 						height="238px"
 					/>

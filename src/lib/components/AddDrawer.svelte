@@ -8,6 +8,7 @@
 	import { RadioGroup, RadioGroupItem } from './radio-group';
 	import { TextField } from './textfield';
 	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from './vaul';
+	import { decode } from 'blurhash';
 
 	let nome = '',
 		preco = '',
@@ -19,22 +20,12 @@
 		states: { value }
 	} = createRadioGroup();
 
-	function addItem() {
-		if (nome !== '' && preco !== '') {
-			addItemToMercado({ nome, preco, img: $value, tipo });
-			img = nome = preco = '';
-			tipo = ItemTipo.UNIDADE;
-		}
-	}
-
 	let images: Unsplash | null = {
 		total: 0,
 		total_pages: 0,
 		results: []
 	};
 	async function unsplash() {
-		console.log('img', img);
-
 		if (img === '') return;
 		const res = await fetch(`https://api.unsplash.com/search/photos/?query=${img}`, {
 			method: 'GET',
@@ -45,6 +36,23 @@
 		});
 
 		images = (await res.json()) as Unsplash;
+		console.log(images);
+	}
+
+	type StringToIMG = [string: 'src', string: 'alt', string: 'color', string: 'blurhash'];
+
+	function addItem() {
+		if (nome !== '' && preco !== '') {
+			const string = $value.split('|') as StringToIMG;			
+			addItemToMercado({ nome, preco, img: {
+				src: string[0],
+				alt: string[1],
+				color: string[2],
+				blur_hash: string[3]
+			}, tipo });
+			img = nome = preco = '';
+			tipo = ItemTipo.UNIDADE;
+		}
 	}
 
 	/**
@@ -66,6 +74,15 @@
 			return fn.apply(this, args);
 		};
 	}
+
+	function blurhash(node: HTMLCanvasElement, hash: string) {
+		const height = node.height;
+		const width = node.width;
+		const ctx = node.getContext('2d');
+		const imageData = ctx?.createImageData(width, height);
+		imageData?.data.set(decode(hash, width, height));
+		ctx?.putImageData(imageData!, 0, 0);
+	}
 </script>
 
 <Drawer>
@@ -73,28 +90,43 @@
 		<Fab />
 	</DrawerTrigger>
 
-	<DrawerContent class="max-h-[96dvh] h-full flex flex-col gap-4 overflow-y-scroll">
+	<DrawerContent>
 		<DrawerTitle class="text-title-medium">Adicione um novo item ao mercado</DrawerTitle>
 		<form class="flex flex-col space-y-6">
 			<TextField title="Nome do produto" bind:value={nome} style="outlined" />
 			<TextField title="Preço do produto" bind:value={preco} style="outlined" />
 			<div>
 				<TextField
-					on:keydown={debounce(unsplash, 300)}
+					on:keydown={debounce(unsplash, 900)}
 					title="Escolha uma imagem"
 					bind:value={img}
 					style="outlined"
 				/>
 
 				{#if images && images?.results?.length}
-					<ul use:melt={$root} class="flex flex-wrap gap-4 justify-center py-4">
+					<ul use:melt={$root} class="grid grid-cols-3 gap-4 justify-center py-4">
 						{#each images.results as image}
-							<figure on:m-click={() => (images = null)} use:melt={$item(image.urls.regular)}>
+							<figure
+								class="relative rounded-xl overflow-hidden ring-2 ring-primary hover:ring-primary hover:ring-4 transition"
+								on:m-click={() => (images = null)}
+								use:melt={$item({
+									value: `${image.urls.regular}|${image.alternative_slugs.pt}|${image.color}|${image.blur_hash}`,
+								})}
+							>
 								<img
 									src={image.urls.thumb}
-									alt={image.description}
-									height="96px"
-									class="aspect-square rounded-xl ring-2 ring-background hover:ring-primary hover:ring-4 transition object-cover h-24 bg-surface-variant"
+									alt={image.alternative_slugs.pt}
+									height="80px"
+									width="200px"
+									loading="lazy"
+									style:--tw-ring-color={image.color}
+									class="object-cover h-[80px] w-[200px] bg-surface-variant"
+								/>
+								<canvas
+									class="absolute z-[-1] inset-0"
+									height="80px"
+									width="200px"
+									use:blurhash={image.blur_hash}
 								/>
 							</figure>
 						{/each}

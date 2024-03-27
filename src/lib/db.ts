@@ -9,15 +9,9 @@ export class MercadoDatabase extends Dexie {
 	constructor() {
 		super('mercado');
 		this.version(1).stores({
-			mercado: '@id, nome, preco, img, tipo',
-			carrinho: '@id, nome, preco, quantidade, tipo'
+			mercado: '++id, nome, preco, img, tipo',
+			carrinho: '++id, nome, preco, quantidade, tipo'
 		});
-
-		/** this.cloud.configure({
-			databaseUrl: 'https://zv2kkg59b.dexie.cloud',
-			requireAuth: false,
-			tryUseServiceWorker: true
-		});*/
 	}
 }
 
@@ -32,4 +26,15 @@ export async function addItemToMercado({ nome, preco, img, tipo }: Mercado) {
 		tipo
 	});
 	return id;
+}
+
+export async function updateItemInMercado(id: string, { nome, preco, img, tipo }: Partial<Mercado>) {
+	const rec =await db.mercado.update(id, {
+		nome,
+		img,
+		preco,
+		tipo
+	});
+
+	return rec;
 }
