@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { tirarDoCarrinho } from '$lib/servicos/carrinho-crud';
 	import carrinho from '$lib/stores/carrinho.store';
-	import { ItemTipo } from '$lib/stores/mercado.store';
+	import { ItemTipo } from '$lib/utils';
 	import Icon from '@iconify/svelte';
 
 	let totalDeItens = 0;

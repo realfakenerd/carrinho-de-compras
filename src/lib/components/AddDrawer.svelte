@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { addItemToMercado } from '$lib/db';
-	import { ItemTipo } from '$lib/stores/mercado.store';
+	import { ItemTipo } from '$lib/utils';
 	import Icon from '@iconify/svelte';
 	import { createRadioGroup, melt } from '@melt-ui/svelte';
 	import Fab from './FAB.svelte';
@@ -9,25 +9,33 @@
 	import { TextField } from './textfield';
 	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger, drawerState } from './vaul';
 
-	let nome = '',
-		preco = '',
-		img = '',
-		tipo = ItemTipo.UNIDADE;
-
 	const {
 		elements: { root, item },
 		states: { value }
 	} = createRadioGroup();
 
-	let images: Unsplash | null = {
+	let nome = '',
+		preco = '',
+		img = '',
+		tipo = ItemTipo.UNIDADE;
+
+	let images: Unsplash | undefined = {
 		total: 0,
 		total_pages: 0,
 		results: []
 	};
-	let gridTemplateRows = '0fr';
+
+	const imgCache = new Map<string, Unsplash>();
+
 	async function unsplash() {
-		if (img === '') return;
-		const res = await fetch(`https://api.unsplash.com/search/photos/?query=${img}&per_page=9`, {
+		if (!img) return;
+
+		const _img = img.toLowerCase()
+		if (imgCache.has(_img)) {
+			images = imgCache.get(_img);
+			return;
+		}
+		const res = await fetch(`https://api.unsplash.com/search/photos/?per_page=9&query=${_img}`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
@@ -35,15 +43,17 @@
 			}
 		});
 
-		gridTemplateRows = '1fr';
-		images = (await res.json()) as Unsplash;
-		console.log(images);
+		if (res.ok) {
+			const data = (await res.json()) as Unsplash;
+			images = data;
+			imgCache.set(_img, data);
+		}		
 	}
 
 	type StringToIMG = [string: 'src', string: 'alt', string: 'color', string: 'blurhash'];
 
 	function addItem() {
-		if (nome !== '' && preco !== '') {
+		if (nome && preco) {
 			const string = $value.split('|') as StringToIMG;
 			addItemToMercado({
 				nome,
@@ -81,15 +91,6 @@
 			return fn.apply(this, args);
 		};
 	}
-
-	// function blurhash(node: HTMLCanvasElement, hash: string) {
-	// 	const height = node.height;
-	// 	const width = node.width;
-	// 	const ctx = node.getContext('2d');
-	// 	const imageData = ctx?.createImageData(width, height);
-	// 	imageData?.data.set(decode(hash, width, height));
-	// 	ctx?.putImageData(imageData!, 0, 0);
-	// }
 </script>
 
 <Drawer bind:open={$drawerState}>
@@ -111,25 +112,26 @@
 				/>
 
 				<ul use:melt={$root} class="grid grid-cols-3 gap-4 pt-2 justify-center">
-					{#if images && images?.results?.length}
+					{#if img && images?.results?.length}
 						{#each images.results as image, i (i)}
 							<figure
 								style:--tw-ring-color={image.color}
 								class="relative h-[80px] overflow-hidden rounded-xl ring-2 ring-primary hover:ring-primary hover:ring-4 transition"
 								on:m-click={() => {
-									images = null;
+									images = undefined;
 								}}
 								use:melt={$item({
 									value: `${image.urls.regular}|${image.alternative_slugs.pt}|${image.color}|${image.blur_hash}`
 								})}
 							>
 								<img
+									style:background-color={image.color}
 									src={image.urls.thumb}
 									alt={image.alternative_slugs.pt}
 									height="80px"
 									width="200px"
 									loading="lazy"
-									class="object-cover h-full w-[200px] bg-surface-variant"
+									class="object-cover h-full w-[200px]"
 								/>
 							</figure>
 						{/each}

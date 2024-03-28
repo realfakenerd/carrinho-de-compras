@@ -1,4 +1,4 @@
-import { ItemTipo } from './stores/mercado.store';
+import { ItemTipo } from '$lib/utils';
 
 export interface Carrinho {
 	id?: string;

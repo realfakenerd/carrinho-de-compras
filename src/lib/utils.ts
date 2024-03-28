@@ -1,6 +1,11 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
+export const enum ItemTipo {
+	UNIDADE = 'uni',
+	KILO = 'kg'
+}
+
 /**
  * Concatenates multiple class values into a single string and applies Tailwind CSS utility classes.
  *

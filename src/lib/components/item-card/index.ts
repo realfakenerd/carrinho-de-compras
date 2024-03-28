@@ -1,4 +1,4 @@
-import { ItemTipo } from '$lib/stores/mercado.store';
+import { ItemTipo } from '$lib/utils';
 import { writable } from 'svelte/store';
 import ItemCard from './ItemCard.svelte';
 

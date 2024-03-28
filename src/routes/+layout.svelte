@@ -1,9 +1,6 @@
 <script lang="ts">
-	import { auth, db } from '$lib/firebase';
-	import '@fontsource/roboto';
 	import Icon, { enableCache } from '@iconify/svelte';
 	import { navdown } from 'navdown';
-	import { FirebaseApp } from 'sveltefire';
 	import '../app.css';
 	export let data;
 
@@ -46,29 +43,34 @@
 	];
 </script>
 
-<FirebaseApp {auth} firestore={db}>
-	<main class="flex-1 relative min-h-dvh">
-		<slot />
-	</main>
+<main class="flex-1 relative min-h-dvh">
+	<slot />
+</main>
 
-	<footer class="fixed bottom-0 z-[999] w-full">
-		<nav use:navdown class="custom-navbar">
-			{#each routes as route, index (index)}
-				<a href={route.href} class="group">
-					<div
-						class="group-hover:bg-secondary"
-						style="background-color:{data.currentRoute === route.href ? 'rgb(var(--color-secondary))' : ''}; color: {data.currentRoute === route.href ? 'rgb(var(--color-on-secondary))' : ''};"
-					>
-						<span class="fill-on-background group-hover:fill-on-secondary">
-							<Icon width="24px" icon={data.currentRoute === route.href ? route.d.filled : route.d.outlined} />
-						</span>
-					</div>
-					<h3>{route.name}</h3>
-				</a>
-			{/each}
-		</nav>
-	</footer>
-</FirebaseApp>
+<footer class="fixed bottom-0 z-[999] w-full">
+	<nav use:navdown class="custom-navbar">
+		{#each routes as route, index (index)}
+			<a href={route.href} class="group">
+				<div
+					class="group-hover:bg-secondary"
+					style="background-color:{data.currentRoute === route.href
+						? 'rgb(var(--color-secondary))'
+						: ''}; color: {data.currentRoute === route.href
+						? 'rgb(var(--color-on-secondary))'
+						: ''};"
+				>
+					<span class="fill-on-background group-hover:fill-on-secondary">
+						<Icon
+							width="24px"
+							icon={data.currentRoute === route.href ? route.d.filled : route.d.outlined}
+						/>
+					</span>
+				</div>
+				<h3>{route.name}</h3>
+			</a>
+		{/each}
+	</nav>
+</footer>
 
 <style lang="scss">
 	.custom-navbar {
