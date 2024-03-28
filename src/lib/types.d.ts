@@ -1,10 +1,11 @@
 import { ItemTipo } from './stores/mercado.store';
 
 export interface Carrinho {
+	id?: string;
 	nome: string;
 	preco: string;
-	quantidade: number;
 	tipo: ItemTipo;
+	quantidade: number;
 }
 
 export interface IMG {

@@ -3,7 +3,6 @@
 	import { ItemTipo } from '$lib/stores/mercado.store';
 	import Icon from '@iconify/svelte';
 	import { createRadioGroup, melt } from '@melt-ui/svelte';
-	import { fade } from 'svelte/transition';
 	import Fab from './FAB.svelte';
 	import type { Unsplash } from './drawer';
 	import { RadioGroup, RadioGroupItem } from './radio-group';
@@ -28,7 +27,7 @@
 	let gridTemplateRows = '0fr';
 	async function unsplash() {
 		if (img === '') return;
-		const res = await fetch(`https://api.unsplash.com/search/photos/?query=${img}`, {
+		const res = await fetch(`https://api.unsplash.com/search/photos/?query=${img}&per_page=9`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
@@ -93,7 +92,7 @@
 	// }
 </script>
 
-<Drawer open={$drawerState}>
+<Drawer bind:open={$drawerState}>
 	<DrawerTrigger on:click={() => drawerState.set(true)}>
 		<Fab />
 	</DrawerTrigger>
@@ -111,15 +110,14 @@
 					style="outlined"
 				/>
 
-				<ul use:melt={$root} class="grid grid-cols-3 h-full gap-4 justify-center py-4">
+				<ul use:melt={$root} class="grid grid-cols-3 gap-4 pt-2 justify-center">
 					{#if images && images?.results?.length}
 						{#each images.results as image, i (i)}
 							<figure
-								transition:fade
-								class="relative overflow-hidden rounded-xl ring-2 ring-primary hover:ring-primary hover:ring-4 transition"
+								style:--tw-ring-color={image.color}
+								class="relative h-[80px] overflow-hidden rounded-xl ring-2 ring-primary hover:ring-primary hover:ring-4 transition"
 								on:m-click={() => {
 									images = null;
-									gridTemplateRows = '0fr';
 								}}
 								use:melt={$item({
 									value: `${image.urls.regular}|${image.alternative_slugs.pt}|${image.color}|${image.blur_hash}`
@@ -131,10 +129,8 @@
 									height="80px"
 									width="200px"
 									loading="lazy"
-									style:--tw-ring-color={image.color}
-									class="object-cover h-[80px] w-[200px] bg-surface-variant"
+									class="object-cover h-full w-[200px] bg-surface-variant"
 								/>
-								
 							</figure>
 						{/each}
 					{/if}

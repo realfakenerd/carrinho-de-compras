@@ -14,11 +14,10 @@
 		style="translate: -50%"
 		{...$$restProps}
 		class={cn(
-			'fixed flex flex-col left-1/2 bottom-0 z-50 bg-surface-variant h-full max-h-[96%] w-full max-w-[640px] rounded-t-xl',
-			className
+			'fixed flex flex-col left-1/2 bottom-0 z-50 bg-surface-variant h-full max-h-[96%] w-full max-w-[640px] rounded-t-xl'
 		)}
 	>
-		<div class="overflow-auto flex flex-col gap-4 py-6 px-4">
+		<div class={cn("overflow-auto flex flex-col gap-4 py-6 px-4", className)}>
 			<slot />
 		</div>
 	</DrawerPrimitive.Content>

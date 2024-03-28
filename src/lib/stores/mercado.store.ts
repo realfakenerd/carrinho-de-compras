@@ -4,8 +4,8 @@ import { collectionStore } from 'sveltefire';
 import type { Mercado } from '../types';
 
 const enum ItemTipo {
-	UNIDADE,
-	KILO
+	UNIDADE = 'uni',
+	KILO = 'kg'
 }
 
 const mercRef = collection(db, 'mercado') as CollectionReference<Mercado>;
