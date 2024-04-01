@@ -19,7 +19,9 @@ setCacheNameDetails({
 	googleAnalytics: 'ga'
 });
 
-const strategy = new CacheFirst();
+const strategy = new CacheFirst({
+	cacheName: `${cacheNames.prefix}-precache-${cacheNames.suffix}`,
+});
 
 warmStrategyCache({ urls, strategy });
 
