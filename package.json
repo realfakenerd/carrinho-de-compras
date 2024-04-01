@@ -118,8 +118,11 @@
 		"vite-plugin-remove-console": "^2.2.0",
 		"vitest": "^1.4.0",
 		"wireit": "^0.14.4",
+		"workbox-cacheable-response": "^7.0.0",
 		"workbox-core": "^7.0.0",
-		"workbox-recipes": "^7.0.0"
+		"workbox-recipes": "^7.0.0",
+		"workbox-routing": "^7.0.0",
+		"workbox-strategies": "^7.0.0"
 	},
 	"type": "module",
 	"dependencies": {

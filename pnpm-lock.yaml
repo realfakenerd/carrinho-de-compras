@@ -157,10 +157,19 @@ devDependencies:
   wireit:
     specifier: ^0.14.4
     version: 0.14.4
+  workbox-cacheable-response:
+    specifier: ^7.0.0
+    version: 7.0.0
   workbox-core:
     specifier: ^7.0.0
     version: 7.0.0
   workbox-recipes:
+    specifier: ^7.0.0
+    version: 7.0.0
+  workbox-routing:
+    specifier: ^7.0.0
+    version: 7.0.0
+  workbox-strategies:
     specifier: ^7.0.0
     version: 7.0.0
 
