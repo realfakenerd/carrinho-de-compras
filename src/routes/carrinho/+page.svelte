@@ -1,34 +1,33 @@
 <script lang="ts">
-	import { tirarDoCarrinho } from '$lib/servicos/carrinho-crud';
-	import carrinho from '$lib/stores/carrinho.store';
+	import { db } from '$lib/db';
 	import { ItemTipo } from '$lib/utils';
 	import Icon from '@iconify/svelte';
+	import { liveQuery } from 'dexie';
+	import { slide } from 'svelte/transition';
 
+	let dbCarrinho = liveQuery(() => db.carrinho.toArray());
+
+	let total = 0;
 	let totalDeItens = 0;
 	let pesoDoCarrinho = 0;
 
-	carrinho.subscribe((val) => {
-		totalDeItens = val.reduce((a, { quantidade, tipo }) => {
-			if (tipo === ItemTipo.KILO) return a;
-			return a + quantidade;
-		}, 0);
+	dbCarrinho.subscribe((items) => {
+		const unidades = items.filter(({ tipo }) => tipo === ItemTipo.UNIDADE);
+		const kg = items.filter(({ tipo }) => tipo === ItemTipo.KILO);
 
-		console.log(totalDeItens);
+		totalDeItens = unidades.length + kg.length;
+		pesoDoCarrinho = kg.reduce((a, { quantidade }) => a + quantidade, 0);
 
-		pesoDoCarrinho = val.reduce((a, { quantidade, tipo }) => {
-			if (tipo === ItemTipo.UNIDADE) return a;
-			return a + quantidade;
+		total = items.reduce((acc, { preco, quantidade, tipo }) => {
+			const price = parseFloat(preco);
+			return tipo === ItemTipo.UNIDADE
+				? acc + price * quantidade
+				: acc + +(price * quantidade).toFixed(2);
 		}, 0);
 	});
 
-	let total = 0;
-
-	$: {
-		for (let i = 0; i < $carrinho.length; i++) {
-			const item = $carrinho[i];
-			if (item.tipo === ItemTipo.UNIDADE) total += parseFloat(item.preco) * item.quantidade;
-			else total += +(parseFloat(item.preco) * item.quantidade).toFixed(2);
-		}
+	async function removerCarrinho(id?: string) {
+		await db.carrinho.delete(id!);
 	}
 </script>
 
@@ -56,36 +55,38 @@
 		</section>
 
 		<ul class="card gap-4 card-filled w-full">
-			{#each $carrinho as c}
-				<li class="transition-colors hover:bg-surface-1">
-					<div class="flex flex-row items-center justify-between w-full">
-						<div>
-							<div class="flex items-center gap-x-2">
-								<h1 class="text-body-large capitalize">{c.nome}</h1>
-								<span class="text-body-small rounded-xl bg-secondary px-1 text-on-secondary">
-									{c.quantidade.toFixed(2)}
-									{c.tipo === ItemTipo.KILO ? 'Kg' : 'Uni'}
-								</span>
+			{#if $dbCarrinho}
+				{#each $dbCarrinho as { nome, preco, quantidade, id, tipo } (id)}
+					<li out:slide={{ axis: 'y' }} class="transition-colors hover:bg-surface-1 min-h-full">
+						<div class="flex flex-row items-center justify-between w-full">
+							<div>
+								<div class="flex items-center gap-x-2">
+									<h1 class="text-body-large capitalize">{nome}</h1>
+									<span class="text-body-small rounded-xl bg-secondary px-1 text-on-secondary">
+										{quantidade.toFixed(2)}
+										{tipo === ItemTipo.KILO ? 'Kg' : 'Uni'}
+									</span>
+								</div>
+								<p class="text-body-medium">R${preco}</p>
 							</div>
-							<p class="text-body-medium">R${c.preco}</p>
-						</div>
 
-						<button
-							class="icon-btn-container interactive-bg-error"
-							on:click={tirarDoCarrinho(c.nome)}
-						>
-							<span class="icon-btn">
-								<Icon icon="mdi:minus" />
-							</span>
-						</button>
-					</div>
-				</li>
-			{:else}
-				<li class="py-2 pl-4 pr-6 flex flex-col gap-1">
-					<h1>Oops!</h1>
-					<p class="text-text-body-medium">Não há items dentro do carrinho</p>
-				</li>
-			{/each}
+							<button
+								class="icon-btn-container interactive-bg-error"
+								on:click={() => removerCarrinho(id)}
+							>
+								<span class="icon-btn">
+									<Icon icon="mdi:minus" />
+								</span>
+							</button>
+						</div>
+					</li>
+				{:else}
+					<li class="py-2 pl-4 pr-6 flex flex-col gap-1">
+						<h1>Oops!</h1>
+						<p class="text-text-body-medium">Não há items dentro do carrinho</p>
+					</li>
+				{/each}
+			{/if}
 		</ul>
 	</section>
 </div>

@@ -1,6 +1,5 @@
-//@ts-expect-error i dont know
 import { build, files, version } from '$service-worker';
-import { cacheNames, setCacheNameDetails } from 'workbox-core';
+import { cacheNames, clientsClaim, setCacheNameDetails	 } from 'workbox-core';
 import {
 	imageCache,
 	pageCache,
@@ -18,6 +17,8 @@ setCacheNameDetails({
 	runtime: 'runtime',
 	googleAnalytics: 'ga'
 });
+
+clientsClaim();
 
 const strategy = new CacheFirst({
 	cacheName: `${cacheNames.prefix}-precache-${cacheNames.suffix}`,

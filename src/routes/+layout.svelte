@@ -1,19 +1,21 @@
 <script lang="ts">
 	import Icon, { enableCache } from '@iconify/svelte';
 	import { navdown } from 'navdown';
+	import { Toaster } from 'svelte-sonner';
 	import '../app.css';
+	import { onNavigate } from '$app/navigation';
 	export let data;
 
 	enableCache('all');
-	// onNavigate((navigation) => {
-	// 	if (!document.startViewTransition) return;
-	// 	return new Promise((resolve) => {
-	// 		document.startViewTransition(async () => {
-	// 			resolve();
-	// 			await navigation.complete;
-	// 		});
-	// 	});
-	// });
+	onNavigate((navigation) => {
+		if (!document.startViewTransition) return;
+		return new Promise((resolve) => {
+			document.startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
+		});
+	});
 
 	const routes = [
 		{
@@ -24,14 +26,6 @@
 				filled: `mdi:home-variant`
 			}
 		},
-		// {
-		// 	href: '/pesquisa',
-		// 	name: 'Pesquisa',
-		// 	d: {
-		// 		outlined: `mdi:search`,
-		// 		filled: `mdi:search`
-		// 	}
-		// },
 		{
 			href: '/carrinho',
 			name: 'carrinho',
@@ -47,45 +41,101 @@
 	<slot />
 </main>
 
-<footer class="fixed bottom-0 z-[999] w-full">
-	<nav use:navdown class="custom-navbar">
-		{#each routes as route, index (index)}
-			<a href={route.href} class="group">
+<Toaster
+	toastOptions={{
+		unstyled: true,
+		classes: {
+			toast:
+				'min-h-[48px] max-h-[68px] shadow-md p-4 bg-surface rounded-md flex flex-row-reverse items-center justify-between',
+			title: 'text-label-large',
+			description: 'text-body-medium'
+		}
+	}}
+	richColors
+	theme="dark"
+	closeButton
+	visibleToasts={1}
+	duration={1600}
+>
+	<Icon width="24px" height="24px" icon="mdi:check" slot="success-icon" />
+	<Icon width="24px" height="24px" icon="mdi:information" slot="info-icon" />
+</Toaster>
+
+<footer use:navdown style="view-transition-name: footer;" class="fixed bottom-0 z-[999] w-full">
+	<nav class="custom-navbar">
+		{#each routes as { d, href, name } (href)}
+			<a {href} class="group">
 				<div
 					class="group-hover:bg-secondary"
-					style="background-color:{data.currentRoute === route.href
+					style="background-color:{data.currentRoute === href
 						? 'rgb(var(--color-secondary))'
-						: ''}; color: {data.currentRoute === route.href
-						? 'rgb(var(--color-on-secondary))'
-						: ''};"
+						: ''}; color: {data.currentRoute === href ? 'rgb(var(--color-on-secondary))' : ''};"
 				>
 					<span class="fill-on-background group-hover:fill-on-secondary">
-						<Icon
-							width="24px"
-							icon={data.currentRoute === route.href ? route.d.filled : route.d.outlined}
-						/>
+						<Icon width="24px" icon={data.currentRoute === href ? d.filled : d.outlined} />
 					</span>
 				</div>
-				<h3>{route.name}</h3>
+				<h3>{name}</h3>
 			</a>
 		{/each}
 	</nav>
 </footer>
 
-<style lang="scss">
+<style>
 	.custom-navbar {
-		@apply flex h-20 flex-none flex-grow-0 flex-row items-start gap-2 bg-surface-variant py-0 px-2;
-		a {
-			@apply flex h-20 flex-none flex-grow flex-col items-center justify-center gap-1 px-0 pt-3 pb-4;
-			div {
-				@apply flex h-8 w-16 flex-col items-center justify-center rounded-2xl p-0 transition-all duration-300;
+		display: flex;
+		flex-direction: row;
+		align-items: start;
+		flex: none;
+		flex-grow: 0;
+		gap: 0.5rem;
+		background-color: theme('colors.surface-variant');
+		padding-block: 0;
+		padding-inline: 0.5rem;
+		height: 5rem;
 
-				span {
-					@apply flex h-8 w-16 flex-col items-center justify-center rounded-2xl p-0;
+		& a {
+			display: flex;
+			height: 5rem;
+			flex: none;
+			flex-grow: 1;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 0.25rem;
+			padding-block-start: 0.75rem;
+			padding-block-end: 1rem;
+			padding-inline: 0;
+
+			& div {
+				display: flex;
+				height: 2rem;
+				width: 4rem;
+				align-items: center;
+				justify-content: center;
+				border-radius: 16px;
+				transition: background-color 300ms ease-in-out;
+
+				& span {
+					display: flex;
+					height: 2rem;
+					width: 4rem;
+					flex-direction: column;
+					align-items: center;
+					justify-content: center;
+					border-radius: 16px;
+					padding: 0;
 				}
 			}
-			h3 {
-				@apply h-4 flex-none flex-grow-0 self-stretch text-center text-xs font-medium tracking-wide;
+			& h3 {
+				height: 1rem;
+				flex: none;
+				flex-grow: 0;
+				align-items: stretch;
+				text-transform: capitalize;
+				text-align: center;
+
+				@apply text-label-medium;
 			}
 		}
 	}

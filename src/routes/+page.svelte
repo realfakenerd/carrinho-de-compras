@@ -3,16 +3,55 @@
 	import { ItemCard } from '$lib/components/item-card';
 	import { TextField } from '$lib/components/textfield/index.js';
 	import { db } from '$lib/db';
-	import type { Mercado } from '$lib/types';
-	import { liveQuery, type Observable } from 'dexie';
+	import type { ItemTipo } from '$lib/types';
+	import { liveQuery } from 'dexie';
+	import { toast } from 'svelte-sonner';
+	import { read, utils } from 'xlsx';
+	import type { PageData } from './$types';
+
+	export let data: PageData;
 
 	let value = '';
-	let mercado: Observable<Mercado[]> | undefined;
+	let { mercado } = data;
 
-	$: if (value) {
+	$: if (value)
 		mercado = liveQuery(() => db.mercado.where('nome').startsWithIgnoreCase(value).toArray());
-	} else {
-		mercado = liveQuery(() => db.mercado.toArray());
+	else mercado = data.mercado;
+
+	interface ImportedData {
+		Produto: string;
+		Valor: number;
+		Tipo: ItemTipo;
+	}
+
+	async function handleFile(e: Event) {
+		const { files } = e.target as HTMLInputElement;
+		const file = files?.item(0);
+		if (!file) return;
+		toast.info('Importando...');
+
+		const wb = read(await file.arrayBuffer());
+		const sheet = wb.Sheets[wb.SheetNames[0]];
+		const json = utils.sheet_to_json<ImportedData>(sheet);
+
+		await db.mercado.bulkAdd(
+			json.map(({ Produto, Valor, Tipo }) => ({
+				nome: Produto,
+				preco: String(Valor),
+				tipo: Tipo,
+				img: {
+					alt: 'Imagem indisponível',
+					color: '#111',
+					src: 'https://dummyimage.com/200x200/fff/111.gif&text=Imagem+indisponível',
+					blur_hash: ''
+				}
+			}))
+		);
+
+		toast.success(`Importado com sucesso`, {
+			description: `Importado ${json.length} itens ao mercado`,
+			duration: 2000
+		});
 	}
 </script>
 
@@ -21,13 +60,24 @@
 		<TextField bind:value style="outlined" title="Pesquisar" trailingIcon="mdi:search" />
 	</div>
 
-	<section>
-		<h1 class="text-headline-large">Carrinho da nuvem</h1>
-	</section>
+	<section class="flex flex-col md:flex-row items-center">
+		<h1 class="text-headline-large w-full">Carrinho de compras</h1>
 
+		<section class="flex flex-col gap-2 w-full">
+			<label class="text-label-large" for="d"> Importar de planilha </label>
+			<input
+				class="bg-surface-variant p-4 rounded-lg file:border-0 file:rounded-md file:p-1 file:bg-surface file:text-label-medium file:text-primary"
+				on:input={handleFile}
+				type="file"
+				multiple={false}
+				name="import"
+				id="d"
+			/>
+		</section>
+	</section>
 	<ul class="grid gap-4 justify-center">
 		{#if $mercado}
-			{#each $mercado as { img, nome, preco, tipo, id }, i (i)}
+			{#each $mercado as { img, nome, preco, tipo, id } (id)}
 				<li>
 					<ItemCard {img} {nome} {preco} {tipo} {id} />
 				</li>
@@ -38,6 +88,11 @@
 					<p class="text-body-medium">Tente Adicionar algo na lista</p>
 				</li>
 			{/each}
+		{:else}
+			<li class="card card-filled animate-pulse h-[280px] w-full" />
+			<li class="card card-filled animate-pulse h-[280px] w-full" />
+			<li class="card card-filled animate-pulse h-[280px] w-full" />
+			<li class="card card-filled animate-pulse h-[280px] w-full" />
 		{/if}
 	</ul>
 </section>

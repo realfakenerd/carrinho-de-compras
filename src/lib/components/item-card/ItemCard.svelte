@@ -1,27 +1,37 @@
 <script lang="ts">
-	import { porNoCarrinho } from '$lib/servicos/carrinho-crud';
-	import { ItemTipo } from '$lib/utils';
-	import type { IMG } from '$lib/types';
-	import Icon from '@iconify/svelte';
-	import { carrinhoCard } from './index';
-	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '../vaul';
 	import { db } from '$lib/db';
+	import { porNoCarrinho } from '$lib/servicos/carrinho-crud';
+	import type { IMG } from '$lib/types';
+	import { ItemTipo } from '$lib/utils';
+	import {toast} from 'svelte-sonner';
+	import Icon from '@iconify/svelte';
+	import { slide } from 'svelte/transition';
 	import TextField from '../textfield/text-field.svelte';
-	import { fly, slide } from 'svelte/transition';
+	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '../vaul';
+	import { addCarrinho, carrinhoContas } from './index';
+	import Unsplash, { value } from '../Unsplash.svelte';
 
 	let preco: string;
 	let nome: string;
-	let img: IMG;
+	let img: IMG = {
+		alt: 'Imagem indisponível',
+		color: '#111',
+		src: 'https://dummyimage.com/200x200/fff/111.gif&text=Imagem+indisponível',
+		blur_hash: ''
+	};
+
 	let tipo: ItemTipo;
 	let id = '';
 	let hidden = true;
 
-	const carrinho = carrinhoCard();
+	const carrinho = carrinhoContas();
 
 	let open = false;
 	function addAndDismiss() {
+		addCarrinho({ nome, preco, tipo, quantidade: $carrinho });
 		porNoCarrinho({ nome, preco, tipo, quantidade: $carrinho });
 		open = false;
+		toast.success(`Adicionado ao seu carrinho`);
 	}
 
 	function removeAndDismis() {
@@ -29,9 +39,20 @@
 		open = false;
 	}
 
-	function editAndDismis() {
-		hidden = true;
-		db.mercado.put({ nome, preco, img, tipo, id }, id);
+	type StringToIMG = [string: 'src', string: 'alt', string: 'color', string: 'blurhash'];
+	async function editAndDismis() {
+		const string = $value.split('|') as StringToIMG;
+		img = {
+			src: string[0],
+			alt: string[1],
+			color: string[2],
+			blur_hash: string[3]
+		};
+		const result = await db.mercado.put({ nome, preco, img, tipo, id }, id);
+		if (result) {
+			hidden = true;
+			toast.success(`Editado com sucesso`)
+		}		
 	}
 
 	let valorAPagar = 0;
@@ -47,11 +68,11 @@
 	<figure>
 		<img
 			on:contextmenu|preventDefault
-			style="height: 208px;background-color: {img.color};"
+			style="height: 208px;background-color: {img?.color};"
 			class="rounded-lg object-cover aspect-square"
 			loading="lazy"
-			src={img.src || 'https://dummyimage.com/200x200/fff/111.gif&text=Imagem+indisponível'}
-			alt={img.alt || 'Imagem indisponível'}
+			src={img?.src}
+			alt={img?.alt}
 			width="208px"
 			height="208px"
 		/>
@@ -139,11 +160,11 @@
 				</button>
 
 				{#if !hidden}
-					<div class="h-full" transition:slide={{ axis: 'y' }}>
-						<form class="flex flex-col">
+					<div class="h-full flex flex-col gap-3" transition:slide={{ axis: 'y' }}>
+						<form class="flex flex-col gap-2">
 							<TextField bind:value={nome} title="Nome" />
 							<TextField bind:value={preco} title="Preço" />
-							<TextField bind:value={img.src} title="Imagem" />
+							<Unsplash />
 						</form>
 
 						<button

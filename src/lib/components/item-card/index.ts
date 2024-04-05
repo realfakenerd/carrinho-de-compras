@@ -1,8 +1,16 @@
 import { ItemTipo } from '$lib/utils';
 import { writable } from 'svelte/store';
+// @ts-expect-error boring error
 import ItemCard from './ItemCard.svelte';
+import { db } from '$lib/db';
+import type { Carrinho } from '$lib/types';
 
-function carrinhoCard() {
+/**
+ * Generates a writable store for a shopping cart item count with 
+ * functions to increment, decrement, start auto-increment, start 
+ * auto-decrement, and stop auto-increment.
+ */
+function carrinhoContas() {
 	const { subscribe, update } = writable(0.0);
 	let timer: NodeJS.Timeout | undefined;
 
@@ -51,4 +59,12 @@ function carrinhoCard() {
 	};
 }
 
-export { ItemCard, carrinhoCard };
+function addCarrinho({ nome, preco, tipo, quantidade = 1 }: Carrinho){
+	db.carrinho.add({ nome, preco, tipo, quantidade });
+}
+
+function deleteCarrinho(id: string) {
+	db.carrinho.delete(id);
+}
+
+export { ItemCard, carrinhoContas, addCarrinho, deleteCarrinho };

@@ -1,5 +1,5 @@
 import { ItemTipo } from '$lib/utils';
-
+export { ItemTipo };
 export interface Carrinho {
 	id?: string;
 	nome: string;
@@ -16,5 +16,5 @@ export interface IMG {
 }
 
 export interface Mercado extends Omit<Carrinho, 'quantidade'> {
-	img: IMG;
+	img?: IMG;
 }
