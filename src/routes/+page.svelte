@@ -115,7 +115,7 @@
 	<ul class="grid gap-4 justify-center">
 		{#if result}
 			{#each result as { img, nome, preco, tipo, id }, i (i)}
-				<li transition:fly>
+				<li transition:fly={{delay: i * 0.1}}>
 					<ItemCard {img} {nome} {preco} {tipo} {id} />
 				</li>
 			{:else}
@@ -126,10 +126,10 @@
 				</li>
 			{/each}
 		{:else}
-			<li transition:fly class="card card-filled animate-pulse h-[280px] w-full" />
-			<li transition:fly class="card card-filled animate-pulse h-[280px] w-full" />
-			<li transition:fly class="card card-filled animate-pulse h-[280px] w-full" />
-			<li transition:fly class="card card-filled animate-pulse h-[280px] w-full" />
+			<li transition:fly={{delay: 300, duration: 300}} class="card card-filled animate-pulse h-[280px] w-full" />
+			<li transition:fly={{delay: 300, duration: 300}} class="card card-filled animate-pulse h-[280px] w-full" />
+			<li transition:fly={{delay: 300, duration: 300}} class="card card-filled animate-pulse h-[280px] w-full" />
+			<li transition:fly={{delay: 300, duration: 300}} class="card card-filled animate-pulse h-[280px] w-full" />
 		{/if}
 	</ul>
 </section>
