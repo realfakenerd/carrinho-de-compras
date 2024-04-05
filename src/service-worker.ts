@@ -1,5 +1,5 @@
 import { build, files, version } from '$service-worker';
-import { cacheNames, clientsClaim, setCacheNameDetails	 } from 'workbox-core';
+import { cacheNames, clientsClaim, setCacheNameDetails } from 'workbox-core';
 import {
 	imageCache,
 	pageCache,

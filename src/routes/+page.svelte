@@ -3,21 +3,26 @@
 	import { ItemCard } from '$lib/components/item-card';
 	import { TextField } from '$lib/components/textfield/index.js';
 	import { db } from '$lib/db';
+	import { createMercadoIndex, searchMercadoIndex } from '$lib/search';
 	import type { ItemTipo } from '$lib/types';
+	import Icon from '@iconify/svelte';
 	import { liveQuery } from 'dexie';
 	import { toast } from 'svelte-sonner';
 	import { read, utils } from 'xlsx';
 	import type { PageData } from './$types';
-	import Icon from '@iconify/svelte';
+	import { fade, fly } from 'svelte/transition';
 
 	export let data: PageData;
 
 	let value = '';
 	let { mercado } = data;
+	let result = $mercado;
 
-	$: if (value)
-		mercado = liveQuery(() => db.mercado.where('nome').startsWithIgnoreCase(value).toArray());
-	else mercado = data.mercado;
+	// $: if (value)
+	// 	mercado = liveQuery(() =>
+	// 		db.mercado.where('nome').startsWithIgnoreCase(value.trim()).toArray()
+	// 	);
+	// else mercado = data.mercado;
 
 	interface ImportedData {
 		Produto: string;
@@ -25,10 +30,27 @@
 		Tipo: ItemTipo;
 	}
 
+	$: if ($mercado) {
+		createMercadoIndex($mercado);
+	}
+
+	$: if (value) {
+		result = searchMercadoIndex(value.trim());
+	} else result = $mercado;
+
 	async function handleFile(e: Event) {
 		const { files } = e.target as HTMLInputElement;
 		const file = files?.item(0);
 		if (!file) return;
+
+		if (!file?.type.startsWith('application/vnd')) {
+			toast.error('Tipo invalido de arquivo', {
+				description: 'Apenas arquivos .xlsx e .ods são permitidos',
+				duration: 3000
+			});
+			return;
+		}
+
 		toast.info('Importando...');
 
 		const wb = read(await file.arrayBuffer());
@@ -63,15 +85,16 @@
 		<TextField bind:value style="outlined" title="Pesquisar" trailingIcon="mdi:search" />
 	</div>
 
-	<section class="flex flex-col md:flex-row items-center">
-		<div>
+	<section class="flex flex-col gap-4 md:flex-row items-center">
+		<div class="flex flex-row gap-2 w-full">
 			<h1 class="text-headline-large w-full">Carrinho de compras</h1>
 
 			{#if $mercado && $mercado.length}
-				<button class="icon-btn-container interactive-bg-error" on:click={() => db.mercado.clear()}>
-					<span class="icon-btn">
-						<Icon icon="mdi:trash-can-outline" />
-					</span>
+				<button
+					class="h-12 min-w-12 grid place-items-center rounded-full interactive-bg-error"
+					on:click={() => db.mercado.clear()}
+				>
+					<Icon width="24px" icon="mdi:trash-can-outline" />
 				</button>
 			{/if}
 		</div>
@@ -79,6 +102,7 @@
 		<section class="flex flex-col gap-2 w-full">
 			<label class="text-label-large" for="d"> Importar de planilha </label>
 			<input
+				accept=".ods,.xls,.xlsx"
 				class="bg-surface-variant p-4 rounded-lg file:border-0 file:rounded-md file:p-1 file:bg-surface file:text-label-medium file:text-primary"
 				on:input={handleFile}
 				type="file"
@@ -89,23 +113,23 @@
 		</section>
 	</section>
 	<ul class="grid gap-4 justify-center">
-		{#if $mercado}
-			{#each $mercado as { img, nome, preco, tipo, id } (id)}
-				<li>
+		{#if result}
+			{#each result as { img, nome, preco, tipo, id }, i (i)}
+				<li transition:fly>
 					<ItemCard {img} {nome} {preco} {tipo} {id} />
 				</li>
 			{:else}
-				<li class="card card-filled gap-1 w-full">
+				<li class="card card-filled gap-1 justify-end w-full h-[280px]">
 					<h1 class="text-title-large">Oops!</h1>
 					<p class="text-body-medium">Nenhum item encontrado</p>
 					<p class="text-body-medium">Tente Adicionar algo na lista</p>
 				</li>
 			{/each}
 		{:else}
-			<li class="card card-filled animate-pulse h-[280px] w-full" />
-			<li class="card card-filled animate-pulse h-[280px] w-full" />
-			<li class="card card-filled animate-pulse h-[280px] w-full" />
-			<li class="card card-filled animate-pulse h-[280px] w-full" />
+			<li transition:fly class="card card-filled animate-pulse h-[280px] w-full" />
+			<li transition:fly class="card card-filled animate-pulse h-[280px] w-full" />
+			<li transition:fly class="card card-filled animate-pulse h-[280px] w-full" />
+			<li transition:fly class="card card-filled animate-pulse h-[280px] w-full" />
 		{/if}
 	</ul>
 </section>
