@@ -8,6 +8,7 @@
 	import { toast } from 'svelte-sonner';
 	import { read, utils } from 'xlsx';
 	import type { PageData } from './$types';
+	import Icon from '@iconify/svelte';
 
 	export let data: PageData;
 
@@ -35,17 +36,19 @@
 		const json = utils.sheet_to_json<ImportedData>(sheet);
 
 		await db.mercado.bulkAdd(
-			json.map(({ Produto, Valor, Tipo }) => ({
-				nome: Produto,
-				preco: String(Valor),
-				tipo: Tipo,
-				img: {
-					alt: 'Imagem indisponível',
-					color: '#111',
-					src: 'https://dummyimage.com/200x200/fff/111.gif&text=Imagem+indisponível',
-					blur_hash: ''
-				}
-			}))
+			json.map(({ Produto, Valor, Tipo }) => {
+				return {
+					nome: Produto,
+					preco: String(Valor),
+					tipo: Tipo,
+					img: {
+						alt: 'Imagem indisponível',
+						color: '#111',
+						src: 'https://dummyimage.com/200x200/fff/111.gif&text=Imagem+indisponível',
+						blur_hash: ''
+					}
+				};
+			})
 		);
 
 		toast.success(`Importado com sucesso`, {
@@ -61,7 +64,17 @@
 	</div>
 
 	<section class="flex flex-col md:flex-row items-center">
-		<h1 class="text-headline-large w-full">Carrinho de compras</h1>
+		<div>
+			<h1 class="text-headline-large w-full">Carrinho de compras</h1>
+
+			{#if $mercado && $mercado.length}
+				<button class="icon-btn-container interactive-bg-error" on:click={() => db.mercado.clear()}>
+					<span class="icon-btn">
+						<Icon icon="mdi:trash-can-outline" />
+					</span>
+				</button>
+			{/if}
+		</div>
 
 		<section class="flex flex-col gap-2 w-full">
 			<label class="text-label-large" for="d"> Importar de planilha </label>
