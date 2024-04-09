@@ -6,11 +6,11 @@
 	import { createMercadoIndex, searchMercadoIndex } from '$lib/search';
 	import type { ItemTipo } from '$lib/types';
 	import Icon from '@iconify/svelte';
-	import { liveQuery } from 'dexie';
 	import { toast } from 'svelte-sonner';
+	import { fly } from 'svelte/transition';
 	import { read, utils } from 'xlsx';
 	import type { PageData } from './$types';
-	import { fade, fly } from 'svelte/transition';
+	import Camera from '$lib/components/Camera.svelte';
 
 	export let data: PageData;
 
@@ -80,6 +80,8 @@
 	}
 </script>
 
+<Camera />
+
 <section class="py-8 px-2 flex flex-col gap-4">
 	<div class="relative mb-6 flex w-full items-center">
 		<TextField bind:value style="outlined" title="Pesquisar" trailingIcon="mdi:search" />
@@ -115,7 +117,7 @@
 	<ul class="grid gap-4 justify-center">
 		{#if result}
 			{#each result as { img, nome, preco, tipo, id }, i (i)}
-				<li transition:fly={{delay: i * 0.1}}>
+				<li transition:fly={{ delay: i * 0.1 }}>
 					<ItemCard {img} {nome} {preco} {tipo} {id} />
 				</li>
 			{:else}
@@ -126,10 +128,22 @@
 				</li>
 			{/each}
 		{:else}
-			<li transition:fly={{delay: 300, duration: 300}} class="card card-filled animate-pulse h-[280px] w-full" />
-			<li transition:fly={{delay: 300, duration: 300}} class="card card-filled animate-pulse h-[280px] w-full" />
-			<li transition:fly={{delay: 300, duration: 300}} class="card card-filled animate-pulse h-[280px] w-full" />
-			<li transition:fly={{delay: 300, duration: 300}} class="card card-filled animate-pulse h-[280px] w-full" />
+			<li
+				transition:fly={{ delay: 300, duration: 300 }}
+				class="card card-filled animate-pulse h-[280px] w-full"
+			/>
+			<li
+				transition:fly={{ delay: 300, duration: 300 }}
+				class="card card-filled animate-pulse h-[280px] w-full"
+			/>
+			<li
+				transition:fly={{ delay: 300, duration: 300 }}
+				class="card card-filled animate-pulse h-[280px] w-full"
+			/>
+			<li
+				transition:fly={{ delay: 300, duration: 300 }}
+				class="card card-filled animate-pulse h-[280px] w-full"
+			/>
 		{/if}
 	</ul>
 </section>
