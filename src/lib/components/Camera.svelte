@@ -55,8 +55,15 @@
 		}
 	}
 
+
+	$: devices = [] as MediaDeviceInfo[];
+	onMount(async () => {
+		devices = await navigator.mediaDevices.enumerateDevices();
+	})
+
 	function startVideo(node: HTMLVideoElement) {
 		playVideo();
+
 		if (!streaming) {
 			height = (node.videoHeight / node.videoWidth) * width;
 			if (isNaN(height)) {
@@ -69,6 +76,7 @@
 		}
 	}
 </script>
+
 
 <div>
 	<!-- svelte-ignore a11y-media-has-caption -->
@@ -84,6 +92,17 @@
 		</span>
 	</button>
 </div>
+
+
+{#if devices.length}
+	<select bind:value={devices[0]}>
+		{#each devices as device}
+			<option value={device}>
+				{device.label}
+			</option>
+		{/each}
+	</select>
+{/if}
 
 <div class="output">
 	<img bind:this={photo} id="photo" alt="The screen capture will appear in this box." />
