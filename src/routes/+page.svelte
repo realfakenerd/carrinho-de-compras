@@ -10,7 +10,6 @@
 	import { fly } from 'svelte/transition';
 	import { read, utils } from 'xlsx';
 	import type { PageData } from './$types';
-	import Camera from '$lib/components/Camera.svelte';
 
 	export let data: PageData;
 
@@ -79,8 +78,6 @@
 		});
 	}
 </script>
-
-<Camera />
 
 <section class="py-8 px-2 flex flex-col gap-4">
 	<div class="relative mb-6 flex w-full items-center">

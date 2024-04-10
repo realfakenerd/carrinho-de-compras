@@ -10,6 +10,7 @@
 	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '../vaul';
 	import { addCarrinho, carrinhoContas } from './index';
 	import Unsplash, { value } from '../Unsplash.svelte';
+	import { photo } from '../camera/stores';
 
 	let preco: string;
 	let nome: string;

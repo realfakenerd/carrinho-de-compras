@@ -4,7 +4,7 @@
 		states: { value }
 	} = createRadioGroup();
 
-	export {value}
+	export { value };
 </script>
 
 <script lang="ts">
@@ -12,6 +12,7 @@
 	import type { Unsplash } from './drawer';
 	import { TextField } from './textfield';
 	import { slide } from 'svelte/transition';
+	import Camera from './camera/Camera.svelte';
 
 	let img = '';
 
@@ -38,7 +39,7 @@
 				Authorization: 'Client-ID g4OdDhmb2xX2x_YlHP6EnHru--MGm1cxdddPrHcQx4o'
 			}
 		});
-		
+
 		if (res.ok) {
 			const data = (await res.json()) as Unsplash;
 			images = data;
@@ -68,13 +69,17 @@
 </script>
 
 <section class="flex flex-col">
-	<TextField
-		display=""
-		on:keydown={debounce(unsplash, 1000)}
-		title="Escolha uma imagem"
-		bind:value={img}
-		style="outlined"
-	/>
+	<div class="inline-flex gap-2 items-center">
+		<TextField
+			display=""
+			on:keydown={debounce(unsplash, 1000)}
+			title="Escolha uma imagem"
+			bind:value={img}
+			style="outlined"
+		/>
+
+		<Camera />
+	</div>
 
 	{#if img && images?.results?.length}
 		<ul
