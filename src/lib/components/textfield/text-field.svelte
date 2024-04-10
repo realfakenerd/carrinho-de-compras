@@ -17,6 +17,7 @@
 	export let display: string = 'inline-flex';
 	export let isTextarea: boolean = false;
 	export let supportingText: string | null = null;
+	export let required = true;
 
 	let id = title ?? `input-${crypto.randomUUID()}`;
 
@@ -44,7 +45,7 @@
 				{id}
 				class="text-field-input"
 				class:value
-				required
+				{required}
 				rows="1"
 				on:input={resize}
 				aria-label="Enter your input {title}"

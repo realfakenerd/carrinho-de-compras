@@ -51,7 +51,7 @@
 			use:melt={$content}
 		>
 			<!-- svelte-ignore a11y-media-has-caption -->
-			<video use:startVideo bind:this={$video} class="bg-surface" class:hidden={taken} />
+			<video use:startVideo bind:this={$video} class="bg-surface h-full w-full" class:hidden={taken} />
 			<section class="absolute bottom-24 z-50 flex gap-4">
 				<button class="w-fit btn icon-full bg-primary" on:click={() => ($front = !$front)}>
 					<Icon icon="mdi:camera-retake" />

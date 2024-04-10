@@ -42,9 +42,9 @@
 
 	type StringToIMG = [string: 'src', string: 'alt', string: 'color', string: 'blurhash'];
 	async function editAndDismis() {
-		const string = $value.split('|') as StringToIMG;
+		const string = $value.split('|') as StringToIMG;		
 		img = {
-			src: string[0],
+			src: $photo?.src ?? string[0],
 			alt: string[1],
 			color: string[2],
 			blur_hash: string[3]

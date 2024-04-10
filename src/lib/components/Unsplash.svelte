@@ -72,6 +72,7 @@
 	<div class="inline-flex gap-2 items-center">
 		<TextField
 			display=""
+			required={false}
 			on:keydown={debounce(unsplash, 1000)}
 			title="Escolha uma imagem"
 			bind:value={img}
