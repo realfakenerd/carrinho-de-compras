@@ -13,17 +13,13 @@ export const startVideo: Action<HTMLVideoElement> = (node) => {
 	let stream: MediaStream | null = null;
 
 	if (!streaming) {
-		console.log(front);
+		node.style.objectFit = 'cover';
+		node.style.width = '100vw';
+		node.style.height = '100vh';
 
 		navigator.mediaDevices
 			.getUserMedia({
 				video: {
-					height: {
-						ideal: window.innerHeight
-					},
-					width: {
-						ideal: window.innerWidth
-					},
 					facingMode: front ? 'user' : 'environment'
 				},
 				audio: false
