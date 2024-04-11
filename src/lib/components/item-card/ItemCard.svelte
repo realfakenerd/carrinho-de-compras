@@ -3,15 +3,14 @@
 	import { porNoCarrinho } from '$lib/servicos/carrinho-crud';
 	import type { IMG } from '$lib/types';
 	import { ItemTipo } from '$lib/utils';
-	import { toast } from 'svelte-sonner';
 	import Icon from '@iconify/svelte';
+	import { toast } from 'svelte-sonner';
 	import { slide } from 'svelte/transition';
+	import { photo } from '../camera/stores';
 	import TextField from '../textfield/text-field.svelte';
+	import { Unsplash, value } from '../unsplash';
 	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '../vaul';
 	import { addCarrinho, carrinhoContas } from './index';
-	import Unsplash, { value } from '../Unsplash.svelte';
-	import { photo } from '../camera/stores';
-	import { onMount } from 'svelte';
 
 	let preco: string;
 	let nome: string;
@@ -63,10 +62,6 @@
 		else valorAPagar = parseFloat((parseFloat(preco) * $carrinho).toFixed(2));
 	}
 
-	onMount(() => {
-		console.log('item-card onMoun : >>', img);
-	});
-
 	export { preco, nome, img, tipo, id };
 </script>
 
@@ -117,7 +112,7 @@
 						style="height: 238px; background-color: {img.color};"
 						class="rounded-lg object-cover"
 						loading="lazy"
-						src={img.src || 'https://dummyimage.com/200x200/fff/111.gif&text=Imagem+indisponível'}
+						src={img.startsWith('data:image/png;base64') ? img : img?.src}
 						alt={img.alt || 'Imagem indisponível'}
 						width="238px"
 						height="238px"
