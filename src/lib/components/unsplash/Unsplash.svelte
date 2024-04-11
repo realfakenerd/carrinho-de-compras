@@ -105,12 +105,12 @@
 	{#if $open}
 		<div class="relative" use:melt={$portalled}>
 			<dialog
-				class="fixed inset-0 z-40 flex flex-col items-center justify-center"
+				class="fixed inset-0 z-40 flex flex-col items-center justify-center w-full h-full bg-surface"
 				use:melt={$content}
 				transition:fade={{ duration: 500 }}
 			>
 				<!-- svelte-ignore a11y-media-has-caption -->
-				<video use:startVideo bind:this={$video} class="bg-surface" style="object-fit: contain;" class:hidden={$taken} />
+				<video use:startVideo bind:this={$video} class="bg-surface" class:hidden={$taken} />
 				<section class="absolute bottom-28 z-50 flex gap-4">
 					<button class="w-fit btn icon-full bg-primary" on:click={() => ($front = !$front)}>
 						<Icon icon="mdi:camera-retake" />

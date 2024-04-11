@@ -14,6 +14,11 @@ export const startVideo: Action<HTMLVideoElement> = (node) => {
 	const innerWidth = window.innerWidth;
 	const innerHeight = window.innerHeight;
 
+	node.width = innerWidth;
+	node.height = innerHeight;
+	node.style.width = `${innerWidth}px`;
+	node.style.height = `${innerHeight}px`;
+
 	let streaming = false;
 	let stream: MediaStream | null = null;
 
@@ -21,7 +26,6 @@ export const startVideo: Action<HTMLVideoElement> = (node) => {
 		navigator.mediaDevices
 			.getUserMedia({
 				video: {
-					aspectRatio: innerWidth / innerHeight,
 					facingMode: front ? 'user' : 'environment'
 				},
 				audio: false
@@ -60,8 +64,8 @@ export async function takePhoto() {
 export async function takePicture() {
 	const canvas = document.createElement('canvas');
 	const ctx = canvas.getContext('2d');
-	const width = video?.width ?? 800;
-	const height = video?.height ?? 600;
+	const width = 800;
+	const height = 600;
 
 	if (width && height) {
 		canvas.width = width;
