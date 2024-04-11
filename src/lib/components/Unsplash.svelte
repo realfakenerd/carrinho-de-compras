@@ -1,4 +1,5 @@
 <script context="module">
+	import { createDialog, createRadioGroup } from '@melt-ui/svelte';
 	const {
 		elements: { root, item },
 		states: { value }
@@ -8,13 +9,16 @@
 </script>
 
 <script lang="ts">
-	import { createRadioGroup, melt } from '@melt-ui/svelte';
+	import { debounce } from '$lib/utils';
+	import Icon from '@iconify/svelte';
+	import { melt } from '@melt-ui/svelte';
+	import { fade, slide } from 'svelte/transition';
+	import { startVideo } from './camera/action';
+	import { front, photo, video } from './camera/stores';
 	import type { Unsplash } from './drawer';
 	import { TextField } from './textfield';
-	import { slide } from 'svelte/transition';
-	import Camera from './camera/Camera.svelte';
 
-	let img = '';
+	$: img = $photo?.src ?? '';
 
 	let images: Unsplash | undefined = {
 		total: 0,
@@ -47,24 +51,32 @@
 		}
 	}
 
-	/**
-	 * Creates a debounced version of the provided function which will only be executed after the specified delay
-	 * since the last call. The function is called with the same arguments as the original function and the `this`
-	 * context is preserved.
-	 * @param fn The function to be debounced
-	 * @param delay The delay in milliseconds
-	 * @returns A function that will only be executed after the specified delay since the last call.
-	 */
-	function debounce<F extends (...args: any[]) => any>(
-		fn: F,
-		delay: number
-	): (...args: Parameters<F>) => ReturnType<F> {
-		let timeout: ReturnType<typeof setTimeout>;
-		return function (this: ThisParameterType<F>, ...args: Parameters<F>): ReturnType<F> {
-			clearTimeout(timeout);
-			timeout = setTimeout(() => fn.apply(this, args), delay);
-			return fn.apply(this, args);
-		};
+	const {
+		elements: { content, portalled, close },
+		states: { open }
+	} = createDialog();
+
+	let taken = false;
+	async function takePhoto() {
+		takePicture();
+		taken = true;
+		setTimeout(() => (taken = false), 3000);
+	}
+
+	async function takePicture() {
+		const canvas = document.createElement('canvas');
+		const ctx = canvas.getContext('2d');
+		const width = $video?.width ?? 0;
+		const height = $video?.height ?? 0;
+
+		if (width && height) {
+			canvas.width = width;
+			canvas.height = height;
+			ctx?.drawImage($video!, 0, 0, width, height);
+
+			const data = canvas.toDataURL('image/png');
+			$photo?.setAttribute('src', data);
+		}
 	}
 </script>
 
@@ -77,9 +89,9 @@
 			title="Escolha uma imagem"
 			bind:value={img}
 			style="outlined"
+			trailingIcon="mdi:camera"
+			on:trailing-click={() => ($open = true)}
 		/>
-
-		<Camera />
 	</div>
 
 	{#if img && images?.results?.length}
@@ -111,5 +123,35 @@
 				</figure>
 			{/each}
 		</ul>
+	{/if}
+
+	{#if $open}
+		<div class="relative" use:melt={$portalled}>
+			<dialog
+				class="fixed inset-0 z-40 flex flex-col items-center justify-center"
+				use:melt={$content}
+				transition:fade={{ duration: 500 }}
+			>
+				<!-- svelte-ignore a11y-media-has-caption -->
+				<video use:startVideo bind:this={$video} class="bg-surface" class:hidden={taken} />
+				<section class="absolute bottom-24 z-50 flex gap-4">
+					<button class="w-fit btn icon-full bg-primary" on:click={() => ($front = !$front)}>
+						<Icon icon="mdi:camera-retake" />
+					</button>
+					<button class="w-fit btn icon-full bg-primary" on:click={takePhoto}>
+						<Icon icon="mdi:camera" />
+					</button>
+					<button class="w-fit btn icon-full bg-primary" on:m-click={() => $value = $photo?.src} use:melt={$close}>
+						<Icon icon="mdi:close" />
+					</button>
+				</section>
+				<img
+					bind:this={$photo}
+					class:hidden={!taken}
+					id="photo"
+					alt="The screen capture will appear in this box."
+				/>
+			</dialog>
+		</div>
 	{/if}
 </section>

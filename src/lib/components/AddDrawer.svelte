@@ -17,16 +17,24 @@
 
 	function addItem() {
 		if (nome && preco) {
-			const string = $value.split('|') as StringToIMG;
+			const string = $value.startsWith('data:image/png;base64')
+				? ($value as string)
+				: ($value.split('|') as StringToIMG | null);
+
+			const img = (string as string).startsWith('data:image/png;base64')
+				? string
+				: {
+						src: string?.[0],
+						alt: string?.[1],
+						color: string?.[2],
+						blur_hash: string?.[3]
+					};
+
+			console.log('img', img);
 			addItemToMercado({
 				nome,
 				preco,
-				img: {
-					src: string[0],
-					alt: string[1],
-					color: string[2],
-					blur_hash: string[3]
-				},
+				img,
 				tipo
 			});
 
@@ -48,7 +56,7 @@
 
 	<DrawerContent>
 		<DrawerTitle class="text-title-medium">Adicione um novo item ao mercado</DrawerTitle>
-		<form class="flex flex-col space-y-6">
+		<section class="flex flex-col space-y-6">
 			<TextField title="Nome do produto" bind:value={nome} style="outlined" />
 			<TextField title="Preço do produto" bind:value={preco} style="outlined" />
 			<Unsplash />
@@ -60,6 +68,6 @@
 				<Icon icon="mdi:plus" width="24px" />
 				<span> Adicionar </span>
 			</button>
-		</form>
+		</section>
 	</DrawerContent>
 </Drawer>

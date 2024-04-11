@@ -15,3 +15,23 @@ export const enum ItemTipo {
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
+
+/**
+	 * Creates a debounced version of the provided function which will only be executed after the specified delay
+	 * since the last call. The function is called with the same arguments as the original function and the `this`
+	 * context is preserved.
+	 * @param fn The function to be debounced
+	 * @param delay The delay in milliseconds
+	 * @returns A function that will only be executed after the specified delay since the last call.
+	 */
+export function debounce<F extends (...args: any[]) => any>(
+	fn: F,
+	delay: number
+): (...args: Parameters<F>) => ReturnType<F> {
+	let timeout: ReturnType<typeof setTimeout>;
+	return function (this: ThisParameterType<F>, ...args: Parameters<F>): ReturnType<F> {
+		clearTimeout(timeout);
+		timeout = setTimeout(() => fn.apply(this, args), delay);
+		return fn.apply(this, args);
+	};
+}

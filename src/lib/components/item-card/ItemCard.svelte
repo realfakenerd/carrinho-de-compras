@@ -3,7 +3,7 @@
 	import { porNoCarrinho } from '$lib/servicos/carrinho-crud';
 	import type { IMG } from '$lib/types';
 	import { ItemTipo } from '$lib/utils';
-	import {toast} from 'svelte-sonner';
+	import { toast } from 'svelte-sonner';
 	import Icon from '@iconify/svelte';
 	import { slide } from 'svelte/transition';
 	import TextField from '../textfield/text-field.svelte';
@@ -11,10 +11,11 @@
 	import { addCarrinho, carrinhoContas } from './index';
 	import Unsplash, { value } from '../Unsplash.svelte';
 	import { photo } from '../camera/stores';
+	import { onMount } from 'svelte';
 
 	let preco: string;
 	let nome: string;
-	let img: IMG = {
+	let img: IMG | string = {
 		alt: 'Imagem indisponível',
 		color: '#111',
 		src: 'https://dummyimage.com/200x200/fff/111.gif&text=Imagem+indisponível',
@@ -42,9 +43,9 @@
 
 	type StringToIMG = [string: 'src', string: 'alt', string: 'color', string: 'blurhash'];
 	async function editAndDismis() {
-		const string = $value.split('|') as StringToIMG;		
+		const string = ($value.split('|') as StringToIMG | null) ?? $photo?.src!;
 		img = {
-			src: $photo?.src ?? string[0],
+			src: typeof string === 'string' ? string : string[0],
 			alt: string[1],
 			color: string[2],
 			blur_hash: string[3]
@@ -52,8 +53,8 @@
 		const result = await db.mercado.put({ nome, preco, img, tipo, id }, id);
 		if (result) {
 			hidden = true;
-			toast.success(`Editado com sucesso`)
-		}		
+			toast.success(`Editado com sucesso`);
+		}
 	}
 
 	let valorAPagar = 0;
@@ -61,6 +62,10 @@
 		if (tipo === ItemTipo.UNIDADE) valorAPagar = parseFloat(preco) * $carrinho;
 		else valorAPagar = parseFloat((parseFloat(preco) * $carrinho).toFixed(2));
 	}
+
+	onMount(() => {
+		console.log('item-card onMoun : >>', img);
+	});
 
 	export { preco, nome, img, tipo, id };
 </script>
@@ -72,7 +77,7 @@
 			style="height: 208px;background-color: {img?.color};"
 			class="rounded-lg object-cover aspect-square"
 			loading="lazy"
-			src={img?.src}
+			src={img.startsWith('data:image/png;base64') ? img : img?.src}
 			alt={img?.alt}
 			width="208px"
 			height="208px"

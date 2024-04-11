@@ -1,10 +1,15 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
 	import Icon from '@iconify/svelte';
-	import type { ClassValue } from 'clsx';
+	import {createEventDispatcher} from 'svelte';
+
+	const dispatch = createEventDispatcher();
 
 	let wrapper: HTMLDivElement | null = null,
 		textarea: HTMLTextAreaElement | null = null;
+
+	let className = '';
+	export { className as class };
 
 	export let value: string = '';
 	export let error: boolean = false;
@@ -43,7 +48,7 @@
 				bind:value
 				bind:this={textarea}
 				{id}
-				class="text-field-input"
+				class={cn("text-field-input", className)}
 				class:value
 				{required}
 				rows="1"
@@ -59,10 +64,10 @@
 				{name}
 				bind:value
 				class:value
-				required
+				{required}
 				type="text"
 				{id}
-				class="text-field-input"
+				class={cn("text-field-input", className)}
 				aria-label="Enter your input {title}"
 				aria-invalid={error ? 'true' : 'false'}
 			/>
@@ -78,7 +83,7 @@
 			</span>
 		{/if}
 		{#if trailingIcon}
-			<button class="trailing-button">
+			<button class="trailing-button" on:click={() => dispatch('trailing-click')}>
 				<Icon icon={trailingIcon} />
 			</button>
 		{/if}

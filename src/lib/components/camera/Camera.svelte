@@ -29,15 +29,12 @@
 			ctx?.drawImage($video!, 0, 0, width, height);
 
 			const data = canvas.toDataURL('image/png');
-			console.log(data);
-			console.log($photo?.src);
 			$photo?.setAttribute('src', data);
-			console.log($photo?.src);
 		}
 	}
 </script>
 
-<button class="icon-btn-container" use:melt={$trigger}>
+<button class="icon-btn-container rounded-full" use:melt={$trigger}>
 	<span class="icon-btn-filled icon-btn">
 		<Icon icon="mdi:camera" />
 	</span>
