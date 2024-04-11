@@ -21,13 +21,7 @@ export const startVideo: Action<HTMLVideoElement> = (node) => {
 		navigator.mediaDevices
 			.getUserMedia({
 				video: {
-					width: {
-						ideal: innerWidth
-					},
-					height: {
-						ideal: innerHeight
-					},
-					aspectRatio: 9 / 16,
+					aspectRatio: innerWidth / innerHeight,
 					facingMode: front ? 'user' : 'environment'
 				},
 				audio: false
