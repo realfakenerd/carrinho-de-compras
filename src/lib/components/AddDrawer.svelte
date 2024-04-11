@@ -15,36 +15,42 @@
 
 	type StringToIMG = [string: 'src', string: 'alt', string: 'color', string: 'blurhash'];
 
-	function addItem() {
-		if (nome && preco) {
-			const string = $value.startsWith('data:image/png;base64')
-				? ($value as string)
-				: ($value.split('|') as StringToIMG | null);
+	async function addItem() {
+		try {
+			if (nome && preco) {
+				const string = $value.startsWith('data:image/png;base64')
+					? ($value as string)
+					: ($value.split('|') as StringToIMG | null);
 
-			const img = (string as string).startsWith('data:image/png;base64')
-				? string
-				: {
-						src: string?.[0],
-						alt: string?.[1],
-						color: string?.[2],
-						blur_hash: string?.[3]
-					};
+				const img = (string as string).startsWith('data:image/png;base64')
+					? string
+					: {
+							src: string?.[0],
+							alt: string?.[1],
+							color: string?.[2],
+							blur_hash: string?.[3]
+						};
 
-			console.log('img', img);
-			addItemToMercado({
-				nome,
-				preco,
-				img,
-				tipo
+				addItemToMercado({
+					nome,
+					preco,
+					img,
+					tipo
+				});
+
+				toast.success('Adicionado com sucesso!', {
+					description: `${nome}: R$ ${preco}`
+				});
+
+				drawerState.set(false);
+				nome = preco = '';
+				tipo = ItemTipo.UNIDADE;
+			}
+		} catch (error) {
+			const err = error as Error;
+			toast.error(err.name, {
+				description: err.message
 			});
-
-			toast.success('Adicionado com sucesso!', {
-				description: `${nome}: R$ ${preco}`
-			});
-
-			drawerState.set(false);
-			nome = preco = '';
-			tipo = ItemTipo.UNIDADE;
 		}
 	}
 </script>

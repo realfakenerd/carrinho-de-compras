@@ -16,8 +16,11 @@ export const startVideo: Action<HTMLVideoElement> = (node) => {
 
 	node.width = innerWidth;
 	node.height = innerHeight;
-	node.style.width = `${innerWidth}px`;
-	node.style.height = `${innerHeight}px`;
+
+	node.style.width = '100%';
+	node.style.height = 'auto';
+	node.style.maxWidth = `${innerWidth}px`;
+	node.style.maxHeight = `${innerHeight}px`;
 
 	let streaming = false;
 	let stream: MediaStream | null = null;
