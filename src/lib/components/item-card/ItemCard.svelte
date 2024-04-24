@@ -2,7 +2,7 @@
 	import { db } from '$lib/db';
 	import { porNoCarrinho } from '$lib/servicos/carrinho-crud';
 	import type { IMG } from '$lib/types';
-	import { ItemTipo } from '$lib/utils';
+	import { ItemTipo } from '$lib/utils.svelte';
 	import Icon from '@iconify/svelte';
 	import { toast } from 'svelte-sonner';
 	import { slide } from 'svelte/transition';
@@ -12,31 +12,41 @@
 	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '../vaul';
 	import { addCarrinho, carrinhoContas } from './index';
 
-	let preco: string;
-	let nome: string;
-	let img: IMG | string = {
-		alt: 'Imagem indisponível',
-		color: '#111',
-		src: 'https://dummyimage.com/200x200/fff/111.gif&text=Imagem+indisponível',
-		blur_hash: ''
-	};
+	let hidden = $state(true);
 
-	let tipo: ItemTipo;
-	let id = '';
-	let hidden = true;
+	interface Props {
+		preco?: string;
+		nome?: string;
+		img?: IMG | string;
+		tipo?: ItemTipo;
+		id?: string;
+	}
+
+	let {
+		preco,
+		nome,
+		img = {
+			alt: 'Imagem indisponível',
+			color: '#111',
+			src: 'https://dummyimage.com/200x200/fff/111.gif&text=Imagem+indisponível',
+			blur_hash: ''
+		},
+		tipo,
+		id
+	}: Props = $props();
 
 	const carrinho = carrinhoContas();
 
-	let open = false;
+	let open = $state(false);
 	function addAndDismiss() {
-		addCarrinho({ nome, preco, tipo, quantidade: $carrinho });
-		porNoCarrinho({ nome, preco, tipo, quantidade: $carrinho });
+		addCarrinho({ nome, preco, tipo, quantidade: carrinho.value });
+		porNoCarrinho({ nome, preco, tipo, quantidade: carrinho.value });
 		open = false;
 		toast.success(`Adicionado ao seu carrinho`);
 	}
 
 	function removeAndDismis() {
-		db.mercado.delete(id);
+		db.mercado.delete(id!);
 		open = false;
 	}
 
@@ -56,24 +66,22 @@
 		}
 	}
 
-	let valorAPagar = 0;
-	$: {
-		if (tipo === ItemTipo.UNIDADE) valorAPagar = parseFloat(preco) * $carrinho;
-		else valorAPagar = parseFloat((parseFloat(preco) * $carrinho).toFixed(2));
-	}
-
-	export { preco, nome, img, tipo, id };
+	let valorAPagar = $state(0);
+	$effect(() => {
+		if (tipo === ItemTipo.UNIDADE) valorAPagar = parseFloat(preco) * carrinho.value;
+		else valorAPagar = parseFloat((parseFloat(preco) * carrinho.value).toFixed(2));
+	});
 </script>
 
 <section class="card p-0 card-filled w-full overflow-hidden">
 	<figure>
 		<img
 			on:contextmenu|preventDefault
-			style="height: 208px;background-color: {img?.color};"
+			style="height: 208px;background-color: {(img as IMG)?.color};"
 			class="rounded-lg object-cover aspect-square"
 			loading="lazy"
-			src={img.startsWith('data:image/png;base64') ? img : img?.src}
-			alt={img?.alt}
+			src={(typeof img === 'string' ? img : (img as IMG)?.src) as string}
+			alt={(img as IMG)?.alt}
 			width="208px"
 			height="208px"
 		/>
@@ -109,11 +117,11 @@
 
 				<figure>
 					<img
-						style="height: 238px; background-color: {img.color};"
+						style="height: 238px; background-color: {(img as IMG).color};"
 						class="rounded-lg object-cover"
 						loading="lazy"
-						src={img.startsWith('data:image/png;base64') ? img : img?.src}
-						alt={img.alt || 'Imagem indisponível'}
+						src={(typeof img === 'string' ? img : (img as IMG)?.src) as string}
+						alt={(img as IMG).alt || 'Imagem indisponível'}
 						width="238px"
 						height="238px"
 					/>
@@ -124,7 +132,7 @@
 						on:click={() => carrinho.decrement(tipo)}
 						on:touchstart={() => carrinho.startDecrement(tipo)}
 						on:touchend={carrinho.stopIncrement}
-						disabled={$carrinho <= 0}
+						disabled={carrinho.value <= 0}
 						class="flex items-center text-on-surface-variant justify-center h-10 w-10 ring-1 hover:text-error hover:ring-2 transition ring-error rounded-full"
 					>
 						<Icon icon="mdi:minus" width="24px" />
@@ -134,29 +142,29 @@
 
 					<div class="flex-1 text-center">
 						<div class="text-headline-large">
-							{$carrinho.toFixed(1)}
+							{carrinho.value.toFixed(1)}
 						</div>
 						<div class="text-label-large uppercase">
 							{#if tipo === ItemTipo.UNIDADE}
-								{$carrinho > 1 ? 'unidades' : 'unidade'}
+								{carrinho.value > 1 ? 'unidades' : 'unidade'}
 							{:else}
-								{$carrinho > 1 ? 'quilos' : 'quilo'}
+								{carrinho.value > 1 ? 'quilos' : 'quilo'}
 							{/if}
 						</div>
 					</div>
 					<button
-						on:click={() => carrinho.increment(tipo)}
-						on:touchstart={() => {
+						onclick={() => carrinho.increment(tipo)}
+						ontouchstart={() => {
 							carrinho.startIncrement(tipo);
 						}}
-						on:touchend={carrinho.stopIncrement}
+						ontouchend={carrinho.stopIncrement}
 						class="flex items-center justify-center h-10 w-10 ring-1 hover:ring-2 text-on-surface-variant hover:text-primary ring-primary rounded-full"
 					>
 						<Icon icon="mdi:plus" width="24px" />
 						<span class="sr-only">Increase</span>
 					</button>
 				</div>
-				<button on:click={addAndDismiss} class="btn interactive-bg-primary py-2 rounded-xl w-full">
+				<button onclick={addAndDismiss} class="btn interactive-bg-primary py-2 rounded-xl w-full">
 					Adicionar no carrinho
 				</button>
 
@@ -169,7 +177,7 @@
 						</form>
 
 						<button
-							on:click={editAndDismis}
+							onclick={editAndDismis}
 							class="btn interactive-bg-secondary-container py-2 rounded-xl w-full"
 						>
 							Salvar
@@ -177,13 +185,13 @@
 					</div>
 				{/if}
 				<button
-					on:click={() => (hidden = false)}
+					onclick={() => (hidden = false)}
 					class="btn interactive-bg-secondary py-2 rounded-xl w-full"
 				>
 					Editar produto
 				</button>
 				<button
-					on:click={removeAndDismis}
+					onclick={removeAndDismis}
 					class="btn interactive-bg-error-container py-2 rounded-xl w-full"
 				>
 					Remover do mercado

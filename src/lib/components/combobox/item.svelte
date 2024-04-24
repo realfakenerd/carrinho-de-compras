@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cn } from '$lib/utils';
+	import { cn } from '$lib/utils.svelte';
 	import { melt, type Combobox, type ComboboxOptionProps } from '@melt-ui/svelte';
 	import { getContext } from 'svelte';
 	import { key } from './index';

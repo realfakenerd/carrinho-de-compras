@@ -5,7 +5,7 @@ import removeConsole from 'vite-plugin-remove-console';
 
 const config = {
 	define: {
-		'process.env': {}
+		'process.env.NODE_ENV': '"production"'
 	},
 	ssr: {
 		external: ['rxfire/firestore', 'firebase']

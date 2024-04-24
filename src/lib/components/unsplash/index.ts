@@ -1,8 +1,3 @@
+import Unsplash, { value } from './Unsplash.svelte';
 
-import Unsplash, {value} from "./Unsplash.svelte";
-
-
-export {
-	Unsplash,
-	value
-}
+export { Unsplash, value };

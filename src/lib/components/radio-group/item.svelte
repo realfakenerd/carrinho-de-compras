@@ -1,8 +1,14 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
-	import { key } from './index';
 	import { melt, type RadioGroup } from '@melt-ui/svelte';
+	import { getContext } from 'svelte';
 	import { fade } from 'svelte/transition';
+	import { key } from './index';
+
+	interface Prop {
+		option: string;
+		label?: string;
+		value: string;
+	}
 
 	const {
 		elements: { item },
@@ -10,11 +16,10 @@
 		states: { value: localValue }
 	} = getContext<RadioGroup>(key);
 
-	export let option: string;
-	export let label: string | undefined = option;
-	export let value: string | any = '';
-
-	$: value = $localValue;
+	let { option, label, value = $bindable() }: Prop = $props();
+	$effect(() => {
+		value = $localValue;
+	});
 </script>
 
 <div class="flex items-center gap-3">

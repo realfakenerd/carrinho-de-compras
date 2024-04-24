@@ -1,11 +1,14 @@
 <script lang="ts">
-	import { cn } from '$lib/utils';
+	import { cn } from '$lib/utils.svelte';
 	import { createRadioGroup, melt } from '@melt-ui/svelte';
-	import { setContext } from 'svelte';
+	import { setContext, type Snippet } from 'svelte';
 	import { key } from './index';
 
-	/** Default value for the radio group. */
-	export let defaultValue: string | undefined = undefined;
+	let {
+		class: className = '',
+		defaultValue,
+		children
+	}: { class?: string; defaultValue?: string; children: Snippet } = $props();
 
 	const ctx = createRadioGroup({
 		defaultValue
@@ -16,13 +19,9 @@
 	const {
 		elements: { root, hiddenInput }
 	} = ctx;
-
-	/** Additional classes applied to the root element. */
-	export let className: string | undefined = '';
-	export { className as class };
 </script>
 
 <ul use:melt={$root} class={cn('flex flex-col gap-y-3', className)}>
-	<slot />
+	{@render children()}
 	<input use:melt={$hiddenInput} />
 </ul>

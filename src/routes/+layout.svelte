@@ -1,10 +1,13 @@
 <script lang="ts">
+	import { onNavigate } from '$app/navigation';
 	import Icon, { enableCache } from '@iconify/svelte';
 	import { navdown } from 'navdown';
+	import type { Snippet } from 'svelte';
 	import { Toaster } from 'svelte-sonner';
 	import '../app.css';
-	import { onNavigate } from '$app/navigation';
-	export let data;
+	import type { PageData } from './$types';
+
+	let { children, data }: { children: Snippet; data: PageData } = $props();
 
 	enableCache('all');
 	onNavigate((navigation) => {
@@ -37,29 +40,9 @@
 	];
 </script>
 
-<main class="flex-1 relative min-h-dvh">
-	<slot />
+<main class="flex-1 w-full relative min-h-dvh mb-10">
+	{@render children()}
 </main>
-
-<Toaster
-	toastOptions={{
-		unstyled: true,
-		classes: {
-			toast:
-				'min-h-[48px] max-h-[68px] shadow-md p-4 bg-surface rounded-md flex flex-row-reverse items-center justify-between',
-			title: 'text-label-large',
-			description: 'text-body-medium'
-		}
-	}}
-	richColors
-	theme="dark"
-	closeButton
-	visibleToasts={1}
-	duration={1600}
->
-	<Icon width="24px" height="24px" icon="mdi:check" slot="success-icon" />
-	<Icon width="24px" height="24px" icon="mdi:information" slot="info-icon" />
-</Toaster>
 
 <footer use:navdown style="view-transition-name: footer;" class="fixed bottom-0 z-[999] w-full">
 	<nav class="custom-navbar">
@@ -80,6 +63,26 @@
 		{/each}
 	</nav>
 </footer>
+
+<Toaster
+	toastOptions={{
+		unstyled: true,
+		classes: {
+			toast:
+				'min-h-[48px] shadow-md p-4 bg-surface rounded-md flex flex-row-reverse items-center justify-between',
+			title: 'text-label-large',
+			description: 'text-body-medium'
+		}
+	}}
+	richColors
+	theme="dark"
+	closeButton
+	visibleToasts={1}
+	duration={1600}
+>
+	<Icon width="24px" height="24px" icon="mdi:check" slot="success-icon" />
+	<Icon width="24px" height="24px" icon="mdi:information" slot="info-icon" />
+</Toaster>
 
 <style>
 	.custom-navbar {

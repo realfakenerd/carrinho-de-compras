@@ -1,11 +1,6 @@
 import { build, files, version } from '$service-worker';
 import { cacheNames, clientsClaim, setCacheNameDetails } from 'workbox-core';
-import {
-	imageCache,
-	pageCache,
-	staticResourceCache,
-	warmStrategyCache,
-} from 'workbox-recipes';
+import { imageCache, pageCache, staticResourceCache, warmStrategyCache } from 'workbox-recipes';
 import { CacheFirst } from 'workbox-strategies';
 
 const urls = [...files, ...build];
@@ -21,7 +16,7 @@ setCacheNameDetails({
 clientsClaim();
 
 const strategy = new CacheFirst({
-	cacheName: `${cacheNames.prefix}-precache-${cacheNames.suffix}`,
+	cacheName: `${cacheNames.prefix}-precache-${cacheNames.suffix}`
 });
 
 warmStrategyCache({ urls, strategy });

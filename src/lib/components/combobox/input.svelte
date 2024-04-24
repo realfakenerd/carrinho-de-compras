@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cn } from '$lib/utils';
+	import { cn } from '$lib/utils.svelte';
 	import Icon from '@iconify/svelte';
 	import { melt, type Combobox } from '@melt-ui/svelte';
 	import { getContext } from 'svelte';
@@ -7,7 +7,7 @@
 
 	const {
 		elements: { input, label },
-		states: { open},
+		states: { open }
 	} = getContext<Combobox>(key);
 
 	let className: string | null | undefined = '';

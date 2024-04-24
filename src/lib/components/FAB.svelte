@@ -1,18 +1,34 @@
-<script>
-	import { onMount } from 'svelte';
-	import { fade } from 'svelte/transition';
+<script lang="ts">
+	import { cn } from '$lib/utils.svelte';
 	import Icon from '@iconify/svelte';
+	import type { Snippet } from 'svelte';
+	import type { MouseEventHandler } from 'svelte/elements';
+	import { fade } from 'svelte/transition';
 
-	let mounted = false;
-	onMount(() => (mounted = true));
+	let mounted = $state(false);
+	$effect(() => {
+		mounted = true;
+	});
+	let {
+		onclick,
+		class: className = '',
+		children
+	}: {
+		class?: string;
+		children: Snippet;
+		onclick: MouseEventHandler<HTMLButtonElement>;
+	} = $props();
 </script>
 
 {#if mounted}
 	<button
-		on:click
+		{onclick}
 		in:fade={{ delay: 300, duration: 600 }}
-		class="fixed bottom-24 right-4 z-50 h-14 w-14 rounded-2xl text-on-primary bg-primary p-4 shadow-sm transition hover:-translate-y-1 hover:bg-primary/90 hover:shadow-md"
+		class={cn(
+			'h-14 rounded-2xl text-on-primary bg-primary p-4 shadow-sm transition hover:-translate-y-1 hover:bg-primary/90 hover:shadow-md',
+			className
+		)}
 	>
-		<Icon icon="mdi:plus" width="24px" />
+		{@render children()}
 	</button>
 {/if}

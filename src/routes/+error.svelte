@@ -1,5 +1,5 @@
 <script>
-	import {page} from '$app/stores';
+	import { page } from '$app/stores';
 </script>
 
 <h1 class="text-display-large">{$page.status}</h1>

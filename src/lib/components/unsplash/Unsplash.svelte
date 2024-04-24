@@ -9,14 +9,15 @@
 </script>
 
 <script lang="ts">
-	import { debounce } from '$lib/utils';
+	import { debounce } from '$lib/utils.svelte';
 	import Icon from '@iconify/svelte';
 	import { melt } from '@melt-ui/svelte';
 	import { fade, slide } from 'svelte/transition';
-	import { startVideo, takePhoto, takePicture, taken } from '../camera/action';
+	import { startVideo, takePhoto, taken } from '../camera/action.svelte';
 	import { front, photo, video } from '../camera/stores';
 	import type { Unsplash } from '../drawer';
 	import { TextField } from '../textfield';
+	import { Map } from 'svelte/reactivity';
 
 	$: img = $photo?.src ?? '';
 
@@ -62,12 +63,12 @@
 		<TextField
 			display=""
 			required={false}
-			on:keydown={debounce(unsplash, 1000)}
+			onkeydown={debounce(unsplash, 1000)}
 			title="Escolha uma imagem"
 			bind:value={img}
 			style="outlined"
 			trailingIcon="mdi:camera"
-			on:trailing-click={() => ($open = true)}
+			trailing-click={() => ($open = true)}
 		/>
 	</div>
 
@@ -110,7 +111,7 @@
 				transition:fade={{ duration: 500 }}
 			>
 				<!-- svelte-ignore a11y-media-has-caption -->
-				<video use:startVideo bind:this={$video} class="bg-surface" class:hidden={$taken} />
+				<video use:startVideo bind:this={$video} class="bg-surface" class:hidden={$taken}></video>
 				<section class="absolute bottom-28 z-50 flex gap-4">
 					<button class="w-fit btn icon-full bg-primary" on:click={() => ($front = !$front)}>
 						<Icon icon="mdi:camera-retake" />

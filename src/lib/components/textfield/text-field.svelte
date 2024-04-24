@@ -1,73 +1,102 @@
 <script lang="ts">
-	import { cn } from '$lib/utils';
+	import { cn } from '$lib/utils.svelte';
 	import Icon from '@iconify/svelte';
-	import {createEventDispatcher} from 'svelte';
+	import type { HTMLInputTypeAttribute } from 'svelte/elements';
 
-	const dispatch = createEventDispatcher();
+	let wrapper = $state<HTMLDivElement | null>(null);
+	let textarea = $state<HTMLTextAreaElement | null>(null);
 
-	let wrapper: HTMLDivElement | null = null,
-		textarea: HTMLTextAreaElement | null = null;
+	interface Props {
+		value?: string;
+		error?: boolean;
+		icon?: string;
+		trailingIcon?: string;
+		iconError?: string;
+		title?: string;
+		name?: string;
+		display?: string;
+		isTextarea?: boolean;
+		supportingText?: string;
+		required?: boolean;
+		style?: 'filled' | 'outlined';
+		class?: string;
+		type?: HTMLInputTypeAttribute;
+		'trailing-click'?: () => void;
+		onkeydown?: (event: KeyboardEvent) => void;
+		oninput?: (event: Event) => void;
+	}
 
-	let className = '';
-	export { className as class };
-
-	export let value: string = '';
-	export let error: boolean = false;
-	export let style: 'filled' | 'outlined' = 'outlined';
-	export let icon: string | null = null;
-	export let trailingIcon: string | null = null;
-	export let iconError: string | null = null;
-	export let title: string | null = null;
-	export let name: string | null = title ?? null;
-	export let display: string = 'inline-flex';
-	export let isTextarea: boolean = false;
-	export let supportingText: string | null = null;
-	export let required = true;
+	let {
+		value = $bindable(),
+		error = false,
+		style = 'outlined',
+		icon = '',
+		trailingIcon = '',
+		iconError = '',
+		title = '',
+		name = title ?? '',
+		display = 'inline-flex',
+		isTextarea = false,
+		supportingText = '',
+		required = true,
+		class: className = '',
+		type = 'text',
+		'trailing-click': trailingClick,
+		onkeydown,
+		oninput
+	}: Props = $props();
 
 	let id = title ?? `input-${crypto.randomUUID()}`;
 
 	function resize() {
+		const style = getComputedStyle(textarea!);
+		const borderTop = parseFloat(style.borderTopWidth);
+		const borderBottom = parseFloat(style.borderBottomWidth);
 		textarea!.style.height = 'unset';
 		wrapper!.style.height = 'unset';
-		const height = textarea?.scrollHeight + 'px';
-		textarea!.style.height = height;
-		wrapper!.style.height = height;
+		textarea!.style.height = `${textarea!.scrollHeight + borderTop + borderBottom}px`;
+		wrapper!.style.height = `${textarea!.scrollHeight + borderTop + borderBottom}px`;
 	}
 </script>
 
 <fieldset class="w-full">
 	<div
-		class="text-field-container style-{style} {error ? 'error' : ''} {icon ? 'has-icon' : ''}"
+		class={cn(
+			'text-field-container',
+			style === 'outlined' ? 'style-outlined' : 'style-filled',
+			error ? 'error' : '',
+			icon ? 'has-icon' : ''
+		)}
 		bind:this={wrapper}
 		style="display: {display}"
 	>
 		{#if isTextarea}
 			<textarea
-				on:input
+				oninput={resize}
+				{onkeydown}
 				{name}
 				bind:value
 				bind:this={textarea}
 				{id}
-				class={cn("text-field-input", className)}
+				class={cn('text-field-input', className)}
 				class:value
 				{required}
 				rows="1"
-				on:input={resize}
 				aria-label="Enter your input {title}"
 				aria-invalid={error ? 'true' : 'false'}
 			/>
 		{:else}
 			<input
 				autocomplete="off"
-				on:input
-				on:keydown
+				{oninput}
+				{onkeydown}
 				{name}
 				bind:value
 				class:value
 				{required}
-				type="text"
+				{type}
 				{id}
-				class={cn("text-field-input", className)}
+				class={cn('text-field-input', className)}
 				aria-label="Enter your input {title}"
 				aria-invalid={error ? 'true' : 'false'}
 			/>
@@ -83,7 +112,7 @@
 			</span>
 		{/if}
 		{#if trailingIcon}
-			<button class="trailing-button" on:click={() => dispatch('trailing-click')}>
+			<button class="trailing-button" onclick={trailingClick}>
 				<Icon icon={trailingIcon} />
 			</button>
 		{/if}
@@ -93,7 +122,7 @@
 		</label>
 	</div>
 	{#if supportingText}
-		<p class="supporting {error ? 'error' : ''}">{supportingText}</p>
+		<p class={cn('supporting', error ? 'error' : '')}>{supportingText}</p>
 	{/if}
 </fieldset>
 
@@ -141,7 +170,7 @@
 	.style-filled > .text-field-input {
 		@apply pb-2 pt-6;
 	}
-	.style-filled .text-field-input:is(:focus, .value, :required:valid, [type='date']) ~ label {
+	.style-filled .text-field-input:is(:focus, .value, :required:valid) ~ label {
 		@apply top-2;
 	}
 
@@ -155,16 +184,16 @@
 	.style-outlined > .text-field-input {
 		@apply py-4;
 	}
-	.style-outlined .text-field-input:is(:focus, .value, :required:valid, [type='date']) ~ label {
+	.style-outlined .text-field-input:is(:focus, .value, :required:valid) ~ label {
 		background-color: rgb(var(--color-surface-variant));
 		@apply -top-2 left-3 px-1;
 	}
 
-	.text-field-input:is(:focus, .value, :required:valid, [type='date']) ~ label {
+	.text-field-input:is(:focus, .value, :required:valid) ~ label {
 		@apply text-label-small;
 	}
 
-	.text-field-input:is(:focus, .value, :required:valid, [type='date']) ~ .leading-icon {
+	.text-field-input:is(:focus, .value, :required:valid) ~ .leading-icon {
 		@apply fill-primary;
 	}
 
@@ -228,5 +257,9 @@
 		.style-filled {
 			background-color: field;
 		}
+	}
+
+	input[type='number']::-webkit-inner-spin-button {
+		display: none;
 	}
 </style>

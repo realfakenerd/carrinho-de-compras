@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { db } from '$lib/db';
-	import { ItemTipo } from '$lib/utils';
+	import { ItemTipo } from '$lib/utils.svelte';
 	import Icon from '@iconify/svelte';
 	import { liveQuery } from 'dexie';
 	import { slide } from 'svelte/transition';
 
 	let dbCarrinho = liveQuery(() => db.carrinho.toArray());
 
-	let total = 0;
-	let totalDeItens = 0;
-	let pesoDoCarrinho = 0;
+	let total = $state(0);
+	let totalDeItens = $state(0);
+	let pesoDoCarrinho = $state(0);
 
 	dbCarrinho.subscribe((items) => {
 		const unidades = items.filter(({ tipo }) => tipo === ItemTipo.UNIDADE);
