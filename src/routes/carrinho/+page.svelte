@@ -29,11 +29,23 @@
 	async function removerCarrinho(id?: string) {
 		await db.carrinho.delete(id!);
 	}
+
+	const produtos = liveQuery(() => db.produtos.toArray());
 </script>
 
 <div class="flex flex-col md:flex-row items-start gap-4 p-4">
 	<section class="card card-filled flex-1 items-center justify-between w-full min-h-[40dvh]">
 		<h1>Seu Carrinho</h1>
+
+		{#if $produtos && $produtos.length}
+			<button
+				class="btn text-label-large interactive-bg-error"
+				on:click={() => db.produtos.clear()}
+			>
+				<Icon width="24px" icon="mdi:trash-can-outline" />
+				Apagar Tudo
+			</button>
+		{/if}
 	</section>
 
 	<section class="w-full md:w-1/2 flex flex-col gap-2">

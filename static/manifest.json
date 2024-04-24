@@ -2,10 +2,12 @@
 	"$schema": "https://json.schemastore.org/web-manifest-combined.json",
 	"name": "Carrinho de Compras",
 	"short_name": "Carrinho de Compras",
+	"description": "Faça suas compras com o nosso app e economize dinheiro.",
 	"start_url": "/?source=pwa",
 	"display": "standalone",
-	"theme_color": "#1f2937",
+	"theme_color": "#F15A11",
 	"background_color": "#fff",
+	"id": "carrinho_de_compras",
 	"icons": [
 		{
 			"src": "icons/maskable_icon_x512.png",

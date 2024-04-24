@@ -4,7 +4,9 @@
 		AddCategoriaDrawer,
 		AddDrawer,
 		AddItemDrawer,
+		AddMercadoDrawer,
 		categoriaDrawerState,
+		mercadoDrawerState,
 		produtoDrawerState
 	} from '$lib/components/add-drawer';
 	import { ItemCard } from '$lib/components/item-card';
@@ -60,15 +62,6 @@
 				</li>
 			{/if}
 		</ul>
-
-		{#if $produtos && $produtos.length}
-			<button
-				class="h-12 min-w-12 grid place-items-center rounded-full interactive-bg-error"
-				on:click={() => db.mercado.clear()}
-			>
-				<Icon width="24px" icon="mdi:trash-can-outline" />
-			</button>
-		{/if}
 	</section>
 
 	<ul class="grid gap-4 justify-center">
@@ -136,14 +129,24 @@
 </section>
 
 <div class="fixed bottom-24 right-4 z-50 flex flex-col gap-4 items-end">
-	<Fab class="w-14" onclick={() => categoriaDrawerState.set(true)}>
+	<Fab class="w-14" onclick={() => mercadoDrawerState.set(true)}>
 		<Icon icon="mdi:store-plus" width="24px" />
 	</Fab>
-	<Fab class="inline-flex gap-2 min-w-20 text-label-large items-center" onclick={() => produtoDrawerState.set(true)}>
+	<Fab
+		class="inline-flex gap-2 min-w-20 text-label-large items-center"
+		onclick={() => produtoDrawerState.set(true)}
+	>
 		<Icon icon="mdi:plus" width="24px" />
 		Produto
 	</Fab>
 </div>
+
+<div class="btn">
+	<input type="file" accept="image/*" capture="user" />
+</div>
+<AddDrawer bind:open={$mercadoDrawerState}>
+	<AddMercadoDrawer />
+</AddDrawer>
 
 <AddDrawer bind:open={$categoriaDrawerState}>
 	<AddCategoriaDrawer />
