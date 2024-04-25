@@ -11,7 +11,7 @@
 	} from '$lib/components/add-drawer';
 	import { ItemCard } from '$lib/components/item-card';
 	import { TextField } from '$lib/components/textfield/index.js';
-	import { db } from '$lib/db';
+	import { URL } from 'svelte/reactivity';
 	import { createMercadoIndex, searchMercadoIndex } from '$lib/search';
 	import { handleFile, readXLSX } from '$lib/utils.svelte';
 	import Icon from '@iconify/svelte';
@@ -32,6 +32,7 @@
 			result = searchMercadoIndex(value.trim());
 		} else result = $produtos;
 	});
+
 </script>
 
 <section class="py-8 px-2 flex flex-col gap-4">
@@ -141,9 +142,6 @@
 	</Fab>
 </div>
 
-<div class="btn">
-	<input type="file" accept="image/*" capture="user" />
-</div>
 <AddDrawer bind:open={$mercadoDrawerState}>
 	<AddMercadoDrawer />
 </AddDrawer>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { cn } from '$lib/utils.svelte';
 	import Icon from '@iconify/svelte';
+	import type { Snippet } from 'svelte';
 	import type { HTMLInputTypeAttribute } from 'svelte/elements';
 
 	let wrapper = $state<HTMLDivElement | null>(null);
@@ -113,7 +114,7 @@
 		{/if}
 		{#if trailingIcon}
 			<button class="trailing-button" onclick={trailingClick}>
-				<Icon icon={trailingIcon} />
+				<Icon {icon} />
 			</button>
 		{/if}
 		<div class="text-field-layer" />

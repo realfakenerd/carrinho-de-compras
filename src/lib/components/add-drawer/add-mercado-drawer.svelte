@@ -15,17 +15,10 @@
 
 <section class="flex flex-col space-y-6">
 	<TextField icon="mdi:label" title="Nome do mercado" bind:value={nome} style="outlined" />
-	<TextField
-		icon="mdi:currency-usd"
-		type="number"
-		title="Preço do produto"
-		bind:value={preco}
-		style="outlined"
-	/>
+	<TextField type="text" title="Rua" bind:value={preco} style="outlined" />
+	<TextField type="number" title="Numero" bind:value={preco} style="outlined" />
 	<Unsplash />
-	<button
-		class="btn text-label-large btn-filled w-full"
-	>
+	<button class="btn text-label-large btn-filled w-full">
 		<Icon icon="mdi:plus" width="24px" />
 		<span> Adicionar </span>
 	</button>

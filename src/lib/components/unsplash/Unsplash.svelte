@@ -1,5 +1,5 @@
 <script context="module">
-	import { createDialog, createRadioGroup } from '@melt-ui/svelte';
+	import { createRadioGroup } from '@melt-ui/svelte';
 	const {
 		elements: { root, item },
 		states: { value }
@@ -10,14 +10,13 @@
 
 <script lang="ts">
 	import { debounce } from '$lib/utils.svelte';
-	import Icon from '@iconify/svelte';
 	import { melt } from '@melt-ui/svelte';
-	import { fade, slide } from 'svelte/transition';
-	import { startVideo, takePhoto, taken } from '../camera/action.svelte';
-	import { front, photo, video } from '../camera/stores';
+	import { Map } from 'svelte/reactivity';
+	import { photo } from '../camera/stores';
 	import type { Unsplash } from '../drawer';
 	import { TextField } from '../textfield';
-	import { Map } from 'svelte/reactivity';
+	import Camera, { image } from '../camera/Camera.svelte';
+	import { slide } from 'svelte/transition';
 
 	$: img = $photo?.src ?? '';
 
@@ -31,6 +30,8 @@
 
 	async function unsplash() {
 		if (!img) return;
+		console.log(image);
+		
 
 		const _img = img.toLowerCase();
 		if (imgCache.has(_img)) {
@@ -51,11 +52,6 @@
 			imgCache.set(_img, data);
 		}
 	}
-
-	const {
-		elements: { content, portalled, close },
-		states: { open }
-	} = createDialog();
 </script>
 
 <section class="flex flex-col">
@@ -67,9 +63,9 @@
 			title="Escolha uma imagem"
 			bind:value={img}
 			style="outlined"
-			trailingIcon="mdi:camera"
-			trailing-click={() => ($open = true)}
+			trailingIcon=""
 		/>
+		<Camera />
 	</div>
 
 	{#if img && images?.results?.length}
@@ -101,39 +97,5 @@
 				</figure>
 			{/each}
 		</ul>
-	{/if}
-
-	{#if $open}
-		<div class="relative" use:melt={$portalled}>
-			<dialog
-				class="fixed inset-0 z-40 flex flex-col items-center justify-center w-full h-full bg-surface"
-				use:melt={$content}
-				transition:fade={{ duration: 500 }}
-			>
-				<!-- svelte-ignore a11y-media-has-caption -->
-				<video use:startVideo bind:this={$video} class="bg-surface" class:hidden={$taken}></video>
-				<section class="absolute bottom-28 z-50 flex gap-4">
-					<button class="w-fit btn icon-full bg-primary" on:click={() => ($front = !$front)}>
-						<Icon icon="mdi:camera-retake" />
-					</button>
-					<button class="w-fit btn icon-full bg-primary" on:click={takePhoto}>
-						<Icon icon="mdi:camera" />
-					</button>
-					<button
-						class="w-fit btn icon-full bg-primary"
-						on:m-click={() => ($value = $photo?.src)}
-						use:melt={$close}
-					>
-						<Icon icon="mdi:close" />
-					</button>
-				</section>
-				<img
-					bind:this={$photo}
-					class:hidden={!$taken}
-					id="photo"
-					alt="The screen capture will appear in this box."
-				/>
-			</dialog>
-		</div>
 	{/if}
 </section>

@@ -1,12 +1,12 @@
 import Dexie, { type DexieError, type Table } from 'dexie';
-import type { Categoria, Mercado, Produto } from './types';
+import type { Carrinho, Categoria, Mercado, Produto } from './types';
 import { toast } from 'svelte-sonner';
 
 class MercadoDatabase extends Dexie {
 	mercado!: Table<Mercado, number>;
-	carrinho!: Table<Produto, number>;
+	carrinho!: Table<Carrinho, number>;
 	categorias!: Table<Categoria, number>;
-	produtos!: Table<Omit<Produto, 'quantidade'>, number>;
+	produtos!: Table<Produto, number>;
 
 	constructor() {
 		super('mercado');

@@ -17,15 +17,19 @@ interface Coordenadas {
 }
 
 type Local = { type: 'coord'; coord: Coordenadas } | { type: 'endereco'; endereco: Endereco };
+type Mapa = [id: number, nome: string];
 
 export interface Produto {
 	id?: number;
 	nome: string;
 	preco: string;
 	tipo: ItemTipo;
-	quantidade: number;
 	foto: Foto | string;
-	categorias?: [id: number, nome: string][];
+	categorias?: Mapa[];
+}
+
+export interface Carrinho extends Produto{
+	quantidade: number;
 }
 
 export interface Foto {
@@ -37,12 +41,12 @@ export interface Mercado {
 	id?: number;
 	nome: string;
 	local: Local;
-	foto: Foto | string;
-	produtos: [id: number, nome: string];
+	foto?: Foto | string; 
+	produtos?: Mapa[];
 }
 
 export interface Categoria {
 	id?: number;
 	nome: string;
-	produtos?: [id: number, nome: string];
+	produtos?: Mapa[];
 }
