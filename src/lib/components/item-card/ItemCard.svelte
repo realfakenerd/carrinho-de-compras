@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { db } from '$lib/db';
 	import { porNoCarrinho } from '$lib/servicos/carrinho-crud';
-	import type { IMG } from '$lib/types';
+	import type { Foto } from '$lib/types';
 	import { ItemTipo } from '$lib/utils.svelte';
 	import Icon from '@iconify/svelte';
 	import { toast } from 'svelte-sonner';
@@ -11,29 +11,19 @@
 	import { Unsplash, value } from '../unsplash';
 	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '../vaul';
 	import { addCarrinho, carrinhoContas } from './index';
+	import { URL } from 'svelte/reactivity';
 
 	let hidden = $state(true);
 
 	interface Props {
 		preco?: string;
 		nome?: string;
-		img?: IMG | string;
+		foto?: Foto;
 		tipo?: ItemTipo;
 		id?: string;
 	}
 
-	let {
-		preco,
-		nome,
-		img = {
-			alt: 'Imagem indisponível',
-			color: '#111',
-			src: 'https://dummyimage.com/200x200/fff/111.gif&text=Imagem+indisponível',
-			blur_hash: ''
-		},
-		tipo,
-		id
-	}: Props = $props();
+	let { preco, nome, foto, tipo, id }: Props = $props();
 
 	const carrinho = carrinhoContas();
 
@@ -53,13 +43,11 @@
 	type StringToIMG = [string: 'src', string: 'alt', string: 'color', string: 'blurhash'];
 	async function editAndDismis() {
 		const string = ($value.split('|') as StringToIMG | null) ?? $photo?.src!;
-		img = {
+		foto = {
 			src: typeof string === 'string' ? string : string[0],
-			alt: string[1],
-			color: string[2],
-			blur_hash: string[3]
+			alt: string[1]
 		};
-		const result = await db.mercado.put({ nome, preco, img, tipo, id }, id);
+		const result = await db.mercado.put({ nome, preco, img: foto, tipo, id }, id);
 		if (result) {
 			hidden = true;
 			toast.success(`Editado com sucesso`);
@@ -71,17 +59,34 @@
 		if (tipo === ItemTipo.UNIDADE) valorAPagar = parseFloat(preco) * carrinho.value;
 		else valorAPagar = parseFloat((parseFloat(preco) * carrinho.value).toFixed(2));
 	});
+
+	function getFoto() {
+		if (foto) {
+			if (typeof foto.src === 'string') {
+				return foto.src;
+			}
+			
+			if (foto.src) {
+				return URL.createObjectURL(foto.src);
+			}
+		}
+
+		return {
+			alt: 'Imagem indisponível',
+			src: 'https://dummyimage.com/200x200/fff/111.gif&text=Imagem+indisponível'
+		};
+	}
 </script>
 
 <section class="card p-0 card-filled w-full overflow-hidden">
 	<figure>
 		<img
-			on:contextmenu|preventDefault
-			style="height: 208px;background-color: {(img as IMG)?.color};"
+			oncontextmenu={(e) => e.preventDefault()}
+			style="height: 208px;background-color: {(foto as IMG)?.color};"
 			class="rounded-lg object-cover aspect-square"
 			loading="lazy"
-			src={(typeof img === 'string' ? img : (img as IMG)?.src) as string}
-			alt={(img as IMG)?.alt}
+			src={getFoto()}
+			alt={(foto as Foto)?.alt}
 			width="208px"
 			height="208px"
 		/>
@@ -117,11 +122,11 @@
 
 				<figure>
 					<img
-						style="height: 238px; background-color: {(img as IMG).color};"
+						style="height: 238px; background-color: {(foto as IMG).color};"
 						class="rounded-lg object-cover"
 						loading="lazy"
-						src={(typeof img === 'string' ? img : (img as IMG)?.src) as string}
-						alt={(img as IMG).alt || 'Imagem indisponível'}
+						src="getFoto()}"
+						alt={(foto as Foto).alt || 'Imagem indisponível'}
 						width="238px"
 						height="238px"
 					/>
@@ -129,9 +134,9 @@
 
 				<div class="flex px-4 items-center justify-center gap-x-2">
 					<button
-						on:click={() => carrinho.decrement(tipo)}
-						on:touchstart={() => carrinho.startDecrement(tipo)}
-						on:touchend={carrinho.stopIncrement}
+						onclick={() => carrinho.decrement(tipo)}
+						ontouchstart={() => carrinho.startDecrement(tipo)}
+						ontouchend={carrinho.stopIncrement}
 						disabled={carrinho.value <= 0}
 						class="flex items-center text-on-surface-variant justify-center h-10 w-10 ring-1 hover:text-error hover:ring-2 transition ring-error rounded-full"
 					>

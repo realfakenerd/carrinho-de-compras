@@ -24,7 +24,7 @@ export interface Produto {
 	nome: string;
 	preco: string;
 	tipo: ItemTipo;
-	foto: Foto | string;
+	foto: Foto;
 	categorias?: Mapa[];
 }
 
@@ -33,7 +33,7 @@ export interface Carrinho extends Produto{
 }
 
 export interface Foto {
-	src?: string;
+	src?: string | Blob;
 	alt?: string;
 }
 

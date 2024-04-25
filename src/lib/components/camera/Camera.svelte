@@ -1,5 +1,5 @@
 <script context="module">
-	export let image = '';
+	export let image: Blob | null;
 </script>
 
 <script lang="ts">
@@ -16,12 +16,12 @@
 
 		const uarr = new Uint8Array(buffer);
 		const blob = new Blob([uarr], { type: file.type });
-		image = URL.createObjectURL(blob);
+		image = blob;
 		return;
 	}
 </script>
 
-<label class="btn py-10">
+<label class="btn interactive-bg-primary">
 	<input
 		class="hidden"
 		type="file"

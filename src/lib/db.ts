@@ -11,9 +11,9 @@ class MercadoDatabase extends Dexie {
 	constructor() {
 		super('mercado');
 		this.version(1).stores({
-			mercado: '++id, nome, local, foto, *produtos',
-			carrinho: '++id, nome, preco, tipo, foto, quantidade',
-			produtos: '++id, nome, preco, tipo, foto, *categorias',
+			mercado: '++id, nome, local, *produtos',
+			carrinho: '++id, nome, preco, tipo, quantidade',
+			produtos: '++id, nome, preco, tipo, *categorias',
 			categorias: '++id, nome, *produtos'
 		});
 	}

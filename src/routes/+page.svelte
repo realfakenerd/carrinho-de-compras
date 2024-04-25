@@ -32,7 +32,6 @@
 			result = searchMercadoIndex(value.trim());
 		} else result = $produtos;
 	});
-
 </script>
 
 <section class="py-8 px-2 flex flex-col gap-4">
@@ -81,9 +80,9 @@
 
 	<ul class="grid gap-4 justify-center">
 		{#if result}
-			{#each result as { img, nome, preco, tipo, id }, i (i)}
+			{#each result as { nome, preco, tipo, id, foto }, i (i)}
 				<li transition:fly={{ delay: i * 0.1 }}>
-					<ItemCard {img} {nome} {preco} {tipo} {id} />
+					<ItemCard {foto} {nome} {preco} {tipo} {id} />
 				</li>
 			{:else}
 				<li class="card card-filled gap-1 justify-end w-full h-[280px]">
@@ -96,19 +95,19 @@
 			<li
 				transition:fly={{ delay: 300, duration: 300 }}
 				class="card card-filled animate-pulse h-[280px] w-full"
-			/>
+			></li>
 			<li
 				transition:fly={{ delay: 300, duration: 300 }}
 				class="card card-filled animate-pulse h-[280px] w-full"
-			/>
+			></li>
 			<li
 				transition:fly={{ delay: 300, duration: 300 }}
 				class="card card-filled animate-pulse h-[280px] w-full"
-			/>
+			></li>
 			<li
 				transition:fly={{ delay: 300, duration: 300 }}
 				class="card card-filled animate-pulse h-[280px] w-full"
-			/>
+			></li>
 		{/if}
 	</ul>
 

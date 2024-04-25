@@ -1,50 +1,56 @@
 import { addItemToMercado } from '$lib/db';
-import { toast } from 'svelte-sonner';
-import { value } from '../unsplash/Unsplash.svelte';
-import { produtoDrawerState } from './index';
+import type { Foto as Imagem } from '$lib/types';
 import { ItemTipo } from '$lib/utils.svelte';
-import type { Foto } from '$lib/types';
+import { toast } from 'svelte-sonner';
+import { produtoDrawerState } from './index';
 
 type StringTofoto = [string: 'src', string: 'alt'];
 
-let _value: string | null = $state(null);
-
-value.subscribe((value) => {
-	_value = value;
-});
-
-function getString(string: string | null) {
-	if (string?.startsWith('data:image')) {
-		return string;
+function getString(foto: string | Blob | null) {
+	if (typeof foto === 'string') {
+		return foto?.split('|') as StringTofoto | null;
 	}
 
-	return string?.split('|') as StringTofoto | null;
+	return foto;
 }
 
-function getFoto(string: string | StringTofoto | null) {
-	if (typeof string === 'string') {
-		return string;
+function getFoto(foto: StringTofoto | Blob | null) {
+	if (typeof foto === 'string') {
+		return {
+			src: foto?.[0],
+			alt: foto?.[1]
+		} as Imagem;
 	}
 
 	return {
-		src: string?.[0],
-		alt: string?.[1]
-	} as Foto;
+		src: foto,
+		alt: 'Foto da camera'
+	} as Imagem;
 }
 
-export function addItem({ nome, preco, tipo }: { nome: string; preco: string; tipo: ItemTipo }) {
+export function addItem({
+	nome,
+	preco,
+	tipo,
+	foto
+}: {
+	nome: string;
+	preco: string;
+	tipo: ItemTipo;
+	foto: string | Blob;
+}) {
 	try {
 		if (nome && preco) {
-			const string = getString(_value);
-			const foto = getFoto(string);
+			
+			const string = getString(foto);
+			const imagem = getFoto(string);
 
 			addItemToMercado({
 				nome,
 				preco,
-				foto,
+				foto: imagem,
 				tipo,
 				categorias: [[0, '']],
-				quantidade: 0
 			});
 
 			toast.success('Adicionado com sucesso!', {

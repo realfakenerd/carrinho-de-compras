@@ -15,7 +15,6 @@
 	import { photo } from '../camera/stores';
 	import type { Unsplash } from '../drawer';
 	import { TextField } from '../textfield';
-	import Camera, { image } from '../camera/Camera.svelte';
 	import { slide } from 'svelte/transition';
 
 	$: img = $photo?.src ?? '';
@@ -30,8 +29,6 @@
 
 	async function unsplash() {
 		if (!img) return;
-		console.log(image);
-		
 
 		const _img = img.toLowerCase();
 		if (imgCache.has(_img)) {
@@ -54,19 +51,16 @@
 	}
 </script>
 
-<section class="flex flex-col">
-	<div class="inline-flex gap-2 items-center">
-		<TextField
-			display=""
-			required={false}
-			onkeydown={debounce(unsplash, 1000)}
-			title="Escolha uma imagem"
-			bind:value={img}
-			style="outlined"
-			trailingIcon=""
-		/>
-		<Camera />
-	</div>
+<section class="flex flex-col w-full">
+	<TextField
+		display=""
+		required={false}
+		onkeydown={debounce(unsplash, 1000)}
+		title="Escolha uma imagem"
+		bind:value={img}
+		style="outlined"
+		trailingIcon=""
+	/>
 
 	{#if img && images?.results?.length}
 		<ul

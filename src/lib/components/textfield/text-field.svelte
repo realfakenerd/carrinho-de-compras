@@ -85,7 +85,7 @@
 				rows="1"
 				aria-label="Enter your input {title}"
 				aria-invalid={error ? 'true' : 'false'}
-			/>
+			></textarea>
 		{:else}
 			<input
 				autocomplete="off"
@@ -117,7 +117,7 @@
 				<Icon {icon} />
 			</button>
 		{/if}
-		<div class="text-field-layer" />
+		<div class="text-field-layer"></div>
 		<label for={id}>
 			{title}
 		</label>

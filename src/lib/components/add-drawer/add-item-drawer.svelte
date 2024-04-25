@@ -3,9 +3,10 @@
 	import Icon from '@iconify/svelte';
 	import { RadioGroup, RadioGroupItem } from '../radio-group';
 	import { TextField } from '../textfield';
-	import { Unsplash } from '../unsplash';
+	import { Unsplash, value } from '../unsplash';
 	import { addItem } from './add-item.svelte';
 	import { DrawerTitle } from '../vaul';
+	import Camera, {image} from '../camera/Camera.svelte';
 
 	let nome = $state('');
 	let preco = $state('');
@@ -23,7 +24,10 @@
 		bind:value={preco}
 		style="outlined"
 	/>
-	<Unsplash />
+	<div class="inline-flex gap-4 items-center">
+		<Unsplash />
+		<Camera />
+	</div>
 	<RadioGroup defaultValue={String(ItemTipo.UNIDADE)}>
 		<RadioGroupItem bind:value={tipo} label="Unidade" option={String(ItemTipo.UNIDADE)} />
 		<RadioGroupItem bind:value={tipo} label="Kilo" option={String(ItemTipo.KILO)} />
@@ -33,7 +37,8 @@
 			addItem({
 				nome,
 				preco,
-				tipo
+				tipo,
+				foto: image ?? $value
 			})}
 		class="btn text-label-large btn-filled w-full"
 	>
