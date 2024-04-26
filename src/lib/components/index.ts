@@ -1,2 +1,2 @@
-import AddDrawer from './add-drawer/add-drawer.svelte';
+import AddDrawer from './drawer.svelte';
 export { AddDrawer };

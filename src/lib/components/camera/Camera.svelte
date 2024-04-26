@@ -1,33 +1,35 @@
-<script context="module">
-	export let image: Blob | null;
-</script>
-
 <script lang="ts">
-	import Icon from "@iconify/svelte";
+	import Icon from '@iconify/svelte';
+	import { image } from './stores';
 
 	async function blobify(e: Event) {
-		const { files } = e.target as HTMLInputElement;
-		const file = files?.item(0);
+		const { target } = e;
+		const file = (target as HTMLInputElement).files?.item(0);
+
+		console.log('IMAGE ANTES', $image);
 
 		if (!file) return;
 
-		const buffer = await file.arrayBuffer();
-		if (!buffer) return;
+		try {
+			const blob = await new Promise<Blob>((resolve, reject) => {
+				const reader = new FileReader();
+				reader.readAsArrayBuffer(file);
+				reader.onload = (e) =>
+					resolve(new Blob([e.target?.result as ArrayBuffer], { type: file.type }));
+				reader.onerror = (e) => reject(e);
+			});
+			console.log('BLOB', blob);
 
-		const uarr = new Uint8Array(buffer);
-		const blob = new Blob([uarr], { type: file.type });
-		image = blob;
-		return;
+			$image = blob;
+
+			console.log('IMAGE DEPOIS', $image);
+		} catch (error) {
+			console.error('Error creating blob:', error);
+		}
 	}
 </script>
 
 <label class="btn interactive-bg-primary">
-	<input
-		class="hidden"
-		type="file"
-		oninput={blobify}
-		accept="image/*"
-		capture="user"
-	/>
+	<input class="hidden" type="file" oninput={blobify} accept="image/*" capture="user" />
 	<Icon icon="mdi:camera" />
 </label>

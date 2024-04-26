@@ -1,7 +1,7 @@
 import { ItemTipo } from '$lib/utils.svelte';
 export { ItemTipo };
 
-interface Endereco {
+export interface Endereco {
 	rua: string;
 	numero: string;
 	bairro: string;
@@ -28,13 +28,13 @@ export interface Produto {
 	categorias?: Mapa[];
 }
 
-export interface Carrinho extends Produto{
+export interface Carrinho extends Omit<Produto, 'foto'> {
 	quantidade: number;
 }
 
 export interface Foto {
-	src?: string | Blob;
-	alt?: string;
+	src: Blob;
+	alt: string;
 }
 
 export interface Mercado {

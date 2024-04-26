@@ -5,22 +5,21 @@
 	import { ItemTipo } from '$lib/utils.svelte';
 	import Icon from '@iconify/svelte';
 	import { toast } from 'svelte-sonner';
+	import { URL } from 'svelte/reactivity';
 	import { slide } from 'svelte/transition';
-	import { photo } from '../camera/stores';
+	import { image } from '../camera/stores';
 	import TextField from '../textfield/text-field.svelte';
-	import { Unsplash, value } from '../unsplash';
 	import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '../vaul';
 	import { addCarrinho, carrinhoContas } from './index';
-	import { URL } from 'svelte/reactivity';
 
 	let hidden = $state(true);
 
 	interface Props {
-		preco?: string;
-		nome?: string;
-		foto?: Foto;
-		tipo?: ItemTipo;
-		id?: string;
+		preco: string;
+		nome: string;
+		foto: Foto;
+		tipo: ItemTipo;
+		id?: number;
 	}
 
 	let { preco, nome, foto, tipo, id }: Props = $props();
@@ -30,24 +29,21 @@
 	let open = $state(false);
 	function addAndDismiss() {
 		addCarrinho({ nome, preco, tipo, quantidade: carrinho.value });
-		porNoCarrinho({ nome, preco, tipo, quantidade: carrinho.value });
 		open = false;
 		toast.success(`Adicionado ao seu carrinho`);
 	}
 
 	function removeAndDismis() {
-		db.mercado.delete(id!);
+		db.carrinho.delete(id!);
 		open = false;
 	}
 
-	type StringToIMG = [string: 'src', string: 'alt', string: 'color', string: 'blurhash'];
 	async function editAndDismis() {
-		const string = ($value.split('|') as StringToIMG | null) ?? $photo?.src!;
 		foto = {
-			src: typeof string === 'string' ? string : string[0],
-			alt: string[1]
+			src: $image!,
+			alt: 'foto da camera'
 		};
-		const result = await db.mercado.put({ nome, preco, img: foto, tipo, id }, id);
+		const result = await db.produtos.put({ nome, preco, img: foto, tipo, id }, id);
 		if (result) {
 			hidden = true;
 			toast.success(`Editado com sucesso`);
@@ -55,26 +51,14 @@
 	}
 
 	let valorAPagar = $state(0);
+
 	$effect(() => {
 		if (tipo === ItemTipo.UNIDADE) valorAPagar = parseFloat(preco) * carrinho.value;
 		else valorAPagar = parseFloat((parseFloat(preco) * carrinho.value).toFixed(2));
 	});
 
 	function getFoto() {
-		if (foto) {
-			if (typeof foto.src === 'string') {
-				return foto.src;
-			}
-			
-			if (foto.src) {
-				return URL.createObjectURL(foto.src);
-			}
-		}
-
-		return {
-			alt: 'Imagem indisponível',
-			src: 'https://dummyimage.com/200x200/fff/111.gif&text=Imagem+indisponível'
-		};
+		return URL.createObjectURL(foto.src);
 	}
 </script>
 
@@ -125,7 +109,7 @@
 						style="height: 238px; background-color: {(foto as IMG).color};"
 						class="rounded-lg object-cover"
 						loading="lazy"
-						src="getFoto()}"
+						src={getFoto()}
 						alt={(foto as Foto).alt || 'Imagem indisponível'}
 						width="238px"
 						height="238px"
@@ -178,7 +162,6 @@
 						<form class="flex flex-col gap-2">
 							<TextField bind:value={nome} title="Nome" />
 							<TextField bind:value={preco} title="Preço" />
-							<Unsplash />
 						</form>
 
 						<button
@@ -197,7 +180,7 @@
 				</button>
 				<button
 					onclick={removeAndDismis}
-					class="btn interactive-bg-error-container py-2 rounded-xl w-full"
+					class="btn interactive-bg-error-container py-2 rounded-xl w-full mb-20"
 				>
 					Remover do mercado
 				</button>

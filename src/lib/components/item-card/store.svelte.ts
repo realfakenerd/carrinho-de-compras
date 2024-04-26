@@ -10,16 +10,12 @@ function carrinhoContas() {
 	let timer: NodeJS.Timeout | undefined = $state(undefined);
 
 	function increment(tipo: ItemTipo) {
-		if (tipo === ItemTipo.UNIDADE) {
-			return (value += 1);
-		}
+		if (tipo === ItemTipo.UNIDADE) return (value += 1);
 		return (value += 0.1);
 	}
 
 	function decrement(tipo: ItemTipo) {
-		if (tipo === ItemTipo.UNIDADE) {
-			return (value -= 1);
-		}
+		if (tipo === ItemTipo.UNIDADE) return (value -= 1);
 		return (value -= 0.1);
 	}
 

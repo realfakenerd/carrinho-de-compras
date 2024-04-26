@@ -25,6 +25,7 @@
 		'trailing-click'?: () => void;
 		onkeydown?: (event: KeyboardEvent) => void;
 		oninput?: (event: Event) => void;
+		labelColor?: string;
 	}
 
 	let {
@@ -44,7 +45,8 @@
 		type = 'text',
 		'trailing-click': trailingClick,
 		onkeydown,
-		oninput
+		oninput,
+		labelColor = '--color-surface'
 	}: Props = $props();
 
 	let id = title ?? `input-${crypto.randomUUID()}`;
@@ -60,7 +62,7 @@
 	}
 </script>
 
-<fieldset class="w-full">
+<fieldset class="w-full" style:--lbl-color={labelColor}>
 	<div
 		class={cn(
 			'text-field-container',
