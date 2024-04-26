@@ -66,7 +66,7 @@
 	</section>
 	<button
 		class="btn text-label-large btn-filled w-full"
-		onclic={() => addMercadoToDatabase({ nome, local: { type: 'endereco', endereco } })}
+		onclick={() => addMercadoToDatabase({ nome, local: { type: 'endereco', endereco } })}
 	>
 		<Icon icon="mdi:plus" width="24px" />
 		<span> Adicionar </span>
