@@ -69,12 +69,13 @@ export async function addProdutoToMercado({ nome, preco, foto, tipo }: Produto) 
 }
 
 export async function addMercadoToDatabase({ nome, local, foto }: Mercado) {
+	console.log({ nome, local, foto });
 	try {
 		if (!nome) throw new CustomError('SemNomeError', 'O nome do mercado deve ser informado');
 		if (!local) throw new CustomError('SemLocalError', 'O local do mercado deve ser informado');
 
 		const id = await db.mercado.add({
-			foto,
+			foto: '',
 			local,
 			nome
 		});

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { cn } from '$lib/utils.svelte';
 	import Icon from '@iconify/svelte';
-	import type { Snippet } from 'svelte';
 	import type { HTMLInputTypeAttribute } from 'svelte/elements';
 
 	let wrapper = $state<HTMLDivElement | null>(null);
@@ -25,7 +24,6 @@
 		'trailing-click'?: () => void;
 		onkeydown?: (event: KeyboardEvent) => void;
 		oninput?: (event: Event) => void;
-		labelColor?: string;
 	}
 
 	let {
@@ -45,8 +43,7 @@
 		type = 'text',
 		'trailing-click': trailingClick,
 		onkeydown,
-		oninput,
-		labelColor = '--color-surface'
+		oninput
 	}: Props = $props();
 
 	let id = title ?? `input-${crypto.randomUUID()}`;
@@ -62,7 +59,7 @@
 	}
 </script>
 
-<fieldset class="w-full" style:--lbl-color={labelColor}>
+<fieldset class="w-full">
 	<div
 		class={cn(
 			'text-field-container',

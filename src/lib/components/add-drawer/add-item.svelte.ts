@@ -4,11 +4,9 @@ import { ItemTipo } from '$lib/utils.svelte';
 import { toast } from 'svelte-sonner';
 import { produtoDrawerState } from './index';
 
-
 export function addItem({ nome, preco, tipo, foto }: Produto) {
 	try {
 		if (nome && preco) {
-
 			addProdutoToMercado({
 				nome,
 				preco,

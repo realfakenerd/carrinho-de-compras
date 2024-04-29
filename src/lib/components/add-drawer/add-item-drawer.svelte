@@ -25,13 +25,11 @@
 		bind:value={preco}
 		style="outlined"
 	/>
-	<div class="inline-flex gap-4 items-center">
-		<Camera />
-	</div>
 	<RadioGroup defaultValue={String(ItemTipo.UNIDADE)}>
 		<RadioGroupItem bind:value={tipo} label="Unidade" option={String(ItemTipo.UNIDADE)} />
 		<RadioGroupItem bind:value={tipo} label="Kilo" option={String(ItemTipo.KILO)} />
 	</RadioGroup>
+	<Camera />
 	<button
 		onclick={() => {
 			hidden = !hidden;
@@ -40,7 +38,7 @@
 				preco,
 				tipo,
 				foto: {
-					src: $image,
+					src: $image ?? '',
 					alt: 'Foto da camera'
 				}
 			});

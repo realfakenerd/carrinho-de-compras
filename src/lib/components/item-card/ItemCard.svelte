@@ -58,6 +58,7 @@
 	});
 
 	function getFoto() {
+		if (typeof foto?.src === 'string') return foto?.src;
 		return URL.createObjectURL(foto.src);
 	}
 </script>
@@ -106,7 +107,7 @@
 
 				<figure>
 					<img
-						style="height: 238px; background-color: {(foto as IMG).color};"
+						style="height: 238px;"
 						class="rounded-lg object-cover"
 						loading="lazy"
 						src={getFoto()}

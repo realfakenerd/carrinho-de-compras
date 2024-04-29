@@ -11,10 +11,10 @@
 	} from '$lib/components/add-drawer';
 	import { ItemCard } from '$lib/components/item-card';
 	import { TextField } from '$lib/components/textfield/index.js';
-	import { URL } from 'svelte/reactivity';
 	import { createMercadoIndex, searchMercadoIndex } from '$lib/search';
 	import { handleFile, readXLSX } from '$lib/utils.svelte';
 	import Icon from '@iconify/svelte';
+	import { URL } from 'svelte/reactivity';
 	import { fly } from 'svelte/transition';
 	import type { PageData } from './$types';
 
@@ -66,8 +66,10 @@
 
 	<ul class="grid gap-4 justify-center">
 		{#if $mercados}
-			{#each $mercados as mercado}
-				{mercado.nome}
+			{#each $mercados as { nome }, i (i)}
+				<li class="card card-filled gap-1 justify-end w-full h-[280px]">
+					{nome}
+				</li>
 			{:else}
 				<li class="card card-filled gap-1 justify-end w-full h-[280px]">
 					<h1 class="text-title-large">Oops!</h1>

@@ -85,6 +85,7 @@
 		"clsx": "^2.1.1",
 		"css-declaration-sorter": "^7.2.0",
 		"cssnano": "^6.1.2",
+		"devalue": "^5.0.0",
 		"dexie": "4.0.1",
 		"dexie-cloud-addon": "4.0.1",
 		"eslint": "^8.57.0",
